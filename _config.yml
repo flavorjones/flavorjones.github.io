@@ -1,2 +1,8 @@
 plugins:
   - jekyll-haml-markup
+
+include:
+  - prez/2019-05_embrace-change-as-an-org_code-climate-summit/_assets/slides.css
+  - prez/2019-05_embrace-change-as-an-org_code-climate-summit/_assets/slides.js
+  - prez/2023-10-06-rails-world-rails-html5/_assets/slides.css
+  - prez/2023-10-06-rails-world-rails-html5/_assets/slides.js
