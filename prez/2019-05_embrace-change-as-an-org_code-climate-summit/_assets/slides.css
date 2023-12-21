@@ -1,0 +1,84 @@
+.slides {
+  font-family: Ubuntu ! important ;
+}
+
+.slides h1,
+.slides h2,
+.slides h3
+{
+  font-family: "Ubuntu Condensed" ;
+  font-weight: bold;
+  text-transform: none ;
+}
+
+.reveal section img {
+  border: none;
+}
+
+.dark-text,
+.dark-text h1,
+.dark-text h2,
+.dark-text h3
+{
+  color: #002b36 !important ;
+  text-shadow: 0 0 10px #ffffff;
+}
+
+.command {
+  font-weight: bold !important;
+}
+
+.command::before
+{
+  content: "$ ";
+  position: absolute;
+  left: -1em ;
+}
+
+.plus::before
+{
+  content: "+ ";
+  position: absolute;
+  left: -1em ;
+}
+
+.delta::before
+{
+  content: "Δ ";
+  position: absolute;
+  left: -1em ;
+}
+
+.emoji img {
+  max-height: 1em;
+  max-width: 1em;
+  vertical-align: bottom;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+section.has-footnote {
+  height: 85%;
+  position: relative;
+}
+
+.footnote {
+  text-align: left !important;
+  font-size: 50% !important;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.footnote-bottom {
+  text-align: left !important;
+  font-size: 50% !important;
+  position: absolute;
+  left: 0;
+  bottom: 0 !important;
+}
+
+.larger {
+  font-size: larger !important;
+  font-weight: bold !important;
+}

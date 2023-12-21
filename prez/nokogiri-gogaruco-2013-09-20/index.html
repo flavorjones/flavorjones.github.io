@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <link href="css/reset.css" rel="stylesheet" />
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="shortcut icon" href="css/favicon.png" />
+    <link rel="apple-touch-icon" href="css/apple-touch-icon.png" />
+    <!-- Code Prettifier: -->
+<link href="css/highlight.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    <link href="css/style.css" rel="stylesheet" />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,800italic,300,400,800' rel='stylesheet' type='text/css'>
+
+<div class="footer">@flavorjones / Nokogiri: History of a Gem / GoGaRuCo 2013</div>
+
+  </head>
+
+  <body>
+  <div class="fallback-message">
+  <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+  <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+  </div>
+    <div id="impress">
+    <div class='step' >
+    
+<h1>Nokogiri:</h1>
+
+<h1>History of a Gem</h1>
+
+<h2>A valid and well-formed talk on an open-source success</h2>
+
+<p>Mike Dalessio / <a href="https://twitter.com/flavorjones">@flavorjones</a></p>
+
+<p><a href="http://mike.daless.io">mike.daless.io</a> / <a href="http://blog.flavorjon.es">blog.flavorjon.es</a></p>
+
+<p>GoGaRuCo 2013</p>
+
+<div class="notes">
+
+Thanks to Josh Susser and the organizers.
+
+Josh first invited me to speak about Nokogiri in 2008 at icanhasruby, and
+now he's repeated that mistake, and for that he has my undying gratitude.
+
+Nokogiri is like my child, and my personal story is wrapped up in Nokogiri's story.
+
+</div>
+</div>
+      <div class='step' >
+    
+<p><img src="images/story1.png" alt="story"></p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/story2.png" alt="story"></p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/story3.png" alt="story"></p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/story4.png" alt="story"></p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/story5.png" alt="story"></p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/story6.png" alt="story"></p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/story7.png" alt="story"></p>
+</div>
+      <div class='step' >
+    
+<h2>FAQ</h2>
+
+<ol>
+<li><strong>What is Nokogirl?</strong></li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+</ol>
+</div>
+      <div class='step' data-x=1000>
+    <pre><code class='prettyprint '>$ gem install nokogirl
+Building native extensions.  This could take a while...
+
+It's actually spelled nokogiri, not nokogirl
+
+Successfully installed nokogiri-1.6.0
+Successfully installed nokogirl-1.0
+2 gems installed
+</code></pre>
+<div class="notes">
+Magnus Holm, judofyr
+</div>
+</div>
+      <div class='step' >
+    
+<h2>FAQ</h2>
+
+<ol>
+<li>What is Nokogirl?</li>
+<li><strong>What is Nokogiri?</strong></li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+</ol>
+</div>
+      <div class='step' data-x=1000>
+    
+<p>A Ruby API for XML/HTML parsing and manipulation.</p>
+
+<div class=notes>
+
+Worked on it primarily with Aaron Patterson. Fixes broken markup.  SAX
+parser, pull parser, XSLT, schema validation.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h2>FAQ</h2>
+
+<ol>
+<li>What is Nokogirl?</li>
+<li>What is Nokogiri?</li>
+<li><strong>OMG, isn&#39;t that boring?</strong></li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+</ol>
+
+<div class=notes>
+
+I have a confession to make.
+
+</div>
+</div>
+      <div class='step' data-x=1000>
+    
+<p>I <strong>hate</strong> XML.</p>
+</div>
+      <div class='step' data-x=1000>
+    
+<p>But I ❤ making painful things not-painful.</p>
+
+<div class=notes>
+
+And that's the itch I like to scratch.
+It's rewarding.
+
+</div>
+</div>
+      <div class='step' data-x=1000>
+    
+<p><strong>Nokogiri</strong> has been downloaded 14.8 million times.</p>
+
+<p><br></p>
+
+<p>(<strong>Rails</strong> has 27.6 million downloads, <strong>Formtastic</strong> has 1.7 million.)</p>
+
+<div class=notes>
+
+Look, it's not a contest. But it might be interesting to put these
+numbers in context with some recording industry numbers ...
+
+</div>
+</div>
+      <div class='step' data-x=1000>
+    
+<p>If <a href="https://rubygems.org/gems/rails">Rails</a> is</p>
+
+<p><img src="images/kiss-monster-small.png" alt="kiss"></p>
+
+<div class=notes>
+
+Been around forever. Used to be edgy, now what your parents listen
+to. Highly-produced. Glam. Either hate it or love it.
+
+</div>
+</div>
+      <div class='step' data-x=1000>
+    
+<p>And <a href="https://rubygems.org/gems/formtastic">Formtastic</a> is</p>
+
+<p><img src="images/eileen.jpg" alt="eileen"></p>
+
+<div class=notes>
+
+Everybody loves catchy gems with a hook.
+
+</div>
+</div>
+      <div class='step' data-x=1000>
+    
+<p>Then <a href="https://rubygems.org/gems/nokogiri">Nokogiri</a> is</p>
+
+<p><img src="images/Kelly_Clarkson.jpg" alt="kelly"></p>
+
+<div class=notes>
+
+Broadly appealing, adult contemporary, inoffensive background music.
+
+</div>
+</div>
+      <div class='step' data-x=1000>
+    
+<p>So yes, Nokogiri does one <strong>boring</strong> thing.</p>
+
+<p>But it does it <strong>well</strong>, and people seem to like it.</p>
+
+<p>And that makes me <strong>happy</strong>.</p>
+</div>
+      <div class='step' >
+    
+<h2>FAQ</h2>
+
+<ol>
+<li>What is Nokogirl?</li>
+<li>What is Nokogiri?</li>
+<li>OMG, isn&#39;t that boring?</li>
+<li><strong>What does &quot;Nokogiri&quot; mean?</strong></li>
+<li>&nbsp;</li>
+</ol>
+</div>
+      <div class='step'  data-x=1000 ss=huge>
+    
+<p>鋸</p>
+</div>
+      <div class='step'  data-x=1000>
+    
+<p><img src="images/nokogiri-saws.jpg" alt="nokogiri"></p>
+
+<div class=notes>
+
+It's wordplay. If you have a dense forest of XML trees, you need a saw.
+
+</div>
+</div>
+      <div class='step'  data-x=1000>
+    
+<p><img src="images/punny.png" alt="punny"></p>
+
+<div class=notes>
+
+I don't know if you know this, but @tenderlove likes wordplay.
+
+And the fifth most commonly-asked question ...
+
+</div>
+</div>
+      <div class='step' >
+    
+<h2>FAQ</h2>
+
+<ol>
+<li>What is Nokogirl?</li>
+<li>What is Nokogiri?</li>
+<li>OMG, isn&#39;t that boring?</li>
+<li>What does &quot;Nokogiri&quot; mean?</li>
+<li><strong>I can&#39;t install Nokogiri on Mac OSX 10.8.4 running MacPorts.</strong></li>
+</ol>
+
+<div class=notes>
+
+That's not a question! But we'll cover it later, anyway.
+
+</div>
+</div>
+      <div class='step' >
+    
+<p>“There&#39;s an old saying about those who forget history. I don&#39;t
+remember it, but it&#39;s good.”</p>
+
+<p>&mdash; <em>Stephen Colbert</em></p>
+
+<div class="notes">
+
+Why is history interesting or even relevant?
+
+History is the testing ground of ideas.
+
+Needs fulfilled and unfulfilled.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h1>2006</h1>
+
+<ul>
+<li><a href="https://www.ruby-lang.org/en/news/2006/08/29/ruby-1-8-5-released/">Ruby 1.8.5</a> and <a href="http://weblog.rubyonrails.org/2006/8/10/rails-1-1-6-backports-and-full-disclosure/">Rails 1.1.6</a> are released.</li>
+<li>Ruby core moves from CVS to SVN.</li>
+<li>NASA launches the New Horizons spaceprobe, destined for the planet Pluto.</li>
+<li>IAU redefines &quot;planet&quot; and Pluto is declared not-a-planet. :(</li>
+<li>Googling for &quot;aaron patterson&quot; revealed ...</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/serial-killer.png" alt="serial-killer"></p>
+</div>
+      <div class='step' >
+    
+<h2>Ruby HTML/XML Parsers in 2006</h2>
+
+<ul>
+<li><strong>REXML</strong> is in the stdlib, but is <em>sloooooooooow</em> and doesn&#39;t fix broken markup.</li>
+<li><strong>Hpricot</strong> is the de facto standard for XML/HTML parsing.</li>
+<li><strong>libxml-ruby</strong> is a close runner-up.</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/uspowergen.gif" alt="uspg"></p>
+
+<p>Scraping HTML with Mechanize.</p>
+
+<div class=notes>
+
+Mechanize used Hpricot at this time.
+
+More importantly, though ...
+
+</div>
+</div>
+      <div class='step' >
+    
+<p><img src="images/uspowergen.gif" alt="uspg"></p>
+
+<p>Scraping <strong>super-secret</strong> HTML with Mechanize.</p>
+</div>
+      <div class='step' >
+    
+<p><strong>Problem</strong>: Needed support for client-side certificates.</p>
+
+<p><strong>Solution</strong>: Emailed a patch to <a href="https://twitter.com/tenderlove">@tenderlove</a></p>
+</div>
+      <div class='step' >
+    
+<p>My First ✌Pull request✌</p>
+
+<p><img src="images/pull-request.png" alt="pull"></p>
+</div>
+      <div class='step' >
+    
+<p>@tenderlove was open and kind and responsive.</p>
+</div>
+      <div class='step' >
+    
+<p>I sent more patches.</p>
+
+<p>I got commit privileges.</p>
+
+<p>I kept contributing.</p>
+
+<div class=notes>
+
+Time passed.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h1>2008</h1>
+
+<ul>
+<li><a href="http://www.ruby-lang.org/en/news/2008/05/31/ruby-1-8-7-has-been-released/">Ruby 1.8.7</a> and <a href="http://weblog.rubyonrails.org/2008/5/31/rails-2-1-time-zones-dirty-caching-gem-dependencies-caching-etc/">Rails 2.1</a> are released.</li>
+<li>&#39;Slumdog Millionaire&#39; and &#39;Wall-E&#39; in theaters.</li>
+<li>LHC goes online.</li>
+<li>Oil hits $100/barrel for the first time.</li>
+<li>Stock markets crash. (Thanks, subprime lenders.)</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/pharos.png" alt="pharos"></p>
+
+<p>Scraping HTML with Mechanize.</p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/pharos.png" alt="pharos"></p>
+
+<p>Scraping <strong>broken</strong> HTML with Mechanize.</p>
+
+<div class=notes>
+
+I was running into Hpricot bugs, both with markup correction and
+things like CSS off-by-one errors and crashing when the HTML was
+exactly 16kb long.
+
+</div>
+</div>
+      <div class='step'  data-y=1000 ss=red>
+    
+<p>(<a href="https://twitter.com/flavorjones">@flavorjones</a>, in full Github-stalker mode)</p>
+
+<p><br></p>
+
+<blockquote>
+<p>You&#39;re working on an XML wrapper, right? Do you have any thoughts on
+how useful libxml2 would be with malformed HTML? For me, this was
+actually the killer feature of Hpricot -- it manages to un-mangle
+HTML really well ... There&#39;s a <strong>lot</strong> of malformed HTML out there.</p>
+</blockquote>
+</div>
+      <div class='step'  data-y=1000 ss=blue>
+    
+<p>(<a href="https://twitter.com/tenderlove">@tenderlove</a>, being indulgent)</p>
+
+<p><br></p>
+
+<blockquote>
+<p>Awesome! Yes. Libxml actually handles broken HTML better than
+hpricot does. I have test cases for which libxml will handle broken
+html better than hpricot.</p>
+</blockquote>
+</div>
+      <div class='step'  data-y=1000 ss=blue>
+    
+<p>(<a href="https://twitter.com/tenderlove">@tenderlove</a>)</p>
+
+<p><br></p>
+
+<blockquote>
+<p>I&#39;ve submitted those test cases as bugs
+for hpricot as well.
+I would have patched hpricot, but it is too
+hard for me to read!</p>
+</blockquote>
+
+<div class=notes>
+
+This should give hope to anyone who has ever had trouble figuring out
+where to start on a new codebase.
+
+</div>
+</div>
+      <div class='step'  data-y=1000 ss=red>
+    
+<p>(<a href="https://twitter.com/flavorjones">@flavorjones</a>)</p>
+
+<p><br></p>
+
+<blockquote>
+<p>How can I help out?</p>
+</blockquote>
+
+<div class=notes>
+
+The five most significant words you can use with an open-source maintainer.
+
+</div>
+</div>
+      <div class='step'  data-y=1000 ss=blue>
+    
+<p>(<a href="https://twitter.com/tenderlove">@tenderlove</a>)</p>
+
+<p><br></p>
+
+<blockquote>
+<p>I&#39;ve started a project called &#39;nokogiri&#39; which is my libxml
+wrapper. There is no C, it uses DL exclusively.</p>
+</blockquote>
+</div>
+      <div class='step' >
+    
+<p><strong>D</strong>ynamic <strong>L</strong>anguage binding.</p>
+
+<p>Call C libraries without writing C code.</p>
+</div>
+      <div class='step' >
+    <pre><code class='prettyprint ruby'># lib/nokogiri/dl/xml.rb
+module Nokogiri
+  module DL
+    module XML
+      extend ::DL::Importer
+
+      dlload('libxml2.so') rescue dlload('libxml2.dylib')
+
+      extern "void * xmlReadMemory (const char *, int, const char *,
+                       const char *, int)"
+
+      ...
+    end
+  end
+end
+</code></pre></div>
+      <div class='step' >
+    <pre><code class='prettyprint ruby'># lib/nokogiri/xml.rb
+module Nokogiri
+  module XML
+    class << self
+      def parse(string, url = nil, encoding = nil, options = 1)
+        Document.wrap(NokogiriLib::XML.xmlReadMemory(
+                        string, string.length,
+                        (url || 0),
+                        (encoding || 0),
+                        options
+                      ))
+      end
+    end
+  end
+end
+</code></pre></div>
+      <div class='step' >
+    
+<p>DL was slow. <em>Really</em> slow.</p>
+
+<p>We killed it and started writing a C extension to call libxml2 directly.</p>
+
+<div class=notes>
+
+DL re-parsed the function declaration every time you call it.
+
+We could have worked on this, but the code was pretty hairy and
+experimental, and didn't have great tests.
+
+</div>
+</div>
+      <div class='step' >
+    <pre><code class='prettyprint c'>static VALUE read_memory( VALUE klass,
+                          VALUE string,
+                          VALUE url,
+                          VALUE encoding,
+                          VALUE options )
+{
+  const char * c_buffer = StringValuePtr(string);
+  const char * c_url    = NIL_P(url)      ? NULL : StringValuePtr(url);
+  const char * c_enc    = NIL_P(encoding) ? NULL : StringValuePtr(encoding);
+  int len               = (int)RSTRING_LEN(string);
+  xmlDocPtr doc;
+
+  ...
+
+  doc = xmlReadMemory(c_buffer, len, c_url, c_enc, (int)NUM2INT(options));
+
+  ...
+}
+</code></pre></div>
+      <div class='step' >
+    
+<p>The toughest problem we encountered writing Nokogiri:</p>
+
+<p><strong>Discovering and debugging libxml2&#39;s memory management.</strong></p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/mem1.png" alt="mem1"></p>
+
+<div class=notes>
+
+The Document struct, when freed, recursively frees everything under it.
+
+</div>
+</div>
+      <div class='step' >
+    
+<p><img src="images/mem2.png" alt="mem1"></p>
+
+<div class=notes>
+
+There is zero or one Ruby objects for each C struct.
+
+</div>
+</div>
+      <div class='step' >
+    
+<p><img src="images/mem3.png" alt="mem1"></p>
+
+<div class=notes>
+
+The Document struct is freed when the Document object is GCed.
+
+We structure Ruby object references so that Nodes aren't GCed so long
+as I have a reference to the Document.
+
+</div>
+</div>
+      <div class='step' >
+    
+<p><img src="images/mem4.png" alt="mem1"></p>
+
+<div class=notes>
+
+We have to carefully construct object references to make sure we never
+free a C struct pointed to by a Ruby object.
+
+</div>
+</div>
+      <div class='step' >
+    
+<p><img src="images/mem5.png" alt="mem1"></p>
+
+<div class=notes>
+
+Further complicating things: Documents have a Dictionary to minimize
+the number of strings that have to be allocated.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h3>Attributes and Namespaces have strings in the original document&#39;s dictionary.</h3>
+
+<p>What happens when you move a Node to another Document, then GC the first Doc?</p>
+</div>
+      <div class='step' >
+    
+<h3>Fun fact: libxml2 merges string nodes if they&#39;re next to each other.</h3>
+
+<p>What happens to the Ruby object pointing to a non-existent C object?</p>
+</div>
+      <div class='step' >
+    
+<p>Actual comment explaining some insane memory-management logic:</p>
+<pre><code class='prettyprint c'>/*
+ *  if the reparentee is a text node, there's a very good chance it
+ *  will be merged with an adjacent text node after being reparented,
+ *  and in that case libxml will free the underlying C struct.
+ *
+ *  since we clearly have a ruby object which references the underlying
+ *  memory, we can't let the C struct get freed. let's pickle the original
+ *  reparentee by rooting it; and then we'll reparent a duplicate of the
+ *  node that we don't care about preserving.
+ *
+ *  alternatively, if the reparentee is from a different document than the
+ *  pivot node, libxml2 is going to get confused about which document's
+ *  "dictionary" the node's strings belong to (this is an otherwise
+ *  uninteresting libxml2 implementation detail). as a result, we cannot
+ *  reparent the actual reparentee, so we reparent a duplicate.
+ */
+</code></pre></div>
+      <div class='step' >
+    
+<h3>Different versions of libxml2 have different fun bugs in how they merge (or don&#39;t merge) nodes.</h3>
+</div>
+      <div class='step' >
+    
+<p>PAIN.</p>
+</div>
+      <div class='step' >
+    
+<h2>Writing and Debugging C Extensions</h2>
+
+<p>In conclusion, learn these tools!</p>
+
+<ul>
+<li><code class='inline prettyprint'>valgrind</code> to find unsafe memory ops and memory leaks</li>
+<li><code class='inline prettyprint'>perftools.rb</code> for looking at performance bottlenecks</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h1>API Design</h1>
+</div>
+      <div class='step' >
+    
+<p>We boldly stole the best XML API we could find ...</p>
+</div>
+      <div class='step' >
+    
+<h2>API Design by Theft</h2>
+
+<p>Hpricot&#39;s API.</p>
+
+<p><br></p>
+
+<p><img src="images/why_self_portrait.png" alt="why"></p>
+</div>
+      <div class='step' >
+    
+<p>The first few versions of Nokogiri had an Hpricot-compatible API module.</p>
+
+<div class=notes>
+
+@tenderlove liked calling this layer "bug-compatible", and we eventually killed it.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h1>First official release</h1>
+
+<h2>on November 17, 2008.</h2>
+
+<p>(DST weekend.)</p>
+
+<div class=notes>
+
+Protip: don't release software on DST weekend if you have a job where
+energy trading is 24/7.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h2>Community response</h2>
+
+<p>Mixed.</p>
+</div>
+      <div class='step' >
+    
+<p>Early adopters:</p>
+
+<ul>
+<li><a href="https://github.com/flavorjones/loofah">Loofah</a> née Dryopteris (@brynary)</li>
+<li><a href="https://github.com/nakajima/slidedown">Slidedown</a> (@nakajima)</li>
+<li>Merb (in their test suite)</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>But</h2>
+
+<p>People liked to argue a lot about XML library benchmarks in 2008.</p>
+
+<p>And people loved Hpricot.</p>
+</div>
+      <div class='step' >
+    
+<p>Lots of people had opinions on benchmarks:</p>
+
+<ul>
+<li><a href="https://webcache.googleusercontent.com/search?q=cache:http://www.rubyinside.com/ruby-xml-performance-benchmarks-1641.html">Ruby Inside</a></li>
+<li><a href="https://blog.engineyard.com/2009/xml-parsing-in-ruby">Engine Yard</a></li>
+<li><a href="http://www.patricktulskie.com/2009/03/libxml-ruby-vs-nokogiri-vs-hpricot/">This guy</a></li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p>Here are some BS benchmarks:</p>
+<pre><code class='prettyprint '>For an html snippet 2374 bytes long ...
+                          user     system      total        real
+regex * 1000          0.160000   0.010000   0.170000 (  0.182207)
+nokogiri * 1000       1.440000   0.060000   1.500000 (  1.537546)
+hpricot * 1000        5.740000   0.650000   6.390000 (  6.401207)
+
+it took an average of 0.0015 seconds for Nokogiri
+it took an average of 0.0064 seconds for Hpricot
+
+For an html snippet 97517 bytes long ...
+                          user     system      total        real
+regex * 10            0.100000   0.020000   0.120000 (  0.122117)
+nokogiri * 10         0.310000   0.020000   0.330000 (  0.322290)
+hpricot * 10          3.190000   0.300000   3.490000 (  3.502819)
+
+it took an average of 0.0322 seconds for Nokogiri
+it took an average of 0.3503 seconds for Hpricot
+</code></pre></div>
+      <div class='step' >
+    
+<p>In retrospect, largely pointless, other than driving us to fix
+bottlenecks more quickly.</p>
+
+<div class=notes>
+
+Much like publicly debating which movie star is hotter drives the
+celebrity to get plastic surgery.
+
+</div>
+</div>
+      <div class='step' >
+    
+<p>&lt;tangent class=&quot;personal&quot;&gt;</p>
+</div>
+      <div class='step' >
+    
+<p>Late 2008, I was introduced to Pivotal Labs by a fan of Nokogiri.</p>
+
+<p><img src="images/nakajima.png" alt="nakajima"></p>
+</div>
+      <div class='step' >
+    
+<p>I was hired largely on the basis of my open-source work.</p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/highfive-trans-pivotal.png" alt="high five"></p>
+
+<div class=notes>
+
+Pause for consideration.
+
+</div>
+</div>
+      <div class='step' >
+    
+<p>&quot;I can&#39;t imagine hiring someone that I didn&#39;t know through open source.&quot;</p>
+
+<p>&mdash; <em><a href="http://david.heinemeierhansson.com/arc/000505.html">DHH, 2005</a></em></p>
+</div>
+      <div class='step' >
+    
+<p>&quot;Open source is your farm system. Use it!&quot;</p>
+
+<p>&mdash; <em><a href="http://www.slideshare.net/bcantrill/surge2013">Brian Cantrill at Joyent, 2013</a></em></p>
+</div>
+      <div class='step' >
+    
+<p>Pivotal regularly receives applications without a link to a GitHub
+profile, or references to public or open-source work.</p>
+</div>
+      <div class='step' >
+    
+<p>&lt;/tangent&gt;</p>
+</div>
+      <div class='step' >
+    
+<p>Then, in August 2009, this tweet:</p>
+
+<p><img src="images/why-tweet.png" alt="why-tweet"></p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/why_self_portrait.png" alt="why"></p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/why-tweet.png" alt="why-tweet"></p>
+
+<div class=notes>
+
+This is also a theme running through his recent manifesto.
+
+I love _why, but I just don't agree with this sentiment. If we're not
+constantly looking for ways to improve, why are we in this business?
+
+We miss you, _why.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h1>The Dawn of JRuby</h1>
+</div>
+      <div class='step' data-z=1000>
+    
+<h2>Show of hands, please.</h2>
+
+<ul>
+<li>Ruby (1.8.6 .. 2.0.0)</li>
+<li>JRuby</li>
+<li>Rubinius</li>
+<li>IronRuby? Other?</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>2009 Fact:</h2>
+
+<p>JRuby didn&#39;t fully support the C extension API.</p>
+
+<p>This was a problem for JRubyists who wanted to use Nokogiri.</p>
+</div>
+      <div class='step' >
+    
+<h2>I had a dream</h2>
+
+<p>One codebase that ran on MRI, Rubinius and JRuby.</p>
+</div>
+      <div class='step' >
+    
+<h1>My FFI Phase</h1>
+
+<p><img src="images/Monet-Sunflower.jpg" alt="sunflower-phase"></p>
+
+<div class=notes>
+
+What's FFI?
+
+</div>
+</div>
+      <div class='step' >
+    
+<p><strong>F</strong>oreign <strong>F</strong>unction <strong>I</strong>nterface</p>
+
+<p>Ruby calling native C code directly.</p>
+
+<div class=notes>
+
+A better implementation of what DL meant to do.
+
+</div>
+</div>
+      <div class='step' >
+    <pre><code class='prettyprint ruby'>attach_function :xmlReadMemory,
+                [:string, :int, :string, :string, :int],
+                :pointer
+
+...
+
+module Nokogiri
+  module XML
+    class Document < Node
+      def self.read_memory(string, url, encoding, options)
+        wrap_with_error_handling do
+          LibXML.xmlReadMemory(string, string.length, url, encoding, options)
+        end
+      end
+    end
+  end
+end
+</code></pre></div>
+      <div class='step' >
+    
+<p><img src="images/pony.jpg" alt="pony"></p>
+
+<p>Shout out to Wayne Meissner (@wmeissner).</p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/alltheccodes.jpg" alt="rewrite"></p>
+
+<p>I spent January to May 2009 doing this.</p>
+</div>
+      <div class='step' >
+    
+<h2>Meaningful Statistic</h2>
+
+<p>It took <strong>3,049</strong> lines of Ruby/FFI code</p>
+
+<p>to reproduce <strong>4,150</strong> lines of C code.</p>
+
+<div class=notes>
+
+That's not great for a language that's way more powerful than C.
+
+And it was painful ...
+
+</div>
+</div>
+      <div class='step' >
+    
+<h2>PAIN:</h2>
+
+<h2>Writing C in Ruby</h2>
+
+<p><img src="images/ffi-example-1b.png" alt="ffi-1"></p>
+</div>
+      <div class='step' >
+    
+<h2>PAIN:</h2>
+
+<h2>&quot;Segfault-driven development&quot;</h2>
+
+<p>Development was handicapped by lack of compile-time checking.</p>
+</div>
+      <div class='step' >
+    
+<h2>PAIN:</h2>
+
+<h2>Portable string handling is hard.</h2>
+
+<p>JVM GC edge cases.</p>
+</div>
+      <div class='step' >
+    
+<h2>PAIN:</h2>
+
+<h2>FFI code not any clearer than C.</h2>
+
+<p>Requires you think in C and translate to Ruby.</p>
+</div>
+      <div class='step' >
+    
+<h2>I DO NOT WANT</h2>
+
+<p><img src="images/ffi-example-2b.png" alt="ffi-2"></p>
+</div>
+      <div class='step' >
+    
+<h2>PAIN:</h2>
+
+<h2>Big performance penalty.</h2>
+
+<p>Though FFI is reportedly much faster these days, serializing data and
+calling through the FFI stack is always going to be slower than a
+native function call.</p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/ffi-chart-1.png" alt="ffi-chart-1"></p>
+</div>
+      <div class='step' >
+    
+<h2>PAIN:</h2>
+
+<h2>&quot;Harassment-driven development&quot;</h2>
+
+<p>Let me tell you a story about RubyConf 2009.</p>
+</div>
+      <div class='step' >
+    
+<h2>FFI Lessons</h2>
+
+<ol>
+<li><strong>If you care about performance</strong>, you need to write native extensions</li>
+<li><div style="color: #ccc"><strong>If you care about multi-platform</strong>, you need to support at least two codebases</div></li>
+<li><div style="color: #ccc"><strong>If you don&#39;t care about either</strong>, then FFI is for you!</div></li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h2>FFI Lessons</h2>
+
+<ol>
+<li><strong>If you care about performance</strong>, you need to write native extensions</li>
+<li><strong>If you care about multi-platform</strong>, you need to support at least two codebases</li>
+<li><div style="color: #ccc"><strong>If you don&#39;t care about either</strong>, then FFI is for you!</div></li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h2>FFI Lessons</h2>
+
+<ol>
+<li><strong>If you care about performance</strong>, you need to write native extensions</li>
+<li><strong>If you care about multi-platform</strong>, you need to support at least two codebases</li>
+<li><strong>If you don&#39;t care about either</strong>, then FFI is for you!</li>
+</ol>
+
+<div class=notes>
+
+Worth noting that you may not care about performance unless you're
+doing millions of function calls.
+
+As a counter-example, Martin Bosslet is using FFI in Krypt and loving
+it, because generally cryptographic functions are called once are are
+CPU-intensive once in native-land.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h2>All these choices suck.</h2>
+
+<p><img src="images/choices.png" alt="choices"></p>
+</div>
+      <div class='step' >
+    
+<h2>Outcomes</h2>
+
+<ol>
+<li>Killed the FFI port.</li>
+<li>Unpublished blog post.</li>
+<li>:`(</li>
+</ol>
+</div>
+      <div class='step' >
+    
+<p><img src="images/ffi-add-and-delete.png" alt="whoa"></p>
+</div>
+      <div class='step' >
+    
+<p>&quot;Portability is for people who cannot write new programs.&quot;</p>
+
+<p>&mdash; <em>Linus Torvalds</em></p>
+
+<div class=notes>
+
+I wasn't willing or able to write a "new program" for JRuby -- I
+wanted to use the libxml2 port everywhere.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h2>Enter Sergio</h2>
+</div>
+      <div class='step' >
+    
+<h2>Sergio Arbeo (@serabe).</h2>
+
+<p>Spanish college student.</p>
+
+<p>Spiked on a pure-Java port over GSOC 2009.</p>
+</div>
+      <div class='step' >
+    
+<p>It (mostly) worked.</p>
+
+<p><img src="images/dont-believe.jpg" alt="believe"></p>
+</div>
+      <div class='step' >
+    
+<h2>Ruby Bounty</h2>
+
+<p>A Ruby Bounty was created to finish up a pure-Java port, using Xerces
+and NekoHTML.</p>
+
+<p><br></p>
+
+<p>$625 was the largest Bounty ever at the time.</p>
+
+<div class=notes>
+
+Roger Pack started the Ruby Bounty program.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h2>The Money Men</h2>
+
+<p>Ruby Bounty contributors:</p>
+
+<ul>
+<li>Aaron Patterson (@tenderlove)</li>
+<li>Mike Dalessio (@flavorjones)</li>
+<li>Darrin Eden (@dje)</li>
+<li>Charles Nutter (@headius)</li>
+<li>Tony Arcieri (@tarcieri)</li>
+<li>Sergio Arbeo (@serabe)</li>
+<li>Roger Pack (@rdp)</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>Awesome people took it across the finish line</h2>
+
+<p>Ruby Bounty winners:</p>
+
+<ul>
+<li>Pat Mahoney (@pmahoney)</li>
+<li>Yoko Harada (@yokolet)</li>
+<li>Charles Nutter (@headius)</li>
+<li>Sergio Arbeo (@serabe)</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>Meaningless Statistic</h2>
+<pre><code class='prettyprint '>$ sloccount ext lib
+
+Totals grouped by language
+(dominant language first):
+
+java:          9206 (50.72%)
+ansic:         4758 (26.22%)
+ruby:          3932 (21.67%)
+yacc:           253 (1.39%)
+</code></pre></div>
+      <div class='step' >
+    
+<h2>Meaningless Statistic</h2>
+
+<p><img src="images/zomg-java.png" alt="zomg-java"></p>
+</div>
+      <div class='step' >
+    
+<h2>Meaningful Statistic</h2>
+
+<p><img src="images/ffi-chart-2.png" alt="ffi-chart-2"></p>
+</div>
+      <div class='step' >
+    
+<p>For a flavor of the zeitgeist, check out <a href="https://www.ruby-forum.com/topic/202559">this awesome ruby-talk thread</a></p>
+
+<p><br></p>
+
+<p>Three general opinions expressed:</p>
+
+<ol>
+<li>Do it in pure Ruby and fix the implementations&#39; performance problems! <span style='color: red'>✘ See REXML!</span></li>
+<li>Do it with FFI! <span style='color: red'>✘ Threw it away!</span></li>
+<li>Do it native! <span style='color: green'>✔ ← THIS.</span></li>
+</ol>
+
+<div class=notes>
+
+Even in 2009, there was still confusion and debate over how we should
+support JRuby.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h1>Installation</h1>
+
+<div class=notes>
+
+Remember our FAQ? ...
+
+</div>
+</div>
+      <div class='step'  data-x=1000>
+    
+<h2>FAQ</h2>
+
+<ol>
+<li>What is Nokogirl?</li>
+<li>What is Nokogiri?</li>
+<li>OMG, isn&#39;t that boring?</li>
+<li>What does &quot;Nokogiri&quot; mean?</li>
+<li><strong>I can&#39;t install Nokogiri on Mac OSX 10.8.4 running MacPorts.</strong></li>
+</ol>
+</div>
+      <div class='step'  data-x=1000>
+    
+<h2>FAQ</h2>
+
+<ol>
+<li>What is Nokogirl?</li>
+<li>What is Nokogiri?</li>
+<li>OMG, isn&#39;t that boring?</li>
+<li>What does &quot;Nokogiri&quot; mean?</li>
+<li><strong>I can&#39;t install Nokogiri on X running Y.</strong></li>
+</ol>
+</div>
+      <div class='step' >
+    
+<p>Hard for different reasons on different platforms.</p>
+
+<p><br></p>
+
+<p>But, basically: dependencies.</p>
+</div>
+      <div class='step' >
+    
+<p>Let&#39;s do this in chronological order:</p>
+
+<ol>
+<li>Windows</li>
+<li>JRuby</li>
+<li>Everybody else</li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h2>Windows Problems</h2>
+
+<p>Nobody has a build toolchain.</p>
+
+<p>Nobody has libxml2 installed on their system.</p>
+</div>
+      <div class='step' >
+    
+<h2>Installation solution</h2>
+
+<p>Cross-compile and package DLLs with the gem:</p>
+
+<ul>
+<li>libxml2</li>
+<li>libxslt</li>
+<li>libiconv</li>
+<li>zlib</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p>&quot;Fat Binary&quot; Gems</p>
+<pre><code class='prettyprint '>$ ls -l gems
+total 21652
+-rw-r--r-- 1 miked 9870336 Mar 11 17:31 nokogiri-1.5.7-x86-mingw32.gem
+-rw-r--r-- 1 miked 9870336 Mar 11 17:31 nokogiri-1.5.7-x86-mswin32-60.gem
+-rw-r--r-- 1 miked  221184 Mar 11 17:31 nokogiri-1.5.7.gem
+</code></pre>
+<div class=notes>
+
+10MB versus 220KB
+
+</div>
+</div>
+      <div class='step' >
+    
+<p><strong>Fat</strong> because we have to compile against multiple rubies:</p>
+
+<ul>
+<li>Ruby 1.8.7</li>
+<li>Ruby 1.9.3</li>
+<li>Ruby 2.0 (as of nokogiri 1.5.7)</li>
+</ul>
+
+<div class=notes>
+
+Going to get even fatter once we finish support for 64-bit Windows.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h2>Windows Support</h2>
+
+<p><a href="https://github.com/luislavena">Luis Lavena</a> (<a href="https://twitter.com/luislavena">@luislavena</a>) supports the Windows build toolchain basically single-handedly.</p>
+
+<ul>
+<li><code class='inline prettyprint'>rake-compiler</code> - builds native extensions
+n* <code class='inline prettyprint'>mini_portile</code> - builds autoconf packages</li>
+<li>infinite patience</li>
+</ul>
+
+<p>He rules!</p>
+</div>
+      <div class='step'  data-z=1000>
+    
+<h2>Show of hands</h2>
+
+<p>Any Ruby Windows developers out there?</p>
+</div>
+      <div class='step' >
+    
+<p>We could use some Windows peeps to help support the platform.</p>
+
+<p><br></p>
+
+<p>Tweet me, maybe: @flavorjones</p>
+</div>
+      <div class='step' >
+    
+<h2>JRuby Problems</h2>
+
+<p>Nokogiri&#39;s JRuby port uses specific libraries:</p>
+
+<ul>
+<li><code class='inline prettyprint'>isorelax</code></li>
+<li><code class='inline prettyprint'>jing</code></li>
+<li><code class='inline prettyprint'>nekodtd</code> and <code class='inline prettyprint'>nekohtml</code></li>
+<li><code class='inline prettyprint'>xerces</code></li>
+</ul>
+
+<p>These may not be installed on the target system.</p>
+</div>
+      <div class='step' >
+    
+<h2>Installation solution</h2>
+
+<p>Build and package <code class='inline prettyprint'>jar</code> files!</p>
+<pre><code class='prettyprint '>$ ls lib/*jar
+lib/isorelax.jar
+lib/jing.jar
+lib/nekodtd.jar
+lib/nekohtml.jar
+lib/xercesImpl.jar
+</code></pre></div>
+      <div class='step' >
+    
+<p>The JRuby gem is also a &quot;Fat Binary&quot;</p>
+<pre><code class='prettyprint '>$ ls -l gems
+total 21652
+-rw-r--r-- 1 miked 2204160 Mar 11 17:31 nokogiri-1.5.7-java.gem
+-rw-r--r-- 1 miked 9870336 Mar 11 17:31 nokogiri-1.5.7-x86-mingw32.gem
+-rw-r--r-- 1 miked 9870336 Mar 11 17:31 nokogiri-1.5.7-x86-mswin32-60.gem
+-rw-r--r-- 1 miked  221184 Mar 11 17:31 nokogiri-1.5.7.gem
+</code></pre>
+<div class=notes>
+
+Though still not as fat as the windows gems.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h2>MRI Problems</h2>
+
+<p>Unlike most C extensions, we have unwieldy external dependencies:</p>
+
+<ul>
+<li>libxml2</li>
+<li>libxslt</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>LAME.</h2>
+
+<ul>
+<li>everyone has different libxml2 versions installed</li>
+<li>... in different places</li>
+<li>... with different (possibly buggy) behavior</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>PAIN:</h2>
+
+<h2>FOR YOU</h2>
+
+<p><img src="images/installation.png" alt="installation"></p>
+</div>
+      <div class='step' >
+    
+<h2>PAIN:</h2>
+
+<h2>FOR ME</h2>
+<pre><code class='prettyprint c'>int is_2_6_16(void)
+{
+  return (strcmp(xmlParserVersion, "20616") <= 0) ? 1 : 0 ;
+}
+
+if (   reparentee->type == XML_TEXT_NODE
+    && pivot->type      == XML_TEXT_NODE
+    && is_2_6_16(
+   ) {
+  /* work around a string-handling bug in libxml 2.6.16.
+     we'd rather leak than segfault. */
+  pivot->content = xmlStrdup(pivot->content);
+}
+</code></pre></div>
+      <div class='step' >
+    
+<h2>libxml 2.9.x</h2>
+
+<p>Currently the default for homebrew.</p>
+
+<p>Xpath query bug breaks CSS queries.</p>
+
+<p><br></p>
+
+<p>(This was very recently <a href="https://bugzilla.gnome.org/show_bug.cgi?id=695699">fixed</a>.)</p>
+
+<div class=notes>
+
+This put me over the edge. I was not going to write a new CSS query
+parser implementation to work around a bug in libxml2.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h2>&quot;Wait.&quot;</h2>
+
+<p>&quot;Didn&#39;t you <strong>just say</strong> that <code class='inline prettyprint'>mini_portile</code> will compile autoconf
+projects and bind to them at gem installation time?&quot;</p>
+
+<div class=notes>
+
+Compilation at gem install-time is totally not what mini_portile was
+meant to be used for.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h2>Nokogiri 1.6.0</h2>
+
+<p><img src="images/orange_cadbury_egg_inside_1.jpg" alt="inside"></p>
+
+<p>Packages libxml2 and libxslt inside the gem.</p>
+</div>
+      <div class='step' >
+    
+<h2>Good For You</h2>
+
+<p>Installation Just Works™.</p>
+
+<p>(You can still use your system libraries if you really want to.)</p>
+</div>
+      <div class='step' >
+    
+<h2>Good For Me</h2>
+
+<p>I can lock Nokogiri&#39;s logic to a specific version of libxml2, lowering
+support and testing burden.</p>
+
+<div class=notes>
+
+I may or may not actually do this.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h2>&quot;Fat Source&quot;</h2>
+
+<p><img src="images/mugatu.jpg" alt="mugatu"></p>
+
+<h2>Naming Things is Easy!</h2>
+</div>
+      <div class='step' >
+    
+<h1>The Future</h1>
+</div>
+      <div class='step' >
+    
+<p>Nokogiri 2.0 roadmap up at <a href="https://github.com/sparklemotion/nokogiri/blob/master/ROADMAP.md">github.com/sparklemotion/nokogiri</a></p>
+</div>
+      <div class='step' >
+    
+<h2>2.0 Roadmap Highlights</h2>
+
+<p>Improving APIs:</p>
+
+<ul>
+<li>better serialization / pretty-printing</li>
+<li>better <code class='inline prettyprint'>Node</code> attributes API</li>
+<li>CSS query parsing (pseudo-selectors and JQuery compat)</li>
+<li>better custom XPath handler API</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>2.0 Roadmap Highlights</h2>
+
+<p>Addressing architectural issues:</p>
+
+<ul>
+<li>faster SAX parsing (see the <a href="http://blog.flavorjon.es/2011/05/fairy-wing-wrapup-nokogiri-performance.html">fairy-wing throwdown</a>)</li>
+<li><code class='inline prettyprint'>DocumentFragment</code> boogs</li>
+<li><code class='inline prettyprint'>Reader</code></li>
+<li>general encoding improvement</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h1>Call To Action</h1>
+</div>
+      <div class='step' >
+    
+<h1>Call to Action, Part I</h1>
+
+<p>If you&#39;re a Windows MRI user,</p>
+
+<h2>Get involved.</h2>
+
+<p>Demonstrate to gem maintainers that Windows MRI is worth supporting.</p>
+</div>
+      <div class='step' >
+    
+<h1>Call to Action, Part II</h1>
+
+<p>If you aren&#39;t already,</p>
+
+<h2>Contribute to open-source.</h2>
+
+<p>Start small. Iterate. Get lots of small wins. Make friends. Get a better job.</p>
+</div>
+      <div class='step' >
+    
+<h2>Nokogiri does one boring thing, but does it well.</h2>
+
+<p>You are annoyed by something small and boring somewhere. Go fix it.</p>
+
+<div class=notes>
+
+I wouldn't have my job, wouldn't be talking at conferences, and
+wouldn't be part of the Ruby community, if I hadn't started scratching
+my own itch.
+
+</div>
+</div>
+      <div class='step' >
+    
+<h1>Scratch your itch. Make the world a better place.</h1>
+
+<p>And get to hang out with @tenderlove.</p>
+</div>
+      <div class='step' >
+    
+<script src="js/impressConsole.js"></script>
+
+<script>
+    impressConsole().init();
+    // impressConsole().open(); // for console to open automatically
+</script>
+
+      </div>
+    <script src="js/impress.js"></script>
+    <script>impress().init();</script>
+  </body>
+</html>
+    

@@ -1,0 +1,11 @@
+
+crossed 10M in late april. about to cross 12M.
+
+related to martin's platform interoperability
+
+portability is a trade-off, often on performance. as you encounter the
+need to optimize on a platform, you should rewrite as necessary.
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+™

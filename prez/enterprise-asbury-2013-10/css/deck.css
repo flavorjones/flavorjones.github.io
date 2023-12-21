@@ -1,0 +1,93 @@
+/* Custom CSS for your KeyDown presentation here */
+
+/* Uncomment to turn off deck.js navigation */
+/* .deck-prev-link, .deck-next-link { */
+/*     display: none !important ; */
+/* } */
+
+/* Uncomment to turn off deck.js status */
+/*.deck-status {*/
+    /*display: none;*/
+/*}*/
+
+.slide ul {
+  margin-left: 0 !important ;
+  padding-left: 0 !important ;
+  list-style: none ;
+}
+
+.slide.bullets ul {
+  padding-left: 2.5em !important ;
+  list-style: disc ;
+}
+
+.slide ol {
+  padding-left: 1.3em !important ;
+}
+
+h1, h2, h3 {
+  color: black !important ;
+  font-family: "Ubuntu" !important ;
+  padding-top: 0 !important ;
+}
+.full-background h1 {
+  color: #eee !important ;
+}
+
+.slide {font-family: "Ubuntu" !important ;}
+
+h1 {
+  font-size: 75px !important ;
+  margin-bottom: .2em !important ;
+}
+h2 {
+  font-size: 62px !important ;
+  margin-bottom: .2em !important ;
+}
+h3 {
+  font-size: 50px !important ;
+  margin-bottom: .2em !important ;
+}
+
+.question, .question * {
+   color: white !important ;
+   background-color: #646484  !important ;
+}
+
+.warn, .warn * {
+  font-weight: bold !important;
+  color: black !important ;
+  background-color: #ff0 !important ;
+}
+
+.bam, .bam * {
+   color: white !important ;
+   background-color: #224  !important ;
+}
+.deck-container a, .deck-container a:link {
+  color: #55f !important ;
+  text-decoration: none ;
+}
+
+.tangent, .tangent * {
+   color: white ! important ;
+   background-color: #242 !important ;
+}
+
+.newtopic, .newtopic * {
+   color: white !important ;
+   background-color: #822  !important ;
+}
+
+.advice, .advice * {
+   color: black  !important ;
+   background-color: skyblue  !important ;
+}
+
+.quote {
+   font-style: italic ;
+   padding-top: 20% ;
+   background-color: black !important ;
+   color: white !important ;
+   vertical-align: center ;
+}

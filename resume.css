@@ -1,0 +1,123 @@
+body
+{
+   font-size     : 10.5pt ;
+   font-family   : Ubuntu, Helvetica, Arial, Geneva, sans-serif;
+   max-width     : 80rem ;
+   margin        : 2rem 4rem ;
+}
+
+.title
+{
+   font-weight  : bold ;
+   margin       : .5rem 0 .25rem ;
+}
+
+.info .title
+{
+   font-size    : 1.6rem ;
+}
+
+.info table tr td
+{
+   font-size    : 1rem ;
+   padding-left : 1.5rem ;
+}
+
+.info .statement
+{
+   margin               : 1rem 0 .5rem ;
+   font-style           : italic ;
+}
+
+.section .title
+{
+   font-size     : 1.4rem ;
+   color         : #666 ;
+   border-bottom : 1px solid #aaa ;
+   max-width     : 20rem ;
+   margin-top    : .75rem ;
+}
+
+.section .section .title
+{
+   font-size     : 1.3rem ;
+   color         : #797 ;
+   border-bottom : none ;
+   max-width     : 100% ;
+   margin-top    : .5rem ;
+}
+
+.job
+{
+   padding-left         : 1.5rem ;
+   margin               : .75rem 0 ;
+}
+
+.section .job .title, 
+.section .section .job .title
+{
+   font-size     : 1.2rem ;
+   color         : #000 ;
+   border-bottom : none ;
+   max-width     : 100% ;
+}
+
+.joblet
+{
+   margin-top          : .25rem ;
+   margin-bottom       : .75rem ;
+   /* margin-left         : 1rem ; */
+}
+
+.joblet.only
+{
+   margin-bottom       : 0 ! important ; 
+}
+
+.joblet .description
+{
+}
+
+.joblet .learned
+{
+   font-style           : italic ;
+   font-size            : 90% ;
+   padding-left         : 1rem ;
+   margin               : .25rem 0 ;
+}
+
+li
+{
+   margin               : .3rem 0 ;
+}
+
+dl
+{
+   margin               : 0 ;
+   padding-left         : 1rem ;
+}
+
+dt
+{
+   display              : inline ;
+   font-weight          : bold ;
+   margin-right         : .5rem ;
+}
+
+dd
+{
+   display              : inline ;
+   margin               : 0 ;
+}
+
+dd:after
+{
+   content: "" ;
+   display: block ;
+   margin-bottom        : .5rem ;
+}
+
+p
+{
+   display              : inline ; /* fucking haml markdown filter */
+}

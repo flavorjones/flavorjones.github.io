@@ -1,0 +1,15 @@
+.reveal section img {
+  border: none;
+}
+
+h1, h2, h3, h4 { text-transform: none !important; }
+
+.reveal pre code {
+   max-height: none;
+   width: 100%;
+}
+
+.reveal pre {
+   width: 100%;
+   overflow: hidden;
+}

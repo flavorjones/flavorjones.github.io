@@ -1,0 +1,34 @@
+body {
+   font-family: Arial ;
+}
+
+pre code {
+   font-size: .6em ;
+   font-family: monospace ;
+}
+
+#track > div .content h1,
+#track > div .content h2,
+#track > div .content h3
+{
+  margin-bottom: .25em ;
+  padding-bottom: 0px ;
+}
+
+small {
+   font-size: .6em ;
+}
+
+pre {
+   padding-top: .6em ;
+   padding-left: 1em ;
+}
+
+pre code {
+   font-size: .5em ;
+}
+
+ul, ol {
+   padding-top: .6em ;
+   padding-bottom: .6em ;
+}

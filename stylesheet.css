@@ -1,0 +1,88 @@
+body {
+   overflow: hidden ;
+   padding-bottom: 2em ;
+   margin: .5em ;
+   font-family: Ubuntu ;
+   font-size: 22pt ;
+   font-weight: bold ;
+   letter-spacing: -1px ;
+}
+#container {
+   display: none ;
+}
+a {
+   text-decoration: none ;
+   color: #777 ;
+}
+a:hover {
+   color: #779 ;
+}
+p {
+   margin: .5em 0 .5em 0 ;
+}
+h2 {
+   font-size: 30pt ;
+   color: #797 ;
+   margin-bottom: 0px;
+}
+
+dl {
+   margin: 0px ;
+}
+dt {
+   font-size: 16pt ;
+   font-weight: bold ;
+}
+dd {
+   font-size: 14pt ;
+   font-weight: normal ;
+   letter-spacing: 0px ;
+   padding-bottom: 5px ;
+}
+
+.normal {
+  font-weight: normal ;
+  font-size: 16pt ;
+  line-height: 1.5em ;
+}
+
+#frontpage {
+   max-width: 30em ;
+}
+
+#frontpage dt {
+   font-size: 14pt ;
+   float: left ;
+   clear: left ;
+   width: 7em ;
+}
+#frontpage dd {
+   margin: 0 ;
+   padding: 0 ;
+   float: left ;
+}
+
+.small {
+   font-size: 18pt ;
+}
+
+.shh {
+   color: #ddd ;
+   font-size: smaller ;
+}
+
+.go-right {
+   vertical-align: bottom ;
+   text-align: right ;
+   float: right ;
+}
+
+.go-left {
+   vertical-align: bottom ;
+   text-align: left ;
+   float: left ;
+}
+
+.indent-a-bit {
+  padding-left: 1em ;
+}

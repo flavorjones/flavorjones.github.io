@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>embracing change (as an Organization)</title>
+    <link rel="stylesheet" href="./css/reveal.css" />
+    <link rel="stylesheet" href="./css/theme/moon.css" id="theme" />
+    <link rel="stylesheet" href="./css/highlight/zenburn.css" />
+    <link rel="stylesheet" href="./css/print/paper.css" type="text/css" media="print" />
+    <link rel="stylesheet" href="./_assets/slides.css" />
+
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template">
+
+## embracing change
+
+### (as an Organization)
+
+<br>
+<br>
+
+mike dalessio
+
+vp eng @ pivotal
+
+he/him
+
+<br>
+
+_press "s" for speaker notes_
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-background="assets/listen-without-prejudice.jpg" data-background-size="contain" -->
+
+<aside class="notes"><p>I&#39;m not going to be giving you scads of good advice today. My talk today is about my personal experience, and the journey my co-workers and I have been on for the last seven years, and how we work and how we learn, and more importantly how we&#39;re reconsidering how we work and learn in a changing world.</p>
+<p>Instead of good advice, I&#39;m going to share some vocabulary I&#39;ve been using to talk about team and company context, and the ways in which that context is likely to change. Hopefully this will be helpful for you to frame your own conversations about your own journeys.</p>
+<p>A lot of what I&#39;m going to talk about today has to do with being agile, and what that means for a large organization. That word has been overloaded over the years and might be triggering for some of you. You may have already formed opinions on whether it&#39;s helpful or whether it&#39;s a gimmick. All I ask is that temporarily let go of any preconceived notions you might have already formed.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+![logo](assets/pivotal_logo.png)
+
+<aside class="notes"><p>I work for a company called Pivotal. You may not know who we are, but if you do, it&#39;s possible you know us not because of what we build, but because of how we build it.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+![xp](assets/xp-explained.jpg)
+
+<aside class="notes"><p>We&#39;ve been called the &quot;reference implementation of eXtreme Programming&quot; which means we do things like pair programming, test-driven development, continuous integration, short iterations, and retrospectives.</p>
+<p>Your teams probably use some of these practices, but Pivotal is known for having adopted a strong, rigorous approach to these practices, and so we do them intensely, and we do them <em>all the time</em>.</p>
+<p>Well, we <em>used</em> to do them all the time. We still do them <em>most</em> of the time, but the fact is that our practices and perspectives changed along with our context, and that&#39;s kind of what this talk is about.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+![logo](assets/logo_blue_200x72px.png)
+
+<aside class="notes"><p>Before 2013, Pivotal was a boutique software consultancy called &quot;pivotal labs&quot;. But our context has changed since then, and we&#39;ve become, primarily, a product company (albeit, one with agile consulting roots).</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+![logo](assets/pcf-on-dark.png)
+
+<aside class="notes"><p>Our best selling product is Pivotal Cloud Foundry, and that&#39;s what I work on.</p>
+<p>PCF is a PaaS, a platform-as-a-service, which means it&#39;s a large, highly-available distributed system that you can run on-prem. There are a lot of challenges in building and supporting software like this, and our context has changed dramatically as the architecture and technology has evolved over time, and our customers&#39; expectations have gotten higher for performance and scale.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## pivotal cloud R&D
+
+510 people (360 engineers)
+
+90 teams
+
+8 offices + remotes
+
+across 8 TZs
+
+<aside class="notes"><p>Another big context change has been growth. Pivotal Cloud Foundry started as a dozen pivots, mostly agile consultants, all co-located in SF.</p>
+<p>Today, we&#39;re pretty big (at least, it&#39;s the biggest team I&#39;ve ever led), and notably I think it&#39;s likely we&#39;re the largest XP team anywhere, and by most metrics we&#39;ve been incredibly successful (or incredibly lucky). We have a couple hundred million in recurring revenue and our customers are mostly F500 enterprises, and they love our software.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+# context
+
+<aside class="notes"><p>As we grew, and as our products got more complicated, and as our business model pivoted, those changes in context meant we needed to re-examine our practices and our perspectives. To the point where I&#39;m now doing remarkably little engineering, and instead am focusing nearly all my energy on helping us plan to adapt.</p>
+<p>While some practices changed, some things remained timeless. For example, the following phrase has carried over from our consulting days:</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## "It depends."
+
+<aside class="notes"><p>This phrase, as frustrating as it is to hear as the question-asker, is at the heart of nearly everything that Pivotal delivery teams do. Sound judgement always needs to take into account the <strong>context</strong> in which things are happening.</p>
+<p>This same sentiment is also present in other forms of this statement, like:</p>
+<ul>
+<li>&quot;What are you trying to accomplish?&quot;</li>
+<li>&quot;Who are we building this for?&quot;</li>
+<li>&quot;When do you need it by?&quot;</li>
+</ul>
+<p>Context not only determines <em>what</em> you build, it should determine <em>how</em> you build it.</p>
+<p>Ok, so our context is changing, and context is important. But &quot;context&quot; is a pretty fuzzy word.</p>
+<p>Let&#39;s build up some shared vocabulary so we can have a more meaningful conversation.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## Values
+
+<aside class="notes"><p>Taking from &quot;XP Explained&quot; here, Values are universal.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## Values
+
+* Communication.
+* Simplicity.
+* Feedback.
+* Courage.
+* Respect.
+
+<aside class="notes"><p>These are the values named in &quot;XP Explained&quot;, and frankly these are all pretty good values for life, not just for software development.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## Values
+
+<span class="fragment fade-in">↑</span>
+
+## <span class="fragment fade-in">Principles</span>
+
+<span class="fragment fade-in">↑</span>
+
+## <span class="fragment fade-in">Practices</span>
+
+<span class="fragment fade-in">![bridge](assets/xp-bridge.png)</span>
+
+<aside class="notes"><p>But these are so high level! How is that helping anybody?</p>
+<p>The book bridges from Values to day-to-day behaviors by projecting Values ...</p>
+<p>... into a particular domain, like Software Engineering, and you can generate Principles.</p>
+<p>Project those principles into a very specific team context and you can derive Practices.</p>
+<p>The metaphor used the in the book is that principles are a bridge between high-level values and very specific practices.</p>
+<p>Sometimes this is pretty clear:</p>
+<ul>
+<li>value: Feedback</li>
+<li>principle: Mutual Benefit</li>
+<li>practices: Pair-programming</li>
+</ul>
+<p>but many other practices can be challenging to trace back through a Principle, so this feels handwavy to me.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+A Practice is a __Path__
+
+![path](assets/twisty-path.png)
+
+<span class="fragment fade-in">towards a __Goal__</span>
+
+<aside class="notes"><p>I much prefer to think of Practices as &quot;things we do&quot; to successfully achieve a Goal. Usually that Goal is a Value, but sometimes goals are in the service of more concrete things, like shipping on time, a.k.a. Predictability.</p>
+<p>In any case, I think we can all agree that rigorously following a practice that doesn&#39;t provide some benefit or progress towards a goal is silly. It&#39;s figuratively a path that doesn&#39;t lead anywhere.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+A Practice is __just one possible Path of many__
+
+![path](assets/Three_paths_from_A_to_B.png)
+
+towards a __Goal__
+
+<aside class="notes"><p>It&#39;s important to remember that, even though we&#39;ve got certain strong opinions about how to build product, there are plenty of ways to generate high-quality software and positive customer outcomes.</p>
+<p>Kent Beck had a great story about coming out of retirement to work at Facebook and being blown away at how differently they worked than he expected. He held a seminar on TDD and exactly zero people showed up. He had to reset his expectations and deal with his new context, which is that Facebook had pretty much ignored everything he&#39;d ever said about software development and had adopted completely different practices, but were still successful (for some definition of the word).</p>
+<p>The path you&#39;d follow while hiking depends on your local context. Obstacles like hills and rivers. Also things like the temperature, your supply of water, whether you have blisters, and how capable your hiking partners are. Sure, there&#39;s probably a well-worn trail, and that&#39;s usually going to be your best bet.</p>
+<p>Similarly, it&#39;s great to have XP&#39;s strong &quot;standard practices&quot; to fall back on. But if you&#39;ve got local context that requires slightly different practices (or even greatly different practices), we&#39;re obligated to explore a bit.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-background="assets/the-pivotal-way.small.jpg" data-background-size="contain" -->
+
+<aside class="notes"><p>In 2013 or so a group of Pivots wanted to publish a book named &quot;The Pivotal Way&quot; containing a curated selection of blog posts about core practices. Our Founder and CEO was not a fan, and his main objection was that the phrase &quot;pivotal way&quot; had a parochial sense about it, that everything we did was approved or required, and that didn&#39;t seem right to him.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: class="emoji" -->
+
+The
+
+## ![airquote](assets/airquote.svg) Pivotal Way ![airquote](assets/airquote.svg)
+
+is made up of practices ...
+
+<span class="fragment fade-in">that happened to work</span>
+
+<span class="fragment fade-in">for people at some point in the past</span>
+
+<span class="fragment fade-in">in a specific context.</span>
+
+<span class="fragment fade-in">YMMV!</span>
+
+<aside class="notes"><p>The &quot;Pivotal Way&quot; is made up of activities that happened to work for Pivots at some point in the past in a specific context.</p>
+<p>Maybe to put it another way: blindly following the practices does not guarantee success if you&#39;re applying solutions appropriate for one context in another context that demands different solutions.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+The
+
+# Pivotal Way
+
+* "Do what works."
+* "Do what's right."
+* "Be kind."
+
+<br>
+<span class="fragment fade-in">
+(Values, not Practices)
+</span>
+
+<aside class="notes"><p>So the outcome from that failed book idea is what, at least partially, led our CEO to try to express what he thought the underlying principles or values behind our practices are.</p>
+<p>Notably, &quot;do what works&quot; is first. Use practices if they work. Don&#39;t use practices if they don&#39;t work. Invent new practices if you identify a need.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+# context is queen
+
+<aside class="notes"><p>All of which is to say, your local context should determine your team behaviors and practices.</p>
+<p>Have we done a good job of building vocabulary to talk about different context? What do I even mean by context? This still feels handwavy.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: class="has-footnote" -->
+
+![3x](assets/kent-beck-3x.png)
+
+<span class="footnote">
+https://twitter.com/sketchingsm/status/900657774455029760
+</span>
+
+<aside class="notes"><p>I want to spend a minute talking about 3x, which is another Kent Beck thing. This is helpful to describe context for larger organizations, not just for individual teams, which is where this talk is headed.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: class="has-footnote" -->
+
+![3x](assets/3x-model-diagram.png)
+
+<span class="footnote">
+https://twitter.com/sketchingsm/status/1006102947686768642
+</span>
+
+<aside class="notes"><p>So the idea here is that teams and their successful products go through three phases.</p>
+<p>During the &quot;explore&quot; phase, the team is doing a series of experiments to try to find good ideas. Dealing with narrowing a huge problem space, iterating through the solution space, etc. Code gets thrown away quickly and everyone needs to feel safe failing and learning as they go.</p>
+<p>During &quot;expand&quot;, in which the product has been found valuable by a needy market, there are a series of bottlenecks that need to get broken through. Something is always on fire. Large growth rates and high pressure means that calculated risks need to be taken, and &quot;failure is not an option.&quot;</p>
+<p>Finally, during &quot;extract&quot;, things settle down a bit, economies of scale kick in, and the game becomes about small performance improvements and establishing processes and procedures to mitigate risks and avoid &quot;screwing it up.&quot;</p>
+<p>In my mind, the classic XP practices really sing in the late-explore-to-early-expand phases. It sets teams up for quick iterations, and avoids spending time on things like documentation. It equips teams to survive the pressures of crunch time, and sets them up to healthily avoid heroism and unsustainable behaviors. It allows them to make the transition from experimentation into expansion by deferring decisions, doing the &quot;simplest thing that could possibly work&quot;, and seeing an emergent design.</p>
+<p>CF as a product has been in expansion for the past few years; but I think is comfortably settling into the extraction phase now. APIs between teams are stable, opening the door to using API-Driven-Development. We invest heavily in things we didn&#39;t need before, like technical documentation, telemetry, observability. We&#39;re worried about the maintenance on components and subsystems that don&#39;t need much new feature velocity. We should be concerned about preserving context around decisions via a ADRs (Architecture Decision Records).</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: class="has-footnote" -->
+
+![fractal](assets/fractal-3x.jpg)
+
+<span class="footnote">
+https://twitter.com/AntonyMarcano/status/1098833135595339779
+</span>
+
+<aside class="notes"><p>Now what I just said was a description of PAS as a product (and possibly PCF as an organization), which is huge and encompasses 500+ people on 90+ teams. But the 3x process is going on at a smaller scale within individual teams.</p>
+<p>So each team has its own context depending on whether they&#39;re exploring the next big thing, or extracting the old thing.</p>
+<p>And people might have preferences as to where they want to live on this spectrum. Some people love love love the freedom and learning of the exploration phase, and some people love love love the optimization problems of the extraction phase. Others will love the unpredictability and fast feedback loops of the expansion phase.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: class="has-footnote" -->
+
+![3x](assets/3x-payoff.jpg)
+
+<span class="footnote">
+https://twitter.com/AntonyMarcano/status/951760348436226048
+</span>
+
+<aside class="notes"><p>More importantly, there are practices and behaviors that are appropriate for extract that are inappropriate for explore, and vice versa.</p>
+<p>For example, in the early stages of explore, it probably doesn&#39;t make sense to test-drive. The likelihood of throwing away the code is high, and so you want to make that code as cheap and quick as possible to generate. And so you willingly take on the debt of no tests for the benefit of getting something simple in front of users more quickly.</p>
+<p>Conversely, in the extract phase, avoiding documentation is no longer feasible. You can do a lot by generating documentation from tests and code, but for a large-scale enterprise product, you need documentation written by humans for humans. Maybe a better example is the need to start adopting standard libraries and tooling, which would generally be considered a premature optimization by teams in the Explore or Expand phases. At scale, the wins you get from consistency across the code base and across teams starts to beat the wins you&#39;d get from empowering individual teams to choose their own adventure.</p>
+<p>The real problems start when people and practices evolved for Extract end up getting used for Explore or Expand. This is often what happens in consulting engagements with large enterprise clients. &quot;Water-scrum-fall&quot; is a fun name for what happens in these cases.</p>
+<p>To some extent, my organization has done the opposite, which is to take practices suitable for Explore/Expand and we&#39;re now using them (or iterating on them) in Extract. Maybe a good example of this is the feedback we consistently get in employee survey results about &quot;undue delay in decision making,&quot; which in my mind is due to our emphasizing communication, collaboration, and consensus in a way that worked well for small- to medium-sized teams, but is perhaps less optimal for a 500-person organization.</p>
+<p>I&#39;ll come back to decision-making in a bit.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: class="has-footnote" -->
+
+![3x](assets/3x-overlay.jpg)
+
+<span class="footnote">
+https://twitter.com/AntonyMarcano/status/840183991449845761
+</span>
+
+<aside class="notes"><p>Finally, I want to note that most healthy companies have actually got a few things going on at once, all of which might be in a different 3X context. This is often called a &quot;portfolio investment&quot; approach, where you have cash flow from Extract funding new work that&#39;s in Explore, and building a pipeline of maturing products.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+![ok](assets/it-will-be-ok.gif)
+
+<aside class="notes"><p>Explore can cause some real anxiety for people used to Extract. I have seen how frustrating it can be for many people and teams, because Explore tends to be open-ended journeys of discovery, and as a result it &quot;feel squishy.&quot;</p>
+<p>Take a deep breath, it&#39;ll be OK. That anxiety is because you&#39;re in a new context. Just make sure you adjust your expectations.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+# context is queen
+
+## <span class="fragment fade-in">and it's always changing,</span>
+
+<span class="fragment fade-in">
+and much of that change is unpredictable.
+</span>
+
+<aside class="notes"><p>My primary point with all this is that our context is always changing. Teams will migrate on the 3X maturity spectrum, as will products, the people organizations and entire companies. My hope is that by providing this vocabulary around our contexts, we can all better evaluate and change our practices.</p>
+<p>What&#39;s more interesting though, is that I&#39;ve only talked through some of the <strong>predictable</strong> bits of our context that can change. There&#39;s a lot going on, though, that is <strong>unpredictable</strong> and that can lead to disruptive changes in our business or technology.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## the only constant is change
+
+<div class="fragment fade-in">
+technology is changing rapidly
+</div>
+
+<div class="fragment fade-in">
+our competition is evolving rapidly
+</div>
+
+<div class="fragment fade-in">
+competitors are repositioning themselves
+</div>
+
+<aside class="notes"><p>Calling out the unpredictable changes facing Pivotal today:</p>
+<ul>
+<li>Seeing new tech get invented at a dizzying speed. k8s. istio. firecracker. knative.</li>
+<li>Seeing the competition evolve - RE:Invent every year is evidence of that. public clouds offering on-prem solutions is more evidence.</li>
+<li>Seeing competitors reposition: IBM buying RedHat is evidence.</li>
+</ul>
+</aside></script></section><section  data-markdown><script type="text/template">
+### this is scary!
+
+<aside class="notes"><p>I&#39;m not afraid to say that all this scares me a bit. Lots could happen to make Pivotal fail.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+### how will we survive?
+
+<span class="fragment fade-in">
+we need to be able to respond to change<br>faster than our competitors.
+</span>
+
+
+<aside class="notes"><p>We&#39;re a relatively small company compared to our competition. What do we need to do to beat our competitors?</p>
+<p>The answer is the same as it was for our mammalian ancestors during the Mesozoic era ...</p>
+<p>We need to out-execute companies 10x or 100x our size. We&#39;ll need to focus and we&#39;ll need to make extremely good decisions. We&#39;ll need to be able respond to these changes faster than our competitors.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+become an
+
+## Organization<br>That Embraces Change™
+
+<aside class="notes"><p>We&#39;ve been able to do this so far really well, but given that I&#39;m trying to be inspiring for the people I work with, I&#39;d like to formalize it and give it a name. This is my organizational north star.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-background="assets/good-for-the-company.jpg" data-background-size="contain" -->
+
+<aside class="notes"><p>Everything I do these days is colored by the question on a big banner hanging in my head: will this enable us to better respond to change? Every decision I make, everything I see, is through this lens, and I encourage all my co-workers to do the same.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: class="has-footnote" -->
+
+what does an OTEC<sup>*</sup> look like?
+
+<br>
+
+<span class="fragment fade-in larger">
+`¯\_(ツ)_/¯`
+</span>
+
+<br>
+
+<span class="fragment fade-in">
+Values ← Principles ← Practices
+</span>
+
+<span class="footnote-bottom">
+<sup>*</sup> Organization That Embraces Change
+</span>
+
+<aside class="notes"><p>We&#39;re a little bit in uncharted territory here. Again, there are many paths to this goal, but not all of them are consistent with our values. I think a little bit about most of Silicon Valley tech giant practices (which of course I&#39;ve only heard of second-hand) but there seems like there&#39;s a lot of pressure to work unsustainably, and there have been stories of multiple teams set up to compete against each other on building a product.</p>
+<p>On the macro level, that does enable responding to change, but it&#39;s not something that is aligned with our values.</p>
+<p>And, so, taking a cue from XP explained again, let&#39;s talk about the values we hold dear, and try to build an organization in support of those values.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+_some_
+
+## "Values" of OTEC
+
+- retention of knowledgable employees
+- diversity at all levels of the organization
+- healthy and empowered teams
+- mindset of experimentation
+- user focus
+- communication and collaboration
+
+<aside class="notes"><ul>
+<li>retention: because growth is slow without risking our values and culture. and ramp-up times are long.</li>
+<li>diversity: because collaboration is only useful if there are multiple points of view represented.</li>
+<li>healthy teams: to continue to deliver software, to make sound decisions, and to be able to improve and provide feedback</li>
+<li>experimentation: always be iterating and improving</li>
+<li>user focus: customer outcomes is the definition of success</li>
+<li>c&amp;c: within Pivotal and with customers</li>
+</ul>
+</aside></script></section><section  data-markdown><script type="text/template">
+_some_
+
+## "Practices" of OTEC
+
+- psych safety training
+- clear and just skill levels which evolve over time
+- comp plans incentivize inclusive behavior
+- "stay interviews"
+- investing in managers
+- acknowledge and learn from failure
+
+<aside class="notes"><p>Some of these are aspirational.</p>
+<p>Each is valuable in and of itself. but there&#39;s a deeper principle involved, which is that they enable and support organizational agility.</p>
+<p>We should especially talk about how we&#39;ve failed and are failing, so teams can cheaply learn what&#39;s worked and what hasn&#39;t worked; and so that teams who aren&#39;t failing know that they aren&#39;t failing.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## know your failure modes
+
+</script></section><section  data-markdown><script type="text/template">
+## know your failure modes
+
+### good advice for distributed systems.
+
+<br>
+
+### also good advice for people organizations.
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+### failure mode #1:<br>The Tightly Coupled System
+
+Command and Control / "Leadership will tell you what to do."
+
+<div class="fragment fade-in plus">
+Decisions get made quickly.
+</div>
+
+<div class="fragment fade-in delta">
+Decisions made by people unfamiliar with the situation.
+</div>
+
+<div class="fragment fade-in delta">
+Teams can only comply or rebel
+</div>
+
+<div class="fragment fade-in delta">
+Feedback loops may wither and die.
+</div>
+
+<div class="fragment fade-in">
+<i>Brittle in the face of disruptive change.</i>
+</div>
+
+
+<aside class="notes"><p>There&#39;s a failure mode that I want to call out, which is that a very natural and healthy response to short-term needs and long decision-making times is for someone in charge to make an executive decision and hand that decision down to teams.</p>
+<p>There are advantages to this, which is that we get the proximate thing done quickly. But I&#39;m not convinced it&#39;s worth the trade-off. Even if the decision was a sound one, which is unlikely ... eventually teams will feel disempowered as instructions can only be met with compliance or rebellion. As a result, feedback loops wither and die from disuse or burned trust.</p>
+<p>This compounds when we start missing opportunities to deliver more value because people are no longer talking or even paying attention. Which ends up making organizations like this extremely brittle in the face of disruptive change.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+### failure mode #2:<br>Outgrowing "Explore" practices
+
+Intensely collaborative / "We need consensus before we can move."
+
+<div class="fragment fade-in plus">
+Decisions made with all the relevant input.
+</div>
+
+<div class="fragment fade-in delta">
+Decisions take a long time to make.
+</div>
+
+<div class="fragment fade-in delta">
+Decisions don't always get made.
+</div>
+
+<div class="fragment fade-in delta">
+Opportunities get missed.
+</div>
+
+<div class="fragment fade-in">
+<i>Responds to change, but not quickly and not always.</i>
+</div>
+
+
+<aside class="notes"><p>Another failure mode, at the other end of the spectrum, is requiring a radical level of collaboration and consensus to make any decisions. On the plus side, the decisions that get made are usually sound because everybody has had input into the decision and potential solutions have been fully vetted.</p>
+<p>On the down side, though, it often takes longer, much longer, than we&#39;d like to emerge with a decision. It&#39;s sometimes not even clear who gets to make the decisions. As a result there&#39;s a high activation energy for most change, and change happens more slowly than we&#39;re truly capable of.</p>
+<p>We&#39;re probably closer to this end of the spectrum than I&#39;m comfortable with, and that shows up in the employee survey results around &quot;undue delay&quot; in decision making.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## "In medio stat virtus."
+
+&mdash; Horace<br>_(I think)_
+
+<aside class="notes"><p>So we&#39;re back to the old saying about virtue lying somewhere in the middle. We want to avoid disempowering teams, but we want to make sound decisions as quickly as possible.</p>
+<p>It&#39;s important to mention here that feedback loops, in the systems-thinking sense, can contribute to slow response times. I&#39;ve tried to keep top-of-mind that these loops are a <strong>strength</strong> of our organizational model, not a <strong>weakness</strong>.</p>
+<p>We shouldn&#39;t seek to eliminate feedback loops in the name of fast decision-making -- instead we should focus on making the feedback loops more efficient.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## calls to action
+
+### help OTEC make better, faster decisions
+</script></section><section  data-markdown><script type="text/template">
+## calls to action
+
+### help OTEC make better, faster decisions
+
+1. <span class="fragment-x fade-in">psych safety exercise & team health checks</span>
+2. <span class="fragment-x fade-in">name the anti-pattern</span>
+3. <span class="fragment-x fade-in">decision-making roles and timebox</span>
+4. <span class="fragment-x fade-in">break down silos:<br>share practices and concerns</span>
+5. <span class="fragment-x fade-in">run experiments</span>
+6. <span class="fragment-x fade-in">make your team retros effective</span>
+
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+## 1. psych safety exercises<br>&nbsp;&nbsp;&nbsp;&nbsp;& team health checks
+
+<span class="fragment fade-in">
+<a href="https://labs.spotify.com/2014/09/16/squad-health-check-model/">Spotify wrote about how they do this.</a>
+</span>
+
+
+<aside class="notes"><p>This is really number zero. Psychological safety is a necessary requirement for all the rest of these. The thing is, if you don&#39;t feel safe, you probably also don&#39;t feel safe saying you don&#39;t feel safe.</p>
+<p>So, to help teams who might not feel safe speaking up about the lack of safety, directors took every team, all 90 or so, through a psychological safety workshop.</p>
+<p>I&#39;m also really excited at how the team health assessment has evolved over time, and I&#39;m really pleased to see some teams doing them regularly. If you don&#39;t know what a team health assessment is, or are excited to talk about how we&#39;ve evolved it, please find me or Chris Hendrix after the conference.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+## 2. name the anti-pattern
+
+<div class="fragment fade-in">
+"I'd like to make sure the team is part of this decision."
+</div>
+
+<div class="fragment fade-in">
+"I wonder if we could make this decision more quickly if we pulled in a smaller set of stakeholders."
+</div>
+
+
+<aside class="notes"><p>Assuming you&#39;re feeling safe ...</p>
+<p>We tell teams, if you feel someone in leadership is disempowering a team by making a decision <em>for</em> them (and not <em>with</em> them), kindly but firmly call it out. Some language you might use for this is ...</p>
+<p>Similarly, if you feel like a decision needs to be made and it&#39;s dragging out or being made inefficiently, kindly but firmly call it out. Some language you might use for this is ...</p>
+<p>Then that should give you an opportunity to whip out ...</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+## 3. decision-making:<br>roles and timeboxing
+
+<div class="fragment fade-in">
+Who is responsible for making the decision?
+</div>
+
+<div class="fragment fade-in">
+Who needs to provide input and feel heard? Who simply needs to be informed?
+</div>
+
+<div class="fragment fade-in">
+"I'd like to make this decision by X."
+</div>
+
+<div class="fragment fade-in">
+"Can you disagree and commit?"
+</div>
+
+<aside class="notes"><p>There are lots and lots of decision-making frameworks, but they all come down to identifying what role people should have in the decision-making process. This could be as easy as determining: who makes the decision, who needs to be consulted, and who needs to be informed?</p>
+<p>In particular consider doing this before big meetings to keep attendance to a tractable number. People who only need to be consulted might be able to provide input beforehand and not attend, so long as what was discussed and decided is made completely transparent to them afterwards. You need to do both to avoid FOMO and potential resentment or us-versus-them thinking.</p>
+<p>If you&#39;re a decider, you might also want to try to erect a timebox to drive a decision. We&#39;ll never, ever have perfect information, and so a well-calculated timebox can help drive a healthy sense of urgency while still allowing &quot;just enough&quot; exploration or input, and drive out &quot;I disagree but I&#39;ll commit&quot;</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+## 4. break down silos:<br>share practices and concerns
+
+<div class="fragment fade-in">
+<a href="https://blog.pragmaticengineer.com/scaling-engineering-teams-via-writing-things-down-rfcs/"'>Uber wrote about how they do this.</a>
+</div>
+
+<div class="fragment fade-in">
+It doesn't have to just be for engineering challenges. What practices does one team follow that might be interesting to other teams?
+</div>
+
+
+<aside class="notes"><p>Some changes that affect a big chunk of the organization will likely still need some measure of consensus before they&#39;re enacted. Moving to shared tooling is an example.</p>
+<p>At Pivotal, we&#39;ve adopted an RFC model similar to what Uber wrote about.</p>
+<p>It doesn&#39;t need to be technical, either. I&#39;m talking to one team who has evolved their feedback process for each other.</p>
+<p>I want to drive better decisions, but I also want to preserve the results of experiments and iterations on our practices for other teams to organically discover in other places and at other times.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+## 5. run experiments
+
+<div class="fragment fade-in">
+we're investing in an Experimentation Toolkit to help teams and individuals run experiments
+</div>
+
+<aside class="notes"><p>We have an inspirational manager, Annie Sing, who recently took some time away from an engineering backlog to invest in building up a set of tools and principles that teams and individuals can use to drive alignment on problem statements, and then generate experiments that the team can evaluate and measure.</p>
+<p>The goal is to lower the cost of experimentation while maximizing the learning we can get and share across the organization, and to give people and teams some ceremonies around deciding when and how to experiment, and how to revisit a previous experiment even if it failed.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## 6. make your retros effective
+
+![fix](assets/fix-it-guy.gif)
+
+1. Identify a problem
+2. Fix it
+3. Repeat as necessary until it's been fixed
+
+</script></section><section  data-markdown><script type="text/template">
+## the retrospective<br>is a meta-practice
+
+based on the concept of Kaizen (改善),
+
+or "continuous improvement"
+
+<aside class="notes"><p>The retro is an agile practice that can create or destroy other agile practices.</p>
+<p>It&#39;s hypothetically possible to re-derive all the other practices through effective Retros ...</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+![retros](assets/retros.jpg)
+
+[Meta-agile:<br>Embrace change in how you embrace change.](https://2018-06-28_dublin-core-practices.cfapps.io)
+
+<aside class="notes"><p>This could be an entire other talk. In fact, it is.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+### effective retros
+
+* require high psychological safety (so fix that first)
+* are a forum to talk about challenges
+* should drive actionable changes
+
+<br>
+
+_Is your team running effective Retros?_
+
+_Are things getting better on your team?_
+
+
+<aside class="notes"><p>Retros need to be a forum where we can safely address problems and try to do better next week. Are things getting better on your team?</p>
+<p>If not, consider a team health assessment, maybe?</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+![book](assets/retros-book.jpg)
+
+</script></section><section  data-markdown><script type="text/template">
+### being meta-agile
+
+you're __authorized and obligated__ to change your practices or add new ones
+
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+### failure mode #3: Deadlock
+
+"We made a decision to do something new, but where will the people come from?"
+
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-background="assets/IMG_20190522_074330.jpg" data-background-size="contain" -->
+
+<aside class="notes"><p>So currently, most teams get their level of funding from the Boss Cloud. This worked great when it was 5 teams, but now we have 90 teams and this isn&#39;t scaling great anymore.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-background="assets/IMG_20190522_074434.jpg" data-background-size="contain" -->
+
+<aside class="notes"><p>So now when we need to work on something new, two bad things happen.</p>
+<p>One, the Boss Cloud needs to decide it, which is an example of failure mode 1, &quot;command and control&quot;. We&#39;d much rather that teams feel empowered to staff a new thing without having to appeal to authority; but in this structure, there&#39;s just no way for that to happen easily.</p>
+<p>Two, every other team is going to say &quot;no&quot; when they&#39;re asked to give up engineers to work on the new thing. Even if they understand the value, they&#39;ve got their own roadmap to deliver on, and that&#39;s a very human response to scarcity. It&#39;s also called the &quot;Capability Trap&quot;.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-background="assets/IMG_20190522_074803.jpg" data-background-size="contain" -->
+
+<aside class="notes"><p>There&#39;s a different model, though, that we&#39;ve started to implement, which are Programs. A Program is a team of teams working within a bounded context. That context could be a persona-focused domain, like Database User; or a tech-focused domain, like Networking. Each team tackles a different aspect within that bounded context. While each of these programs still derives their funding from the boss cloud ...</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-background="assets/IMG_20190522_074834.jpg" data-background-size="contain" -->
+
+<aside class="notes"><p>... the program has the ability to fund a new thing out of their current budget without any ceremony, and if that effort is validated, they can later ask for staffing from the boss cloud to support it.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-background="assets/IMG_20190522_075108.jpg" data-background-size="contain" -->
+
+<aside class="notes"><p>Using Programs has been so successful at managing these bounded contexts, that we&#39;re now looking at applying the same principles to the next layer of abstraction.</p>
+<p>Here&#39;s we&#39;ve got programs laid out with clear customer relationships, or consumer/producer relationships. Programs get their funding from other Programs, and the assumption is that the programs closest to the boss cloud are things we ship to actual paying customers.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-background="assets/IMG_20190522_075200.jpg" data-background-size="contain" -->
+
+<aside class="notes"><p>And when we need a new team, not only can the proximate Program fund it, then so can their dependent Programs fund it autonomously, and presumably without escalating to the boss cloud.</p>
+<p>This is probably really straightforward to most of you, but this is a pretty fundamental restructuring for us, we&#39;ve been flat forever.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+### failure mode #3: Deadlock
+
+* empower teams to decide on new investments
+* remove leadership from the decision tree
+* establish clear "customer" lines and use those for funding new work
+
+<br>
+<br>
+
+this helps us say "yes" to new things<br>and "no" to other things.
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-background="assets/wrap-it-up.gif" data-background-size="contain"-->
+
+</script></section><section  data-markdown><script type="text/template">
+## context is queen
+
+and should determine our practices.
+
+<aside class="notes"><p>Context needs to drive our practices. Seek to understand and articulate your context. Then make sure your practices are appropriate for that context.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## "Explore" is chaotic
+
+![hang](assets/hang-in-there.gif)
+
+Hang in there.
+
+</script></section><section  data-markdown><script type="text/template">
+## everything is changing<br>all the time
+
+<aside class="notes"><p>context is changing, business is changing, tech is changing. we need to be prepared to make sound decisions quickly</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## stay healthy
+
+![health](assets/mental-health.gif)
+
+<aside class="notes"><p>and a healthy people organization is critical for us to make changes. provide psychological safety for your teams. be prepared to delete code or kill projects. look forward to failing fast and learning. speak up when you see decisions being made poorly. talk about challenges on your team and don&#39;t be afraid to try new things.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+![good](assets/good-for-the-company.jpg)
+
+### "Does this help us respond to change?"
+
+<aside class="notes"><p>Do it if it supports learning and responding to change,</p>
+<p>Don&#39;t do it if it doesn&#39;t.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+Credits:
+
+* sketches from @sketchingSM - https://twitter.com/sketchingsm
+<br>
+<br>
+* sketches from @AnthonyMarcano - https://twitter.com/antonymarcano
+<br>
+<br>
+* emojis from https://twemoji.twitter.com/
+</script></section><section  data-markdown><script type="text/template">
+<!-- intentionally blank -->
+</script></section><section  data-markdown><script type="text/template"></script></section></div>
+    </div>
+
+    <script src="./js/reveal.js"></script>
+
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+      // Optional libraries used to extend on reveal.js
+      var deps = [
+        { src: './plugin/markdown/marked.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
+        { src: './plugin/markdown/markdown.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
+        { src: './plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: './plugin/zoom-js/zoom.js', async: true },
+        { src: './plugin/notes/notes.js', async: true },
+        { src: './plugin/math/math.js', async: true }
+      ];
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        dependencies: deps
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal.getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"transition":"fade","center":false,"controls":false}, queryOptions);
+    </script>
+
+    <script src="./_assets/slides.js"></script>
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+</html>

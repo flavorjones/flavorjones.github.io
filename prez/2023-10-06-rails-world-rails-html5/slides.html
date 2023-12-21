@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>Rails::HTML5</title>
+    <link rel="shortcut icon" href="./favicon.ico" />
+    <link rel="stylesheet" href="./dist/reset.css" />
+    <link rel="stylesheet" href="./dist/reveal.css" />
+    <link rel="stylesheet" href="./dist/theme/moon.css" id="theme" />
+    <link rel="stylesheet" href="./css/highlight/base16/zenburn.css" />
+
+    <link rel="stylesheet" href="./_assets/slides.css" />
+
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template">
+
+# Rails::HTML5
+
+## The Strange and Remarkable <br> Three-Year Journey
+
+Mike Dalessio (@flavorjones) / Rails World 2023
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+### whoami
+<!-- .element: style="text-align: center" -->
+
+<img alt="headshot" src="assets/nokogiri-mother-1-crop.png">
+<!-- .element: style="float: right; max-width: 20%;" -->
+
+Mike Dalessio / @flavorjones
+
+Director of Engineering @ Shopify
+
+I maintain the Rails sanitizer stack,
+<br>and I'm on the Rails security team.
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+<br>
+
+## 🤔 Puzzle 🤔
+<!-- .element: class="fragment" -->
+
+## 📝 Exposition! 📝
+<!-- .element: class="fragment" -->
+
+## ⚠ Danger ⚠
+<!-- .element: class="fragment" -->
+
+## 💪 Evolution 💪
+<!-- .element: class="fragment" -->
+
+<aside class="notes"><p>I&#39;m going to start with a security problem, a simplified version of real vulnerability reports filed against Rails.</p>
+<p>The problem touches a lot of software, so I&#39;m going to take you on a whirlwind tour of the software and specifications that are the pieces of the puzzle.</p>
+<p>Then I&#39;ll walk you through the solution to the problem and talk about why the existence of even a single solution is dangerous.</p>
+<p>So dangerous, that I went on a three-ish year journey to evolve the Rails sanitizer stack to have protections against a whole class of security vulnerabilities that you may not even know exists.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## 🤔 Puzzle 🤔
+
+
+![puzzle](assets/puzzle.png)
+
+<aside class="notes"><p>Can you devise a payload that will pass through a sanitizer that uses an HTML4 parser but is a
+security vulnerability in a browser that uses an HTML5 parser?</p>
+<p>This may not make much sense, so just so we all have the same context, i&#39;m going to do a quick deep
+dive on the concepts at work here.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## 🤔 Puzzle 🤔
+
+Can you devise a payload that will pass through a
+<span class="fragment highlight-green">sanitizer</span>
+that uses an HTML4 parser but is a
+<span class="fragment highlight-green">security vulnerability</span>
+in a browser that uses an HTML5 parser?
+
+<br>
+
+### *What is an HTML sanitizer?*
+<!-- .element: class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### *What is an HTML sanitizer?*
+
+> **HTML Sanitization** is the process of examining an HTML document and producing a new HTML
+> document that preserves only whatever tags are designated <u>"safe" and desired</u>.
+
+<small>(so sayeth Wikipedia)</small>
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *What is an HTML sanitizer?*
+
+### Imagine a blog post comment
+
+``` html[]
+Why won't you debate me?
+I've been unfailingly polite.
+```
+<!-- .element: data-id="transition" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *What is an HTML sanitizer?*
+
+### Formatting? OK, fine.
+
+``` html[]
+<b>Why won't you debate me?</b>
+I've been <em>unfailingly</em> polite.
+```
+<!-- .element: data-id="transition" -->
+
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *What is an HTML sanitizer?*
+
+### Some styling? OK, maybe this is still fine ...
+
+``` html[]
+<div style="background:red;">
+    <b>Why won't you debate me?</b>
+    I've been <em>unfailingly</em> polite.
+</div>
+```
+<!-- .element: data-id="transition" -->
+
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *What is an HTML sanitizer?*
+
+### THIS 👏 IS 👏 NOT 👏 OK 👏
+
+``` html[4-6]
+<div style="background:red;">
+    <b>Why won't you debate me?</b>
+    I've been <em>unfailingly</em> polite.
+    <script>
+        window.location.replace("http://evilhacker.com/");
+    __SCRIPT_END__
+</div>
+```
+<!-- .element: data-id="transition" -->
+
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *What is an HTML sanitizer?*
+
+### You could make it safe by <u>*escaping*</u> unsafe tags ...
+
+``` html[4,6]
+<div style="background:red;">
+    <b>Why won't you debate me?</b>
+    I've been <em>unfailingly</em> polite.
+    &lt;script&gt;
+        window.location.replace("http://evilhacker.com/");
+    &lt;/script&gt;
+</div>
+```
+<!-- .element: data-id="transition" -->
+
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *What is an HTML sanitizer?*
+
+### … or by <u>*pruning*</u> the unsafe section entirely
+
+``` html[4-6]
+<div style="background:red;">
+    <b>Why won't you debate me?</b>
+    I've been <em>unfailingly</em> polite.
+
+
+
+</div>
+```
+<!-- .element: data-id="transition" -->
+
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *What is an HTML sanitizer?*
+
+### The Rails HTML Sanitizer
+
+``` ruby
+sanitizer = Rails::Html::Sanitizer.safe_list_sanitizer.new
+sanitizer.sanitize(...)
+# => <div>
+#     <b>Why won't you debate me?</b>
+#     I've been <em>unfailingly</em> polite.
+#
+#      window.location.replace("http://evilhacker.com/");
+#
+#    </div>
+```
+
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *What is an HTML sanitizer?*
+
+### The Rails HTML Sanitizer Stack
+
+Since 2013, the stack has looked like:
+
+![stack](assets/stack.png)
+
+<aside class="notes"><p>Loofah was originally written by me and Bryan Helmkamp for Weplay</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *What is an HTML sanitizer?*
+
+### Cross Site Scripting attacks ("XSS")
+
+<small>https://cheatsheetseries.owasp.org/cheatsheets/XSS_Filter_Evasion_Cheat_Sheet.html</small>
+
+<div class="fragment">
+Some payloads try to exploit buggy parsers<br>or (ugh) regular expressions<sup>*</sup>:
+
+<pre><code>&lt;IMG """&gt;&lt;SCRIPT&gt;alert("XSS")&lt;/SCRIPT&gt;"\&gt;
+</code></pre>
+
+or
+
+<pre><code>&lt;&lt;SCRIPT>alert("XSS");//\&lt;&lt;/SCRIPT>
+</code></pre>
+
+<small>* please please please do not ever do this<small>
+</div>
+
+<aside class="notes"><p>Historically, many of these attacks focus on a particular parser or filter&#39;s behavior and targets it specifically.</p>
+<p>So the first step</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *What is an HTML sanitizer?*
+
+### Cross Site Scripting attacks ("XSS")
+
+<pre><code class="ruby">payload = %{&lt;IMG """&gt;&lt;SCRIPT&gt;alert("XSS")&lt;/SCRIPT&gt;"\&gt;}
+</code></pre>
+
+``` ruby[|1-6,10-99]
+frag = Nokogiri::HTML4.fragment(payload)
+# => @ Nokogiri::HTML4::DocumentFragment
+#    ├─ errors: (length: 1)
+#    │  └─ @ SyntaxError = "error parsing attribute name"
+#    └─ children: (length: 3)
+#       ├─ @ "img" Element (line: 1)
+#       ├─ @ "script" Element (line: 1)
+#       │  └─ children: (length: 1)
+#       │     └─ @ CDATA = "alert(\"XSS\")"
+#       └─ @ Text = "\"&gt;"
+
+frag.to_html
+# => "<img><script>alert(\"XSS\")__SCRIPT_END__\"&gt;"
+```
+<!-- .element data-id="code" -->
+
+<aside class="notes"><p>Nokogiri builds a tree out of the HTML tags, and then Loofah simply traverses the tree and
+removes any tags that aren&#39;t in the allowlist.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *What is an HTML sanitizer?*
+
+### Cross Site Scripting attacks ("XSS")
+
+<pre><code class="ruby">payload = %{&lt;IMG """&gt;&lt;SCRIPT&gt;alert("XSS")&lt;/SCRIPT&gt;"\&gt;}
+</code></pre>
+
+``` ruby[]
+frag = Loofah.html4_fragment(payload).scrub!(:prune)
+# => @ Loofah::HTML4::DocumentFragment
+#    ├─ errors: (length: 1)
+#    │  └─ @ SyntaxError = "error parsing attribute name"
+#    └─ children: (length: 2)
+#       ├─ @ "img" Element (line: 1)
+#       └─ @ Text = "\"&gt;"
+
+
+
+
+frag.to_html
+# => "<img>\"&gt;"
+```
+<!-- .element data-id="code" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *What is an HTML sanitizer?*
+
+### In summary
+
+An <u>*HTML Sanitizer*</u> is what stops bad actors from running javascript<sup>*</sup> in other users'
+browsers.
+
+It does this by parsing correctly, then removing unsafe nodes from the document tree.
+<!-- .element class="fragment" -->
+
+<br>
+<small>* and doing other bad things, too.</small>
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## 🤔 Puzzle 🤔
+
+Can you devise a payload that will pass through a
+<span class="fragment highlight-green" data-fragment-index="1">sanitizer</span>
+that uses an HTML4 parser but is a
+<span class="fragment highlight-green" data-fragment-index="1">security vulnerability</span>
+in a browser that uses an HTML5 parser?
+
+<br>
+
+### *What is an HTML sanitizer?*
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## 🤔 Puzzle 🤔
+
+Can you devise a payload that will pass through a sanitizer that uses an
+<span class="fragment highlight-green" data-fragment-index="1">HTML4 parser</span>
+but is a security vulnerability in a browser that uses an
+<span class="fragment highlight-green" data-fragment-index="1">HTML5 parser</span>?
+
+<br>
+
+### *What is an HTML sanitizer?* ☑
+<!-- .element class="fragment semi-fade-out" data-fragment-index="1" -->
+
+### *Let's talk about HTML standards.*
+<!-- .element class="fragment" data-fragment-index="2" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### *Let's talk about HTML standards.*
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *Let's talk about HTML standards.*
+
+# HTML 4.01
+
+## W3C Recommendation 24 December 1999
+
+<a href="http://www.w3.org/TR/html401" target="_blank">http://www.w3.org/TR/html401</a>
+
+<aside class="notes"><p>click on the link, scroll around a bit, show off the grammar, etc.</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *Let's talk about HTML standards.*
+
+# HTML 4.01
+
+cool cool cool
+
+## There is no guidance for error correction
+<!-- .element: class="fragment" -->
+
+<aside class="notes"><p>you may be aware that there is a lot of broken HTML on the internet</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *Let's talk about HTML standards.*
+
+### HTML4 Error correction?
+
+``` html
+<b>1<i>2</b>3</i>
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+``` html
+<b>1<i>2</b>3</i>
+```
+
+#### Nokogiri on CRuby (libxml2)
+
+``` ruby
+Nokogiri::VERSION_INFO["libxml"]["loaded"]
+# => "2.11.5"
+
+Nokogiri::HTML4.fragment("<b>1<i>2</b>3</i>").to_html
+# => "<b>1<i>2</i></b>3"
+```
+<!-- .element: class="fragment" -->
+
+#### Nokogiri on JRuby (nekohtml)
+
+``` ruby
+Nokogiri::VERSION_INFO["other_libraries"] \
+  ["net.sourceforge.htmlunit:neko-htmlunit"]
+=> "2.63.0"
+
+Nokogiri::HTML4.fragment("<b>1<i>2</b>3</i>").to_html
+# => "<b>1<i>2</i></b><i>3</i>"
+```
+<!-- .element: class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *Let's talk about HTML standards.*
+
+### HTML4 Error correction?
+
+Every parser may fix broken HTML4 differently
+
+> Some guiding principles Nokogiri tries to follow ...
+> be a **thin-as-reasonable layer** on top of the underlying parsers, and don't attempt to fix behavioral differences between the parsers.
+<!-- .element: class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *Let's talk about HTML standards.*
+
+## THE WORLD HAS MOVED ON FROM HTML4
+
+# 😅
+
+<aside class="notes"><p>I&#39;ve been using the <em>past tense</em> to refer to HTML4 parsers, because the world has moved on</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *Let's talk about HTML standards.*
+
+# HTML 5
+
+### aka
+
+## The HTML Living Standard
+
+<a href="https://html.spec.whatwg.org/multipage/" target="_blank">https://html.spec.whatwg.org/</a>
+
+<aside class="notes"><p>click on the link, scroll around a bit, show off the &quot;is this HTML5&quot;</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### *Let's talk about HTML standards.*
+
+# 🗣 👂
+
+## The HTML5 Spec
+<!-- .element class="fragment" -->
+
+is
+<!-- .element class="fragment" -->
+
+## a goddamned delight.
+<!-- .element class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### The HTML5 Spec is a delight
+
+#### It's got pseudo-code.
+
+It describes HTML syntax by specifying the parser's behavior ***as a state machine***.
+
+* <a target="_blank" href="https://html.spec.whatwg.org/multipage/#toc-syntax">HTML Syntax</a>
+* <a target="_blank" href="https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody">"in body" state</a>
+
+It's pseudo-code, and it's simple to translate into working code.
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### The HTML5 Spec is a delight
+
+#### It's got sparkle and wit.
+
+``` text
+I'm sure it does, I totally believe you.</sarcasm>
+```
+
+![sarcasm](assets/sarcasm.png)
+<!-- .element class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### The HTML5 Spec is a delight
+
+#### It's got sparkle and wit.
+
+> 1.9.1 How to read this specification
+>
+> This specification should be read like all other specifications. First, it should be read
+> cover-to-cover, multiple times. Then, it should be read backwards at least once. Then it should be
+> read by picking random sections from the contents list and following all the cross-references.
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### The HTML5 Spec is a delight
+
+#### It's got history.
+
+And it reads like a soap opera.
+
+<aside class="notes"><p>w3c had a utopian vision of everyone writing well-formed XHTML all the time</p>
+<p>but the browser maintainers knew that backwards compatibility and evolution was the way forward, so they created WHATWG around some guiding principles</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### The HTML5 Spec is a delight
+
+#### It's got history.
+
+WHATWG guiding principles:
+
+* technologies need to be backwards compatible, <!-- .element class="fragment" -->
+* specifications and implementations need to match even if this means changing the specification rather than the implementations, <!-- .element class="fragment" -->
+* specifications need to be detailed enough that implementations can achieve complete interoperability without reverse-engineering each other. <!-- .element class="fragment" -->
+
+<aside class="notes"><p>that&#39;s a pretty good set of principles</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### The HTML5 Spec is a delight
+
+#### It's got error correction instructions
+
+It <a href="https://html.spec.whatwg.org/multipage/parsing.html#parse-errors"
+target="_blank">standardizes errors</a>.
+
+It <a
+href="https://html.spec.whatwg.org/multipage/parsing.html#an-introduction-to-error-handling-and-strange-cases-in-the-parser"
+target="_blank">specifies algorithms to fix the document tree when errors are encountered</a>.
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### The HTML5 Spec is a delight
+
+#### It's actively being developed every day
+
+#### It has a test suite
+ <!-- .element class="fragment" -->
+
+I could go on but ⌚
+ <!-- .element class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## 🤔 Puzzle 🤔
+
+Can you devise a payload that will pass through a sanitizer that uses an HTML4 parser but is a
+security vulnerability in a browser that uses an HTML5 parser?
+
+<br>
+
+### *What is an HTML sanitizer?* ☑
+
+### *Let's talk about HTML standards.*<span class="fragment">☑</span>
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## 🤔 Puzzle 🤔
+
+## 📝 Exposition! 📝
+
+## ⚠ Danger ⚠
+
+## 💪 Evolution 💪
+
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## ⚠ Danger ⚠
+
+Can you devise a payload that will pass through a sanitizer that uses an HTML4 parser but is a
+security vulnerability in a browser that uses an HTML5 parser?
+
+- Rails has been using an HTML4-based sanitizer <!-- .element class="fragment" -->
+- Browsers are all HTML5 these days <!-- .element class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploit #1
+
+``` html
+<select>
+  <style>
+    <script>alert(1);__SCRIPT_END__
+  </style>
+</select>
+```
+
+``` ruby
+payload = "<select><style><script>alert(1);__SCRIPT_END__</style></select>"
+# => "<select><style><script>alert(1);__SCRIPT_END__</style></select>"
+
+result = Nokogiri::HTML4.fragment(payload).to_html
+# => "<select><style><script>alert(1);__SCRIPT_END__</style></select>"
+
+payload == result
+# => true
+```
+<!-- .element class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploit #1
+
+``` ruby
+payload = "<select><style><script>alert(1);__SCRIPT_END__</style></select>"
+Nokogiri::HTML4.fragment(payload)
+```
+
+``` text[|5,7,9]
+@ Nokogiri::HTML4::DocumentFragment
+├─ errors: (length: 1)
+│  └─ @ SyntaxError (line: 1, column: 45) = "ERROR: Element style embeds close tag"
+└─ children: (length: 1)
+   └─ @ "select" Element (line: 1)
+      └─ children: (length: 1)
+         └─ @ "style" Element (line: 1)
+            └─ children: (length: 1)
+               └─ @ CDATA = "<script>alert(1);__SCRIPT_END__"
+```
+<!-- .element class="fragment" -->
+
+There is no `<script>` tag for the sanitizer to remove!
+<!-- .element class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploit #1
+
+``` ruby
+payload = "<select><style><script>alert(1);__SCRIPT_END__</style></select>"
+
+# sanitizer returns it verbatim
+sanitizer = Rails::Html::Sanitizer.safe_list_sanitizer.new
+html4 = sanitizer.sanitize(payload, tags: %w[select style])
+# => "<select><style><script>alert(1);__SCRIPT_END__</style></select>"
+```
+<!-- .element: data-id="code2" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploit #1
+
+``` ruby
+payload = "<select><style><script>alert(1);__SCRIPT_END__</style></select>"
+
+# sanitizer thinks it's safe and returns it verbatim
+sanitizer = Rails::Html::Sanitizer.safe_list_sanitizer.new
+html4 = sanitizer.sanitize(payload, tags: %w[select style])
+# => "<select><style><script>alert(1);__SCRIPT_END__</style></select>"
+
+# emulate a browser loading the response
+html5 = Nokogiri::HTML5.fragment(html4)
+```
+<!-- .element: data-id="code2" -->
+
+``` text[|,5,7]
+@ Nokogiri::HTML5::DocumentFragment
+└─ children: (length: 1)
+   └─ @ "select" Element (line: 1)
+      └─ children: (length: 1)
+         └─ @ "script" Element (line: 1)
+            └─ children: (length: 1)
+               └─ @ Text = "alert(1);"
+```
+<!-- .element: class="fragment" data-id="code1" -->
+
+Uh oh.
+<!-- .element: class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploit #1
+
+What's going on here?
+
+``` ruby
+Nokogiri::HTML5.fragment(
+  "<select><style><script>alert(1);__SCRIPT_END__</style></select>"
+)
+# => "<select><script>alert(1);__SCRIPT_END__</select>"
+```
+<!-- .element: data-id="code2" -->
+
+``` text[5,7]
+@ Nokogiri::HTML5::DocumentFragment
+└─ children: (length: 1)
+   └─ @ "select" Element (line: 1)
+      └─ children: (length: 1)
+         └─ @ "script" Element (line: 1)
+            └─ children: (length: 1)
+               └─ @ Text = "alert(1);"
+```
+<!-- .element: data-id="code1" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploit #1
+
+What's going on here?
+
+- insertion mode: ["in body"](https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inbody)
+  - see "select"
+    - insert `select` tag into `body`
+    - move to ["in select" insertion mode](https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inselect)
+- insertion mode: "in select"
+  - see "style"
+    - **ignore tag and drop it**
+  - see "script"
+    - **insert `script` tag into `select`**
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploit #1
+
+What's going on here?
+
+``` html
+<select>
+  <style>
+    <script>alert(1);__SCRIPT_END__
+  </style>
+</select>
+```
+<!-- .element: data-id="code" -->
+
+HTML5 says `<style>` cannot be a child of `<select>`
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploit #1
+
+What's going on here?
+
+``` html
+<select>
+
+    <script>alert(1);__SCRIPT_END__
+
+</select>
+```
+<!-- .element: data-id="code" -->
+
+There's no longer a `<style>` tag to protect the `CDATA`, so it gets parsed as `PCDATA` content
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### How did we try to fix this?
+
+1. recursively sanitize CDATA
+2. prohibit both `style` and `select` in an allowlist
+3. escape `style` tags (e.g., `&lt;script&gt;`)
+
+None of these were great, TBH
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploit #2
+
+``` html
+<svg>
+  <style>
+    <script>alert(1);__SCRIPT_END__
+  </style>
+</svg>
+```
+<!-- .element class="fragment" -->
+
+#### Exploit #3
+
+``` html
+<math>
+  <style>
+    <img src=x onerror=alert(1)>
+  </style>
+</math>
+```
+<!-- .element class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploits #2 and #3
+
+Rely on `<svg>` and `<math>` which are
+
+## foreign contexts
+
+in HTML5
+
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploits #2 and #3
+
+### foreign contexts
+
+> Foreign content is a like a Swiss Army knife for breaking parsers and sanitizers.
+
+<small>-- Michał Bentkowski,<br>Chief Security Researcher, Securitum</small>
+
+<small>https://research.securitum.com/mutation-xss-via-mathml-mutation-dompurify-2-0-17-bypass/</small>
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploits #2 and #3
+
+What's going on here?
+
+``` ruby
+payload = "<math><style><img src=x onerror=alert(1)></style></math>"
+Nokogiri::HTML4.fragment(payload)
+```
+
+``` text[5,7,9]
+@ Nokogiri::HTML4::DocumentFragment
+├─ errors: (length: 1)
+│  └─ @ SyntaxError (line: 1, column: 18) = "ERROR: Tag math invalid"
+└─ children: (length: 1)
+   └─ @ "math" Element (line: 1)
+      └─ children: (length: 1)
+         └─ @ "style" Element (line: 1)
+            └─ children: (length: 1)
+               └─ @ CDATA = "<img src=x onerror=alert(1)>"
+```
+<!-- .element: class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Exploits #2 and #3
+
+What's going on here?
+
+``` ruby
+payload = "<math><style><img src=x onerror=alert(1)></style></math>"
+Nokogiri::HTML5.fragment(payload)
+```
+
+``` text[3,7,8]
+@ Nokogiri::HTML5::DocumentFragment
+└─ children: (length: 2)
+   ├─ @ "math" Element (@ Namespace (prefix: "math", href: "http://www.w3.org/1998/Math/MathML"))
+   │  ├─ namespace_definitions: (length: 1)
+   │  │  └─ @ Namespace (prefix: "math", href: "http://www.w3.org/1998/Math/MathML")
+   │  └─ children: (length: 1)
+   │     └─ @ "style" Element (@ Namespace (prefix: "math", href: "http://www.w3.org/1998/Math/MathML"))
+   └─ @ "img" Element (line: 1)
+      └─ attribute_nodes: (length: 2)
+         ├─ @ "src" Attr = "x"
+         └─ @ "onerror" Attr = "alert(1)"
+```
+<!-- .element: class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## ⚠ Danger ⚠
+
+This class of vulnerabilities has a name.
+
+### Mutation XSS ("mXSS")
+<!-- .element: class="fragment" -->
+
+All the parsers are spec-compliant! But the mismatch between HTML4 and HTML5 results in the tree being ***mutated*** to allow an XSS attack.
+<!-- .element: class="fragment" -->
+
+### 😟😨😢
+<!-- .element: class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## ⚠ Danger ⚠
+
+How do we fix this?
+
+### 💪 Evolve 💪 the Rails sanitizer to use HTML5.
+<!-- .element: class="fragment" -->
+
+<div>
+This entire class of problem goes away.
+
+<small><a href="https://github.com/flavorjones/loofah/blob/main/docs/2022-10-decision-on-cdata-nodes.md#long-term">flavorjones/loofah/docs/2022-10-decision-on-cdata-nodes.md</a></small>
+</div>
+<!-- .element: class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## 🤔 Puzzle 🤔
+
+## 📝 Exposition! 📝
+
+## ⚠ Danger ⚠
+
+## 💪 Evolution 💪
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## 💪 Evolution 💪
+
+![stack](assets/stack2.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### Let's talk about problems that feel overwhelming
+
+![stack](assets/stack2.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### Let's talk about problems that feel overwhelming
+
+![stack](assets/stack3.png)
+</script></section><section  data-markdown><script type="text/template">
+Sketch out what the top-most change might look like.
+
+``` patch
+# Action View
+  mattr_accessor :sanitizer_vendor, default: Rails::Html::Sanitizer
+
+# railties/lib/rails/application/configuration.rb
++ action_view.sanitizer_vendor = Rails::HTML5::Sanitizer
+```
+</script></section><section  data-markdown><script type="text/template">
+``` patch[|6]
+# Rails::Html::Sanitizer
+   module HTML5
++    class Sanitizer
++      class << self
++        def full_sanitizer
++          Rails::HTML5::FullSanitizer
++        end
++
++        def link_sanitizer
++          Rails::HTML5::LinkSanitizer
++        end
++
++        def safe_list_sanitizer
++          Rails::HTML5::SafeListSanitizer
++        end
++
++        def white_list_sanitizer # :nodoc:
++          safe_list_sanitizer
++        end
++      end
++    end
+   end
+```
+</script></section><section  data-markdown><script type="text/template">
+``` patch[|5,11-16|14]
+# Rails::Html::Sanitizer
++  module HTML5
++    class FullSanitizer < Rails::HTML::Sanitizer
++      include HTML::Concern::ComposedSanitize
++      include HTML::Concern::Parser::HTML5
++      include HTML::Concern::Scrubber::Full
++      include HTML::Concern::Serializer::UTF8Encode
++    end
++  end
+
+# Rails::HTML::Concern::Parser
++  module HTML5
++    def parse_fragment(html)
++      Loofah.html5_fragment(html)
++    end
++  end
+```
+</script></section><section  data-markdown><script type="text/template">
+``` patch[|8]
+# Loofah
++  def html5_fragment(*args, &block)
++    Loofah::HTML5::DocumentFragment.parse(*args, &block)
++  end
+
++  module Loofah
++    module HTML5 # :nodoc:
++      class Document < Nokogiri::HTML5::Document
++      end
++    end
++  end
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### Let's talk about problems that feel overwhelming
+
+![stack](assets/stack3.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### Let's talk about problems that feel overwhelming
+
+![stack](assets/stack4.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### Let's talk about problems that feel overwhelming
+
+- Explore from goals towards prerequisites
+- And execute in the inverse order
+
+# Mikado Method
+<!-- .element class="fragment" -->
+
+https://mikadomethod.info/
+<!-- .element class="fragment" -->
+
+<aside class="notes"><p>foreshadow that this happy path is an idealistic first draft</p>
+<ul>
+<li>nothing is actually this easy</li>
+<li>we&#39;ll have to explore and revert along the way</li>
+</ul>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### Let's talk about problems that feel overwhelming
+
+![yakshave](assets/yak-shave.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### Let's talk about problems that feel overwhelming
+
+Q: How do you eat an elephant?
+
+A: One bite at a time.
+<!-- .element class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+![stack](assets/stack2.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### 💪 Evolution 💪
+
+## Layers 1 and 2: Nokogiri HTML5 support
+
+August 2020 through June 2021
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## Choosing an html5 library
+
+![libxml](assets/libxml-support.png)
+</script></section><section  data-markdown><script type="text/template">
+## Choosing an html5 library
+
+![rfc](assets/html-rfc.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## Choosing an html5 library
+
+- validator.nu
+- Gecko (Mozilla's rendering engine)
+- Blink (Chrome's rendering engine)
+- libgumbo (via Nokogumbo)
+- gammo (a pure-ruby solution!)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## Choosing an html5 library
+
+### 👀 Nokogumbo and libgumbo 👀
+
+How does it work?
+
+<aside class="notes"><p>It&#39;s a DOM parser, it parses the document all in one go, and builds a tree data structure. Then it traverses that tree and builds the analogous libxml2 tree.</p>
+<p>Once that libxml2 tree is built, we treat it like any other document, so we can use libxml2&#39;s xpath searches (for example).</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-background="assets/decided.gif" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## Merging Nokogumbo
+
+![integration](assets/integration-epic.gif)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## Merging Nokogumbo
+
+# Human Factors
+
+## 📜 🥂 🫂 🙌
+
+<aside class="notes"><p>preserved git history, celebrated new nokogiri authors, many hands make the work light</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+## Thank you, Steve Checkoway!
+
+![steve](assets/mugshot4.jpg)
+
+<aside class="notes"><p>for maintaining libgumbo and the test suite, and for helping me maintain nokogiri</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## Merging Nokogumbo
+
+# Low risk work
+
+## ⚖ 🖥 👋
+
+<aside class="notes"><p>license terms, precompilation, shutting nokogumbo down</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Layers 1 and 2: Nokogiri HTML5 support
+
+# Naming
+
+### Introduce Nokogiri::HTML4
+
+because Nokogiri::HTML is ambiguous
+
+### Q: What should Nokogiri::HTML do?
+
+<aside class="notes"><p>Keeping in mind, libgumbo is only a DOM parser</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Layers 1 and 2: Nokogiri HTML5 support
+
+# Functionality
+
+## The namespace problem
+
+``` ruby
+Nokogiri::HTML5.fragment("<svg></svg>")
+# @ Nokogiri::HTML5::DocumentFragment
+# └─ children: (length: 1)
+#    └─ @ "svg" Element (line: 1, namespace: @ Namespace (prefix: "svg", href: "http://www.w3.org/2000/svg"))
+#       └─ namespace_definitions: (length: 1)
+#          └─ @ Namespace (prefix: "svg", href: "http://www.w3.org/2000/svg")
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+``` html
+<svg version="1.1" width="300" height="200">
+  <rect width="100%" height="100%" fill="red" />
+  <circle cx="150" cy="100" r="80" fill="green" />
+</svg>
+```
+
+``` ruby
+doc = Nokogiri::HTML5.fragment(svg)
+
+doc.css("rect") # => []
+
+doc.css("svg|rect", {"svg" => "http://www.w3.org/2000/svg"})
+# [@ "rect" Nokogiri::XML::Element (line: 2, namespace: @ Namespace (prefix: "svg", href: "http://www.w3.org/2000/svg"))
+# └─ attribute_nodes: (length: 3)
+#    ├─ @ "width" Attr = "100%"
+#    ├─ @ "height" Attr = "100%"
+#    └─ @ "fill" Attr = "red"
+# ]
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## Nokogiri compiles CSS queries
+
+into
+
+## XPath queries
+
+``` ruby
+Nokogiri::CSS.xpath_for("div / b:first-child")
+# => ["//div/b[count(preceding-sibling::*)=0]"]
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### The namespace problem
+
+## Use XPath's built-in local-name()?
+
+``` text
+      Comparison:
+      //span:
+          18922.5 i/s
+      //*[local-name()='span']:
+           1849.4 i/s - 10.23x  (± 0.00) slower
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### The namespace problem
+
+## Write custom XPath local-name-is()?
+
+``` text
+      Comparison:
+      //span:
+          18922.5 i/s
+      //*[nokogiri-builtin:local-name-is('span')]:
+           3190.6 i/s - 5.93x  (± 0.00) slower
+      //*[local-name()='span']:
+           1849.4 i/s - 10.23x  (± 0.00) slower
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## 🤔 Wildcard namespaces 🤔
+
+``` ruby
+Nokogiri::CSS.xpath_for("rect")
+# => ["//*:rect"]
+```
+</script></section><section  data-markdown><script type="text/template">
+![patch](assets/libxml-patch.png)
+</script></section><section  data-markdown><script type="text/template">
+``` text[4-5]
+      Comparison:
+      //span:
+          18922.5 i/s
+      //*:span:
+          18016.5 i/s - same-ish: difference falls within error
+      //*[nokogiri-builtin:local-name-is('span')]:
+           3190.6 i/s - 5.93x  (± 0.00) slower
+      //*[local-name()='span']:
+           1849.4 i/s - 10.23x  (± 0.00) slower
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+## The namespace problem solution
+
+``` ruby[|5,7,15]
+describe "builtins:always" do
+  let(:builtins) { Nokogiri::CSS::XPathVisitor::BuiltinsConfig::ALWAYS }
+  it "matches on the element's local-name, ignoring namespaces" do
+    if Nokogiri.libxml2_patches.include?("0009-allow-wildcard-namespaces.patch")
+      assert_xpath("//*:foo", parser.parse("foo"))
+    else
+      assert_xpath("//*[nokogiri-builtin:local-name-is('foo')]", parser.parse("foo"))
+    end
+  end
+end
+
+describe "builtins:never" do
+  let(:builtins) { Nokogiri::CSS::XPathVisitor::BuiltinsConfig::NEVER }
+  it "matches on the element's local-name, ignoring namespaces" do
+    assert_xpath("//*[local-name()='foo']", parser.parse("foo"))
+  end
+end
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Layers 1 and 2: Nokogiri HTML5 support
+
+# Performance
+
+## Serialization rewritten in C
+
+``` text[1,2]
+ruby 3.1.2p20 (2022-04-12 revision 4491bb740a) +YJIT C impl:
+      827.5 i/s
+ruby 3.1.2p20 (2022-04-12 revision 4491bb740a) +YJIT:
+       93.9 i/s - 8.81x  (± 0.00) slower
+ruby 3.1.2p20 (2022-04-12 revision 4491bb740a):
+       77.0 i/s - 10.75x  (± 0.00) slower
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Layers 1 and 2: Nokogiri HTML5 support
+
+# Performance
+
+## Ideas
+
+- Memory arena
+- Construct libxml2 tree directly
+</script></section><section  data-markdown><script type="text/template">
+#### Layers 1 and 2: Nokogiri HTML5 support
+
+## The finish line
+
+![release](assets/nokogumbo-release.png)
+</script></section><section  data-markdown><script type="text/template">
+#### Layers 1 and 2: Nokogiri HTML5 support
+
+# Retrospective
+
+👎 jruby implementation still needs to be done
+<!-- .element: class="fragment" -->
+
+😎 you are now the maintainer of an html5 parser
+<!-- .element: class="fragment" -->
+
+👏 ruby has better HTML5 support than other languages 🐍
+<!-- .element: class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### 💪 Evolution 💪
+
+![stack](assets/stack5.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### 💪 Evolution 💪
+
+## Layer 3: Loofah HTML5 support
+
+December 2022 through May 2023
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Layer 3: Loofah HTML5 support
+
+# API design
+
+Loofah documents subclass Nokogiri documents
+
+``` ruby
+module Loofah
+  module HTML
+    module Document < Nokogiri::HTML::Document
+    end
+  end
+end
+```
+<!-- .element data-id="code" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Layer 3: Loofah HTML5 support
+
+HTML → HTML4
+
+``` ruby
+module Loofah
+  module HTML4
+    module Document < Nokogiri::HTML4::Document
+    end
+  end
+end
+```
+<!-- .element data-id="code" -->
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Layer 3: Loofah HTML5 support
+
+Add HTML5
+
+``` ruby
+module Loofah
+  module HTML4
+    module Document < Nokogiri::HTML4::Document
+    end
+  end
+
+  module HTML5
+    module Document < Nokogiri::HTML5::Document
+    end
+  end
+end
+```
+<!-- .element data-id="code" -->
+</script></section><section  data-markdown><script type="text/template">
+Loofah::HTML4::Document → Nokogiri::HTML4::Document
+
+Loofah::HTML4::DocumentFragment → Nokogiri::HTML4::DocumentFragment
+
+Loofah::HTML5::Document → Nokogiri::HTML5::Document
+
+Loofah::HTML5::DocumentFragment → Nokogiri::HTML5::DocumentFragment
+
+Loofah.html4_document, Loofah.html5_document, et al
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Layer 3: Loofah HTML5 support
+
+# API design
+
+Expose all HTML4 and HTML5 classes and methods
+
+Defer the decision of "which one to use" to Rails::Html::Sanitizer
+</script></section><section  data-markdown><script type="text/template">
+``` text[|10-17]
+commit 69623162
+Author: Mike Dalessio <mike.dalessio@gmail.com>
+Date:   2023-04-02 09:47:50 -0400
+
+    feat: add HTML5 support
+
+ lib/loofah.rb                         |  37 ++-
+ lib/loofah/html5/document.rb          |  43 ++++
+ lib/loofah/html5/document_fragment.rb |  37 +++
+ test/html5/test_sanitizer.rb          | 119 ++++++---
+ test/integration/test_ad_hoc.rb       | 756 +++++++++++++++++++++++++++++++---------------------------
+ test/integration/test_html.rb         | 189 +++++++++------
+ test/integration/test_scrubbers.rb    | 703 ++++++++++++++++++++++++++++++------------------------
+ test/unit/test_api.rb                 | 144 ++++++-----
+ test/unit/test_encoding.rb            |   7 +
+ test/unit/test_scrubber.rb            | 160 +++++++++++--
+ test/unit/test_scrubbers.rb           |   7 +-
+ 11 files changed, 1342 insertions(+), 860 deletions(-)
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Layer 3: Loofah HTML5 support
+
+## The finish line
+
+![release](assets/loofah-release.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### 💪 Evolution 💪
+
+![stack](assets/stack5.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### 💪 Evolution 💪
+
+### Layer 4: Rails::Html::Sanitizer
+
+May 2023
+</script></section><section  data-markdown><script type="text/template">
+> Make the hard change easy, then make the easy change.
+
+<small>-- Kent Beck</small>
+</script></section><section  data-markdown><script type="text/template">
+``` text
+commit 688056e6
+Author: Mike Dalessio <mike.dalessio@gmail.com>
+Date:   2023-05-11 16:34:09 -0400
+
+    doc: set up .rdoc_options and start marking things :nodoc:
+
+commit 0a8e04b6
+Author: Mike Dalessio <mike.dalessio@gmail.com>
+Date:   2023-05-12 10:06:51 -0400
+
+    dep: remove rails-dom-testing
+    
+    Usage was removed in #156
+
+commit 4bb772eb
+Author: Mike Dalessio <mike.dalessio@gmail.com>
+Date:   2023-05-12 10:32:49 -0400
+
+    ci: add rubocop
+
+```
+</script></section><section  data-markdown><script type="text/template">
+``` text
+commit cd46ff38
+Author: Mike Dalessio <mike.dalessio@gmail.com>
+Date:   2023-04-23 16:56:44 -0400
+
+    test: add API coverage for Sanitizer singleton methods
+    
+    These are the methods used by Rails. Also move these methods into the
+    Sanitizer class definition.
+
+ lib/rails-html-sanitizer.rb | 24 ------------------------
+ lib/rails/html/sanitizer.rb | 18 ++++++++++++++++++
+ test/rails_api_test.rb      | 22 ++++++++++++++++++++++
+ 3 files changed, 40 insertions(+), 24 deletions(-)
+```
+</script></section><section  data-markdown><script type="text/template">
+``` text
+commit 829e74d0
+Author: Mike Dalessio <mike.dalessio@gmail.com>
+Date:   2023-04-23 16:40:45 -0400
+
+    prefactor: replace Loofah.scrub_fragment with the long form
+    
+    because we're preparing to extract fragment parsing
+
+ lib/rails/html/sanitizer.rb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+```
+</script></section><section  data-markdown><script type="text/template">
+``` text
+commit 836becdf
+Author: Mike Dalessio <mike.dalessio@gmail.com>
+Date:   2023-05-10 12:05:54 -0400
+
+    prefactor: extract orthogonal sanitizer methods
+    
+    - parse_fragment
+    - scrub
+    - serialize
+    
+    These are composed in each sanitizer's `#sanitize` method.
+    
+    We're preparing to make html4 and html5 variations and I'd like to use
+    mixins for code reuse.
+
+ lib/rails/html/sanitizer.rb | 61 ++++++++++++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 46 insertions(+), 15 deletions(-)
+```
+</script></section><section  data-markdown><script type="text/template">
+``` text
+commit 2ada04ee
+Author: Mike Dalessio <mike.dalessio@gmail.com>
+Date:   2023-05-11 16:36:20 -0400
+
+    refactor: extract scrubber logic into composable concerns
+    
+    The three concerns are:
+    
+    - fragment parsing
+    - scrubbing
+    - serialization
+    
+    These are combined in a fourth concern which implements a `#sanitize`
+    method that composes the other concerns like:
+    
+      serialize(scrub(parse_fragment(html)))
+    
+    This should enable us to easily add HTML5 fragment parsing in a
+    subsequent commit.
+```
+</script></section><section  data-markdown><script type="text/template">
+``` text
+commit 5836d1d2
+Author: Mike Dalessio <mike.dalessio@gmail.com>
+Date:   2023-05-11 17:15:50 -0400
+
+    naming: Rails::Html is now Rails::HTML
+    
+    but Rails::Html is an alias for backwards compatibility
+```
+
+``` text
+commit f03c34c0
+Author: Mike Dalessio <mike.dalessio@gmail.com>
+Date:   2023-05-11 17:59:25 -0400
+
+    test: reorganize sanitizer tests
+    
+    create a new test class for each sanitizer
+```
+</script></section><section  data-markdown><script type="text/template">
+``` ruby
+# commit ffb32dcf, the easy change
+module Loofah
+  module HTML5
+    class FullSanitizer < Rails::HTML::Sanitizer
+      include HTML::Concern::ComposedSanitize
+      include HTML::Concern::Parser::HTML5
+      include HTML::Concern::Scrubber::Full
+      include HTML::Concern::Serializer::UTF8Encode
+    end
+    class LinkSanitizer < Rails::HTML::Sanitizer
+      include HTML::Concern::ComposedSanitize
+      include HTML::Concern::Parser::HTML5
+      include HTML::Concern::Scrubber::Link
+      include HTML::Concern::Serializer::SimpleString
+    end
+    class SafeListSanitizer < Rails::HTML::Sanitizer
+      include HTML::Concern::ComposedSanitize
+      include HTML::Concern::Parser::HTML5
+      include HTML::Concern::Scrubber::SafeList
+      include HTML::Concern::Serializer::UTF8Encode
+    end
+  end
+end
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Layer 4: Rails::HTML::Sanitizer HTML5 support
+
+## The finish line
+
+![release](assets/rhs-release.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### 💪 Evolution 💪
+
+![stack](assets/stack5.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### 💪 Evolution 💪
+
+### Layer 5: Rails
+
+- Wire it up
+- Don't break existing apps
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Layer 5: Rails
+
+``` ruby
+# actionview/lib/action_view/helpers/sanitize_helper.rb
+module ActionView
+  module Helpers
+    module SanitizeHelper
+      mattr_accessor :sanitizer_vendor, default: Rails::Html::Sanitizer
+    end
+  end
+end
+```
+</script></section><section  data-markdown><script type="text/template">
+Wrap up a new vendor for HTML5
+
+``` ruby
+module Rails
+  module HTML5
+    class Sanitizer
+      class << self
+        def full_sanitizer
+          Rails::HTML5::FullSanitizer
+        end
+
+        def link_sanitizer
+          Rails::HTML5::LinkSanitizer
+        end
+
+        def safe_list_sanitizer
+          Rails::HTML5::SafeListSanitizer
+        end
+      end
+    end
+  end
+end
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+``` ruby[5,6]
+# actionview/lib/action_view/helpers/sanitize_helper.rb
+module ActionView
+  module Helpers
+    module SanitizeHelper
+      mattr_accessor :sanitizer_vendor,
+          default: Rails::HTML5::Sanitizer
+    end
+  end
+end
+```
+
+😢 It's not that easy.
+
+<aside class="notes"><p>jruby, apps with tests that specify HTML4 behavior</p>
+</aside></script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+#### `config.action_view.sanitizer_vendor`
+
+<small>
+Configures the set of HTML sanitizers used by Action View by setting `ActionView::Helpers::SanitizeHelper.sanitizer_vendor`. The default value depends on the `config.load_defaults` target version:
+
+| Starting with version | The default value is                 | Which parses markup as |
+|-----------------------|--------------------------------------|------------------------|
+| (original)            | `Rails::HTML4::Sanitizer`            | HTML4                  |
+| 7.1                   | `Rails::HTML5::Sanitizer` (see NOTE) | HTML5                  |
+
+NOTE\: `Rails::HTML5::Sanitizer` is not supported on JRuby, so on JRuby platforms Rails will fall back to `Rails::HTML4::Sanitizer`.
+</small>
+</script></section><section  data-markdown><script type="text/template">
+``` ruby
+# actionview/lib/action_view/helpers/sanitize_helper.rb
+module ActionView
+  module Helpers
+    module SanitizeHelper
+      mattr_accessor :sanitizer_vendor,
+          default: Rails::HTML4::Sanitizer
+    end
+  end
+end
+```
+
+``` ruby
+# railties/lib/rails/application/configuration.rb
+if defined?(Rails::HTML::Sanitizer) # nested ifs to avoid linter errors
+  if respond_to?(:action_view)
+    action_view.sanitizer_vendor =
+        Rails::HTML::Sanitizer.best_supported_vendor
+  end
+end
+```
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+#### Layer 5: Rails
+
+Lather, rinse, repeat
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+#### `config.action_text.sanitizer_vendor`
+
+<small>
+Configures the HTML sanitizer used by Action Text by setting `ActionText::ContentHelper.sanitizer` to an instance of the class returned from the vendor's `.safe_list_sanitizer` method. The default value depends on the `config.load_defaults` target version:
+
+| Starting with version | The default value is                 | Which parses markup as |
+|-----------------------|--------------------------------------|------------------------|
+| (original)            | `Rails::HTML4::Sanitizer`            | HTML4                  |
+| 7.1                   | `Rails::HTML5::Sanitizer` (see NOTE) | HTML5                  |
+
+NOTE\: `Rails::HTML5::Sanitizer` is not supported on JRuby, so on JRuby platforms Rails will fall back to `Rails::HTML4::Sanitizer`.
+
+</small>
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: style="text-align: left" -->
+
+#### `config.dom_testing_default_html_version`
+
+<small>
+Controls whether an HTML4 parser or an HTML5 parser is used by default by the test helpers in Action View, Action Dispatch, and `rails-dom-testing`.
+
+The default value depends on the `config.load_defaults` target version:
+
+| Starting with version | The default value is |
+| --------------------- | -------------------- |
+| (original)            | `:html4`             |
+| 7.1                   | `:html5` (see NOTE)  |
+
+NOTE\: Nokogiri's HTML5 parser is not supported on JRuby, so on JRuby platforms Rails will fall back to `:html4`.
+</small>
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+### 💪 Evolution 💪
+
+
+![stack](assets/stack5.png)
+</script></section><section  data-markdown><script type="text/template">
+<!-- .slide: data-auto-animate -->
+
+# Rails 7.1
+
+## HTML5 Sanitizer support
+
+🥂 🙌
+</script></section><section  data-markdown><script type="text/template">
+# Rails 7.1
+
+## Upgrading?
+
+- config.action_view.sanitizer_vendor
+- config.dom_testing_default_html_version
+- config.action_text.sanitizer_vendor
+</script></section><section  data-markdown><script type="text/template">
+### Future work
+
+# Sanitizer API
+
+https://wicg.github.io/sanitizer-api/
+
+to avoid "confusions of parsing context"
+</script></section><section  data-markdown><script type="text/template">
+#### Sanitizer API
+
+## Parsing context
+
+``` ruby
+div = Nokogiri::HTML5.fragment("<div></div>").at_css("div")
+div.add_child("<em>bla")
+div.to_html
+# => "<div><em>bla</em></div>"
+
+ta = Nokogiri::HTML5.fragment("<textarea></textarea>").at_css("textarea")
+ta.add_child("<em>bla")
+ta.to_html
+# => "<textarea>&lt;em&gt;bla</textarea>"
+```
+
+</script></section><section  data-markdown><script type="text/template">
+# THE END
+
+Mike Dalessio / @flavorjones
+
+@flavorjones@ruby.social
+
+### Go forth and sanitize!
+
+</script></section></div>
+    </div>
+
+    <script src="./dist/reveal.js"></script>
+
+    <script src="./plugin/markdown/markdown.js"></script>
+    <script src="./plugin/highlight/highlight.js"></script>
+    <script src="./plugin/zoom/zoom.js"></script>
+    <script src="./plugin/notes/notes.js"></script>
+    <script src="./plugin/math/math.js"></script>
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        slideNumber: true,
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealZoom,
+          RevealNotes,
+          RevealMath
+        ]
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal().getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"controls":false,"transition":"fade","center":false,"slideNumber":"","autoAnimate":true,"autoAnimateDuration":0.5}, queryOptions);
+    </script>
+
+    <script src="./_assets/slides.js"></script>
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+</html>

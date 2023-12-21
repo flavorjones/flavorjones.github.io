@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="css/reset.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="shortcut icon" href="css/favicon.png" />
+    <link rel="apple-touch-icon" href="css/apple-touch-icon.png" />
+    <!-- Code Prettifier: -->
+<link href="css/highlight.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    <link href="css/style.css" rel="stylesheet" />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,800italic,300,400,800' rel='stylesheet' type='text/css'>
+
+<div class="footer">
+  <img class="pivotal-logo" src="images/pivotal_logo.png"/img>
+  <div class="guest-logo"></div>
+    <!--
+      add a conference, client, or other topical logo or image
+      to deck/images/guest_logo.png to have it appear on your slides.
+
+      Note: guest_logo.png should be approx 45px H X 135px W; otherwise
+      adjust ".footer .guest-logo" in themes/pivotal.css
+    -->
+  </img>
+  <div class="title">
+    <span>
+      <!-- This will appear in the center of the footer area
+	    Another example: Applying the Pivotal Way • @pivotallabs
+	  -->
+      Inceptions 101 / @flavorjones
+    </span>
+  </div>
+</div>
+
+
+  </head>
+
+  <body>
+  <div class="fallback-message">
+  <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+  <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+  </div>
+    <div id="impress">
+    <div class='step' >
+    
+<h2>agile inceptions 101</h2>
+
+<p>the basics of a Pivotal Labs core practice</p>
+
+<ul>
+<li>what&#39;s a core practice? webster&#39;s dictionary defines it as ... j/k</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p>A <strong>Practice</strong> is a path</p>
+
+<p>towards a <strong>Goal</strong> or <strong>Principle</strong></p>
+
+<p><img src="images/Path.svg" alt="path"></p>
+</div>
+      <div class='step' >
+    
+<p>A Practice is <strong>just one possible</strong> path</p>
+
+<p><em>(of many possible Paths)</em></p>
+
+<p>towards a Goal or Principle</p>
+
+<p><img src="images/Three_paths_from_A_to_B.png" alt="paths"></p>
+</div>
+      <div class='step' >
+    
+<h2>TL;DR</h2>
+</div>
+      <div class='step' >
+    
+<h2><s>TL;DR</s>  TL;DL</h2>
+</div>
+      <div class='step' >
+    
+<h2>TL;DL</h2>
+
+<ol>
+<li>goal of an inception:<br> build a <strong>shared understanding</strong></li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h2>TL;DL</h2>
+
+<ol>
+<li>goal of an inception:<br> build a shared understanding</li>
+<li><strong>everything else is secondary</strong>,<br> including story writing and estimation</li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h2>TL;DL</h2>
+
+<ol>
+<li>goal of an inception:<br> build a shared understanding</li>
+<li>everything else is secondary,<br> including story writing and estimation</li>
+<li><strong>there is no 3</strong></li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h1>Thank you!</h1>
+
+<h2>Questions?</h2>
+</div>
+      <div class='step' >
+    
+<h1>What Are We Gonna Talk About?</h1>
+</div>
+      <div class='step' data-z=1000>
+    
+<ol>
+<li>a <strong>Practice</strong> is just one possible <strong>Path</strong></li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+</ol>
+</div>
+      <div class='step' data-z=1000>
+    
+<ol>
+<li>a Practice is just one possible Path</li>
+<li>why <strong>Shared Understanding</strong> is important</li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+</ol>
+</div>
+      <div class='step' data-z=1000>
+    
+<ol>
+<li>a Practice is just one possible Path</li>
+<li>why Shared Understanding is important</li>
+<li><strong>outline</strong> of a ✌typical inception✌</li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+</ol>
+</div>
+      <div class='step' data-z=1000>
+    
+<ol>
+<li>a Practice is just one possible Path</li>
+<li>why Shared Understanding is important</li>
+<li>outline of a ✌typical inception✌</li>
+<li><strong>antipatterns, tricks and tips</strong></li>
+<li>&nbsp;</li>
+</ol>
+</div>
+      <div class='step' data-z=1000>
+    
+<ol>
+<li>a Practice is just one possible Path</li>
+<li>why Shared Understanding is important</li>
+<li>outline of a ✌typical inception✌</li>
+<li>antipatterns, tricks and tips</li>
+<li>inception sandwich: <strong>scopings</strong> and <strong>estimation</strong></li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h2>a Practice</h2>
+
+<h2>is just one possible Path</h2>
+
+<p><img src="images/Three_paths_from_A_to_B.png" alt="paths"></p>
+
+<ul>
+<li>we should always be re-evaluating how we help clients reach their goals</li>
+<li>LUXR is bringing lots of experimentation and new tools
+
+<ul>
+<li>i&#39;m not going to talk about that today</li>
+</ul></li>
+<li>let&#39;s focus on one particularly well-trodden path
+
+<ul>
+<li>the first inception for a project,</li>
+<li>when unknowns are many,</li>
+<li>and teams haven&#39;t gelled yet</li>
+</ul></li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>meta-agile</h2>
+
+<p>&quot;do what works&quot;</p>
+
+<ul>
+<li>means:
+
+<ul>
+<li>moses didn&#39;t come down the mountain</li>
+<li>what we currently do is constantly evolving</li>
+<li>and it&#39;s different from how we did it N years ago</li>
+</ul></li>
+<li>we need to be able to respond to change
+
+<ul>
+<li>and to different clients</li>
+<li>and to different client goals</li>
+</ul></li>
+<li>anything else is waterfall</li>
+<li>who judges what&#39;s working? YOU DO.</li>
+</ul>
+</div>
+      <div class='step' data-z=1000>
+    
+<ol>
+<li><s>a Practice is just one possible Path</s></li>
+<li><strong>why Shared Understanding is important</strong></li>
+<li>outline of a ✌typical inception✌</li>
+<li>antipatterns, tricks and tips</li>
+<li>inception sandwich: scopings and estimation</li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h2>Shared Understanding</h2>
+
+<ul>
+<li>sounds touchy-feely, insubstantial for a one- or two-day meeting</li>
+<li>why is this important?</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>Shared Understanding</h2>
+
+<p>at the heart of most (all?) of our practices</p>
+
+<ul>
+<li>retros</li>
+<li>IPMs</li>
+<li>pairing</li>
+<li>TDD/BDD</li>
+<li>gherkin as-a/i-want/so-that</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>Shared Understanding</h2>
+
+<p>everything is at risk without it</p>
+
+<ul>
+<li>&quot;what happens if client staff aren&#39;t all on the same page?&quot;</li>
+<li>&quot;what happens if we aren&#39;t on the same page as the client?&quot;</li>
+<li>unless we walk out of the room with a shared understanding, everything else is at risk
+
+<ul>
+<li>e.g.: priority churn</li>
+<li>e.g.: refusal to accept delivered stories</li>
+<li>e.g.: refusal to pair</li>
+<li>e.g.: refusal to pay</li>
+</ul></li>
+</ul>
+</div>
+      <div class='step' data-z=1000>
+    
+<ol>
+<li><s>a Practice is just one possible Path</s></li>
+<li><s>why Shared Understanding is important</s></li>
+<li><strong>outline of a ✌typical inception✌</strong></li>
+<li>antipatterns, tricks and tips</li>
+<li>inception sandwich: scopings and estimation</li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h2>✌typical inception✌</h2>
+
+<p>let&#39;s see if we can derive an agenda from first principles</p>
+
+<p><em>(to the whiteboard!)</em></p>
+</div>
+      <div class='step' >
+    
+<h2>possibly-useful questions</h2>
+
+<p>what are the <strong>goals</strong> of an inception?</p>
+
+<p>are there things we want to <strong>avoid</strong> addressing?</p>
+
+<p>what might put the goals at <strong>risk</strong>?</p>
+
+<p>who are <strong>typical people</strong> in the room?</p>
+
+<p>... and what do they want to get out of it?</p>
+
+<ul>
+<li>goals
+
+<ul>
+<li>shared understanding ... about what?</li>
+<li>business domain</li>
+<li>business goals</li>
+<li>ubiquitous language</li>
+<li>mitigating risks</li>
+<li>write stories</li>
+<li>estimate stories</li>
+</ul></li>
+<li>prioritize the goals</li>
+<li>anti-goals
+
+<ul>
+<li>write stories?</li>
+<li>estimate stories?</li>
+</ul></li>
+<li>risks and mitigations
+
+<ul>
+<li>lack of language → dictionary</li>
+<li>off-topic conversations → parking lot</li>
+<li>too many voices → use notecards</li>
+<li>failure to prioritize → 2x2 quadrants with arbitrary axes</li>
+<li>too much emotion/baggage → independent facilitator</li>
+</ul></li>
+<li>people
+
+<ul>
+<li>facilitator</li>
+<li>CEO</li>
+<li>CTO</li>
+<li>project manager</li>
+<li>product manager</li>
+<li>designer</li>
+<li>developer</li>
+<li>Labs CL</li>
+</ul></li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p>how did that brainstorming session feel?</p>
+
+<ul>
+<li>dude, did we just build some shared understanding?</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><em>you just been incepted!</em></p>
+</div>
+      <div class='step' data-z=1000>
+    
+<ol>
+<li><s>a Practice is just one possible Path</s></li>
+<li><s>why Shared Understanding is important</s></li>
+<li><s>outline of a ✌typical inception✌</s></li>
+<li><strong>antipatterns, tricks and tips</strong></li>
+<li>inception sandwich: scopings and estimation</li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h2>antipatterns</h2>
+
+<p>it&#39;s the first time many clients are face-to-face with our process and practices</p>
+
+<ul>
+<li>many of the same antipatterns that show up during an engagement
+
+<ul>
+<li>no single, accountable, knowledgable product owner</li>
+<li>command-and-control: &quot;do what we say, staff-aug!&quot;</li>
+<li>thinking that &quot;done done&quot; is a thing</li>
+<li>refusal to acknowledge unknowns</li>
+<li>refusal to re-examine assumptions</li>
+<li>&quot;let&#39;s pick this crazy technology&quot;</li>
+<li>&quot;let&#39;s dive into implementation details&quot;</li>
+<li>client feeling threatened by questions</li>
+</ul></li>
+<li>too many people in the room</li>
+<li>unprepared client (e.g., the learning-game client)</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>other tips and tricks</h2>
+
+<ul>
+<li>develop ubiquitous language: dictionary</li>
+<li>stem unconstructive conversation: parking log</li>
+<li>more-flexible whiteboard: use post-its for recategorization and reprioritization</li>
+<li>less verbal communication: use notecards</li>
+<li>huge scope: break risks down by epics, and loop that back into prioritization</li>
+<li>refusal to prioritize: use 2x2 to force decisions and prioritization decisions</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>the independent facilitator</h2>
+
+<p>when is it necessary?</p>
+
+<ul>
+<li>is it always a good idea to have an independent 3rd party facilitating?</li>
+<li>what if you have an agenda you&#39;re trying to drive the room towards?</li>
+<li>why don&#39;t you have an agenda? don&#39;t you have an opinion?</li>
+<li>opinions aren&#39;t bad.
+
+<ul>
+<li>Gust, etc.</li>
+</ul></li>
+</ul>
+</div>
+      <div class='step' data-z=1000>
+    
+<ol>
+<li><s>a Practice is just one possible Path</s></li>
+<li><s>why Shared Understanding is important</s></li>
+<li><s>outline of a ✌typical inception✌</s></li>
+<li><s>antipatterns, tricks and tips</s></li>
+<li><strong>inception sandwich: scopings and estimation</strong></li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h2>scoping notes</h2>
+
+<p>we cover all this in the scoping, no?</p>
+
+<ul>
+<li>we&#39;ll use notes as a starting point</li>
+<li>but things often change radically between scoping and inception:
+
+<ul>
+<li>staffing changes</li>
+<li>gained knowledge</li>
+<li>tech spike</li>
+<li>different people in the room</li>
+</ul></li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>scoping notes</h2>
+
+<p>we need to re-build the shared understanding</p>
+
+<ul>
+<li>with the whole team</li>
+<li>with the stakeholders</li>
+<li>assimilating things learned in the meantime</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>story writing and estimation</h2>
+
+<p>start with epics</p>
+
+<ul>
+<li>on blue notecards</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>story writing and estimation</h2>
+
+<p><em>&quot;registration and login&quot;</em></p>
+</div>
+      <div class='step' >
+    
+<h2>story writing and estimation</h2>
+
+<p>put roles under the epic</p>
+
+<ul>
+<li>on yellow notecards</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>story writing and estimation</h2>
+
+<p><em>&quot;as an anonymous guest, I should be able to ...&quot;</em></p>
+
+<p><em>&quot;as a registered user, I should be able to ...&quot;</em></p>
+</div>
+      <div class='step' >
+    
+<h2>story writing and estimation</h2>
+
+<p>write stories (quickly)</p>
+
+<p>arrange in dependency order under the role</p>
+
+<ul>
+<li>on white notecards</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>story writing and estimation</h2>
+
+<p><em>&quot;... click on a &#39;Start Fizzywigging!&#39; CTA&quot;</em></p>
+
+<p><em>&quot;... enter my email and password&quot;</em></p>
+
+<p><em>&quot;... enter my username and password&quot;</em></p>
+
+<p><em>&quot;... click on &#39;Forgot Password&#39;&quot;</em></p>
+</div>
+      <div class='step' >
+    
+<h2>story writing and estimation</h2>
+
+<p>point stories as usual</p>
+</div>
+      <div class='step' >
+    
+<h2>story writing and estimation</h2>
+
+<p>figure out the team&#39;s probable initial velocity</p>
+
+<ul>
+<li>shuffle up notecards
+
+<ul>
+<li>after noting where they were</li>
+</ul></li>
+<li>deal a hand to each developer</li>
+<li>each person chooses a set of stories that they think will take a pair-week to do</li>
+<li>compare and chat</li>
+<li>repeat until team arrives at a consensus</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p>is the hour over yet?</p>
+</div>
+      <div class='step' >
+    
+<p>that&#39;s all I got for now.</p>
+</div>
+      <div class='step' >
+    
+<h1>more reading</h1>
+
+<p><a href="http://www.infoq.com/articles/project-inception-meeting">James Bayer&#39;s post</a></p>
+
+<p><a href="http://pivotallabs.com/agile-inception_knowing-what-to-build-and-where-to-start">Graham&#39;s post</a></p>
+</div>
+      <div class='step' >
+    
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script src="js/impressConsole.js"></script>
+
+<script>
+    impressConsole().init();
+    // impressConsole().open(); // for console to open automatically
+    jQuery("ul").wrap("<div class='notes'></div>");
+</script>
+
+      </div>
+    <script src="js/impress.js"></script>
+    <script>impress().init();</script>
+  </body>
+</html>
+    

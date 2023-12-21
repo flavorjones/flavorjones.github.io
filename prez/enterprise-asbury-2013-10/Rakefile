@@ -1,0 +1,20 @@
+FONTS = %q{<link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel='stylesheet' type='text/css'>}
+
+COMMAND = "keydown slides slides.md ; sed -i \"s|/title>|/title>#{FONTS}|\" slides.html"
+
+desc "Regenerate slides.html"
+task :watch do
+  sh COMMAND
+  sh "while inotifywait -r -e modify -e delete -e create slides.md css ; do #{COMMAND} ; done"
+end
+
+desc "Open the deck in a browser"
+task :open do
+  sh "launchy slides.html"
+end
+
+desc "Generate a pdf"
+task :pdf do
+  sh COMMAND
+  sh "phantomjs ~/code/oss/deck2pdf/deck2png.js slides.html && phantomjs ~/code/oss/deck2pdf/png2pdf.js"
+end

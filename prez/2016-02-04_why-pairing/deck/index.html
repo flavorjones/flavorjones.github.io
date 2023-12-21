@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="css/reset.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="shortcut icon" href="css/favicon.png" />
+    <link rel="apple-touch-icon" href="css/apple-touch-icon.png" />
+    <!-- Code Prettifier: -->
+<link href="css/highlight.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    <link href="css/style.css" rel="stylesheet" />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,800italic,300,400,800' rel='stylesheet' type='text/css'>
+
+<div class="footer">
+  <img class="pivotal-logo" src="images/pivotal_logo.png"/img>
+  <div class="guest-logo"></div>
+    <!--
+      add a conference, client, or other topical logo or image
+      to deck/images/guest_logo.png to have it appear on your slides.
+
+      Note: guest_logo.png should be approx 45px H X 135px W; otherwise
+      adjust ".footer .guest-logo" in themes/pivotal.css
+    -->
+  </img>
+  <div class="title">
+    <span>
+      <!-- This will appear in the center of the footer area
+	    Another example: Applying the Pivotal Way • @pivotallabs
+	  -->
+      But Why Pairing?
+    </span>
+  </div>
+  <div class="who">
+    <span>
+      Mike Dalessio / @flavorjones / 2016-02-04
+    </span>
+  </div>
+</div>
+
+
+  </head>
+
+  <body>
+  <div class="fallback-message">
+  <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+  <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+  </div>
+    <div id="impress">
+    <div class='step' >
+    
+<p><img src="images/but-why.jpeg" alt="But Why Pairing?"></p>
+
+<p>a treatise on a Pivotal core practice</p>
+</div>
+      <div class='step' >
+    
+<p>(I soloed on this presentation.)</p>
+
+<ul>
+<li>But you should listen to me, anyway.</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/practices-how-do-they-work.jpeg" alt="how do they work?"></p>
+
+<ul>
+<li>webster&#39;s dictionary defines it as ... j/k</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p>A <strong>Practice</strong> is a path</p>
+
+<p>towards a <strong>Goal</strong> or <strong>Principle</strong></p>
+
+<p><img src="images/Path.svg" alt="path"></p>
+</div>
+      <div class='step' >
+    
+<p>A Practice is <strong>just one possible</strong> path</p>
+
+<p><em>(of many possible Paths)</em></p>
+
+<p>towards a Goal or Principle</p>
+
+<p><img src="images/Three_paths_from_A_to_B.png" alt="paths"></p>
+</div>
+      <div class='step' >
+    
+<h2>there are many ways to grow quality software</h2>
+
+<p><img src="images/rifleman.jpg" alt="rifleman"></p>
+
+<h3>but this one is ours</h3>
+</div>
+      <div class='step' >
+    
+<h2>what this talk is <u>not</u> about</h2>
+
+<p><img src="images/pair-programming.gif" alt="This is pairing."></p>
+
+<ul>
+<li>we&#39;re not going to talk about how to pair</li>
+<li>you should know to remember to eat a breath mint</li>
+<li>because you have empathy</li>
+<li>we&#39;re not going to focus on software development</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h1>what this talk <u>is</u> about</h1>
+
+<ul>
+<li>why we pair - what goals are we trying to achieve?</li>
+<li>what we think are the benefits of pairing</li>
+<li>pairing showing up in some unexpected places</li>
+<li>attributes that all pairing scenarios have in common</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/php-ceo.jpeg" alt="PHP CEO"></p>
+
+<ul>
+<li>my goal is to help y&#39;all have a conversation with this guy about why pairing is valuable</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>context: XP practices</h2>
+
+<ul>
+<li>let&#39;s first talk about the context in which we execute our practices</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/feature-chart-1.jpg" alt="features chart 1"></p>
+
+<ul>
+<li>using poor practices, you can usually get a good, fast start on software</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/feature-chart-2.jpg" alt="features chart 2"></p>
+
+<ul>
+<li>but you&#39;ll get dimishing returns as the code ossifies</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/feature-chart-3.jpg" alt="features chart 3"></p>
+
+<ul>
+<li>with good practices you can theoretically add new features at a steady pace forever</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/feature-chart-4.jpg" alt="features chart 4"></p>
+
+<ul>
+<li>there&#39;s a crossover at t1</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/feature-chart-5.jpg" alt="features chart 5"></p>
+
+<ul>
+<li>if you&#39;re exiting before t1, go ahead and throw away all our good XP practices</li>
+<li>this might be the start of an answer to a good question ...</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>&quot;When is pair programming worth the trade-off in resources?&quot;</h2>
+</div>
+      <div class='step' >
+    
+<p><img src="images/kent-beck-pairing.png" alt="kent beck says ..."></p>
+</div>
+      <div class='step' >
+    
+<h2>at pivotal</h2>
+
+<ol>
+<li>problem space is big and unknown: ✓</li>
+<li></li>
+<li></li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h2>at pivotal</h2>
+
+<ol>
+<li>problem space is big and unknown: ✓</li>
+<li>solution space is big and unknown: ✓</li>
+<li></li>
+</ol>
+</div>
+      <div class='step' >
+    
+<h2>at pivotal</h2>
+
+<ol>
+<li>problem space is big and unknown: ✓</li>
+<li>solution space is big and unknown: ✓</li>
+<li>you need to build relationships: ✓</li>
+</ol>
+
+<ul>
+<li>great, but why?</li>
+<li>what problems are we trying to solve at Pivotal?</li>
+<li>what are our goals?</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h1>Teaching and Learning</h1>
+
+<p>you can do it <em>forever</em></p>
+
+<ul>
+<li>programming, design, and product skills don&#39;t have a biological ceiling like athletes do</li>
+<li>we&#39;ll come back to this later</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h1>Shared Ownership</h1>
+
+<p><em>&quot;we&quot;</em> instead of &quot;us versus them&quot;</p>
+
+<p>succeed or fail <em>together</em></p>
+
+<ul>
+<li>rotating pairs create a healthy sense of shared ownership</li>
+<li>and improves the bus count</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h1>Building a 10x Team</h1>
+
+<p>better than a 10x <em>ninja</em> <em>rockstar</em></p>
+</div>
+      <div class='step' >
+    
+<h1>Build the Right Thing</h1>
+
+<p>avoid <em>ratholes</em></p>
+
+<p>ask <em>&quot;why?&quot;</em></p>
+
+<p>go <em>meta</em></p>
+
+<ul>
+<li>helps people focus on the task at hand</li>
+<li>occasionally pop your head out of the specific problem</li>
+<li>talk about whether you&#39;re solving the right problem</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h1>Build the Thing Right</h1>
+
+<p>keep each other <em>honest</em></p>
+
+<p>don&#39;t <em>cut corners</em></p>
+
+<p>use <em>domain language</em></p>
+</div>
+      <div class='step' >
+    
+<h1>Finding the Right Abstractions</h1>
+
+<ul>
+<li>explaining it to your pair is the first step towards identifying the correct abstraction</li>
+<li>meaning less tech debt and better problem-solving</li>
+</ul>
+
+<p><a href="http://engineering.pivotal.io/post/abstraction-or-the-gift-of-our-weak-brains/">(I wrote a blog post about this)</a></p>
+</div>
+      <div class='step' >
+    
+<h3>What other goals do <em>you</em> have when you pair?</h3>
+</div>
+      <div class='step' >
+    
+<p><img src="images/php-ceo-one-job.jpeg" alt="PHP CEO"></p>
+
+<ul>
+<li>&quot;can&#39;t you just have one person per job?&quot;</li>
+<li>&quot;can&#39;t you just do your job right in the first place?&quot;</li>
+<li>nature has evolved pair bonding when the job is difficult</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/gibbons.jpg" alt=""></p>
+
+<ul>
+<li>gibbons</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/penguins.jpg" alt=""></p>
+
+<ul>
+<li>penguins</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/albatrosses.jpg" alt=""></p>
+
+<ul>
+<li>albatrosses</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/voles.jpg" alt=""></p>
+
+<ul>
+<li>voles</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/swans.jpg" alt=""></p>
+
+<ul>
+<li>swans</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/wolves.jpg" alt=""></p>
+
+<ul>
+<li>wolves</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/turtledoves.jpg" alt=""></p>
+
+<ul>
+<li>turtle doves</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/vultures.jpg" alt=""></p>
+
+<ul>
+<li>vultures</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/termites.jpg" alt=""></p>
+
+<ul>
+<li>termites</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/parasites.jpg" alt=""></p>
+
+<ul>
+<li>parasitic worms</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/baldeagles.jpg" alt=""></p>
+
+<p>&#39;Merka!</p>
+
+<ul>
+<li>bald eagles</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/it-takes-two.jpg" alt="it takes two"></p>
+
+<ul>
+<li>clearly, evolution thinks that sometimes it takes two</li>
+<li>parenting is hard!</li>
+<li>dating is hard!</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/php-ceo-lone-wolf.jpeg" alt="PHP CEO"></p>
+
+<ul>
+<li>&quot;successful software comes from the mind of a sole creative genius&quot;</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/gates-allen.jpg" alt="microsoft"></p>
+
+<ul>
+<li>bill gates and paul allen</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/jobs-woz.jpg" alt="apple"></p>
+
+<ul>
+<li>steve jobs and woz</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/php-ceo-lone-wolf2.jpeg" alt="PHP CEO"></p>
+
+<ul>
+<li>&quot;great art comes from the mind of a sole creative genius&quot;</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p>Great Art™ can indeed come from a lone genius.</p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/eltonandbernie.jpg" alt="elton and bernie"></p>
+
+<p>B-b-b-benny and the Jets</p>
+
+<ul>
+<li>elton john and bernie taupin</li>
+<li>elton got much worse after the pair split</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/SimonGarfunkel.jpg" alt="simon and garfunkel"></p>
+
+<p>I am a Rock</p>
+
+<ul>
+<li>simon and garfunkel</li>
+<li>simon got much better after the pair split</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td><img src="images/rodgershammerstein.jpg" alt="rodgers and hammerstein"></td>
+<td><img src="images/gilbert-and-sullivan.jpg" alt="gilbert and sullivan"></td>
+</tr>
+</tbody></table>
+
+<p>The Hill are Alive with ... a Modern Major General</p>
+
+<ul>
+<li>rodgers and hammerstein</li>
+<li>gilbert and sullivan</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/colbert-show.jpg" alt="colbert show writers"></p>
+
+<p>The Colbert Show writing team</p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/wachowskis.jpg" alt=""></p>
+
+<p>The Matrix</p>
+
+<ul>
+<li>wachowskis</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/coens.jpg" alt=""></p>
+
+<p>No Country For Old Men</p>
+
+<ul>
+<li>coen brothers</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/Salt-n-Pepa.jpg" alt=""></p>
+
+<p>Push It Good</p>
+
+<ul>
+<li>salt n pepa</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/mann-penn.jpg" alt=""></p>
+
+<p>Magnolia</p>
+
+<ul>
+<li>aimee mann and michael penn</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/frozen.jpg" alt=""></p>
+
+<p>Let It Go</p>
+
+<ul>
+<li>the writers of Frozen whose names nobody knows</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/weinsteins.jpg" alt=""></p>
+
+<p>Anything Starring Matt Damon and Ben Affleck</p>
+
+<ul>
+<li>weinstein brothers</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/damon-affleck.jpg" alt=""></p>
+
+<p>Good Will Hunting</p>
+
+<ul>
+<li>damon and affleck</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/php-ceo-stop.jpeg" alt="stop talking"></p>
+
+<ul>
+<li>but exploring a complex problem domain means somebody needs to be in charge</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/washington-hamilton.jpg" alt=""></p>
+
+<p>I&#39;m Gonna Need a Right-Hand Man</p>
+
+<ul>
+<li>washington and hamilton</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/curies.jpg" alt=""></p>
+
+<p>X-Rays</p>
+
+<ul>
+<li>marie and pierre curie shared the 1903 nobel prize in Physics</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/lewis-clark.jpg" alt=""></p>
+
+<p>Crossing North America</p>
+
+<ul>
+<li>lewis and clark</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/stanley-livingstone.jpg" alt=""></p>
+
+<p>Dr. Livingstone, I Presume?</p>
+
+<ul>
+<li>stanley and livingstone</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/php-ceo-cost.jpeg" alt="but cost"></p>
+
+<ul>
+<li>but those are all instances where it&#39;s cheap to pair</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/lost-that-loving-feeling.jpg" alt="fighter pilots"></p>
+
+<p>&quot;she&#39;s lost that loving feeling.&quot;</p>
+
+<p>... &quot;i hate it when she does that.&quot;</p>
+
+<ul>
+<li>pilot / navigator</li>
+<li>not just for picking up people in bars</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/cash-epps.jpg" alt="cash and epps"></p>
+
+<p>BTW the &quot;Top Gun&quot; script was the result of pairing, too.</p>
+
+<ul>
+<li>jim cash and jack epps</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/fighter-jet.jpg" alt="jet fighter"></p>
+
+<ul>
+<li>there are two seats in some 2g and 3g jet fighters</li>
+<li>this is incredibly expensive</li>
+<li>additional life support systems</li>
+<li>less room for fuel</li>
+<li>2x the training cost for people</li>
+<li>how did this happen?</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h1>dealing with cognitive overhead</h1>
+
+<p>and multitasking</p>
+</div>
+      <div class='step' >
+    
+<p>&quot;[electronic] systems, intended to <em>increase</em> pilot situational
+awareness, ended up doing the <em>exact opposite</em>, forcing the pilot to
+keep his head `in the cockpit&#39; reading gauges and displays, with [lower]
+situational awareness ...&quot;</p>
+</div>
+      <div class='step' >
+    
+<p>&quot;The supersonic aerial equivalent of checking his Facebook on his phone
+while he&#39;s dodging traffic doing 80 down a busy highway.&quot;</p>
+</div>
+      <div class='step' >
+    
+<p>&quot;Flying a fighter jet is hard and very demanding, and if a guy in the
+sky wants to do anything while he&#39;s in the air, like dropping bombs,
+finding targets, navigating, listening or trying to take pictures,
+it&#39;s very helpful to have somebody who doesn&#39;t need to keep the thing
+in the air to help.&quot;</p>
+</div>
+      <div class='step' >
+    
+<h2>Not a tactical / strategic split</h2>
+
+<p>WSOs perform both strategic and tactical jobs</p>
+<pre><code class='prettyprint '>strategic: navigation
+tactical: guiding bombs to targets
+</code></pre>
+<ul>
+<li>it&#39;s more about multitasking than it is about separation of concerns</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<p><img src="images/rally-racing.jpg" alt="rally racing"></p>
+
+<ul>
+<li>look! two people in a car racing</li>
+<li>endurance / focus</li>
+<li>driver&#39;s cognitive overhead similar to a fighter jet</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>consider pilot skill versus programming and design skills</h2>
+
+<p>Developers, Designers, PMs are always learning and getting better.</p>
+
+<ul>
+<li>pilot skill has a ceiling, based in biology</li>
+<li>programming skill doesn&#39;t really have an effective ceiling</li>
+<li>you can keep learning forever, so pairing forever makes even more sense for software</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>also: training</h2>
+
+<p>Most tactical aircraft also have training versions, which are indeed
+two-seaters with dual flight controls with the instructor sitting in
+the back.</p>
+</div>
+      <div class='step' >
+    
+<h3>what do all these things have in common?</h3>
+</div>
+      <div class='step' >
+    
+<p>(1). difficult tasks</p>
+<pre><code class='prettyprint '>* explorers
+* parents
+* rally racers
+* fighter jet pilot / wso
+* president / treasury secretary
+</code></pre></div>
+      <div class='step' >
+    
+<p>(2). requires a broad skill set that may not be present in one person</p>
+<pre><code class='prettyprint '>* fighter jet pilot / wso
+* composer / lyricist
+* developer / designer
+* designer / PM
+* developer / developer
+* nerd / businessdog
+* director / producer / screenwriter
+* president / treasury secretary
+</code></pre></div>
+      <div class='step' >
+    
+<p>(3). exploration: finding your way through ...</p>
+<pre><code class='prettyprint '>* a large problem space
+* a large solution space
+* the wilderness
+* political fights
+* scientific discovery
+</code></pre></div>
+      <div class='step' >
+    
+<p>(4). teaching and learning</p>
+<pre><code class='prettyprint '>* fighter jet trainers
+* pair programming
+* pair design
+</code></pre></div>
+      <div class='step' >
+    
+<p>(5). shared ownership and shared success</p>
+<pre><code class='prettyprint '>* pair programming and design
+* parenting
+* rally racing
+* comedy writing
+* exploration
+* scientific discovery
+</code></pre></div>
+      <div class='step' >
+    
+<p>(6). ensuring quality, reducing errors, robust focus on task</p>
+<pre><code class='prettyprint '>* rally racing
+* fighter jets
+* composer / lyricist
+* pair programming
+* pair design
+* president / treasury secretary
+* comedy writing
+* scientific discovery
+</code></pre></div>
+      <div class='step' >
+    
+<h2>there are exceptions, obvs</h2>
+
+<p>for every elton john, there&#39;s a paul simon</p>
+
+<ul>
+<li>remember that even though paul simon got better after leaving garfunkel, elton john got worse after he stopped collaborating with bernie taupin</li>
+</ul>
+</div>
+      <div class='step' >
+    
+<h2>there are many ways to grow quality software</h2>
+
+<p><img src="images/rifleman.jpg" alt="rifleman"></p>
+
+<h3>but this one is ours</h3>
+</div>
+      <div class='step' >
+    
+<h1>WDYT?</h1>
+
+<p>why <em>else</em> do we pair?</p>
+
+<p>why do we pair <em>all</em> the time?</p>
+
+<p>is there a time to <em>not</em> pair?</p>
+</div>
+      <div class='step' >
+    
+<p><img src="images/php-ceo-the-end.jpeg" alt="the end"></p>
+
+<script src="js/impressConsole.js"></script>
+
+<script src="js/jquery.js"></script>
+
+<script>
+  $(document).ready(function(){
+    $("ul").wrap("<div class='notes'></div>");  // to make all <ul>'s hidden notes.
+    impressConsole().init();
+    // impressConsole().open(); // for console to open automatically
+    if (window.innerWidth < 400) {
+      $("footer").hide();
+    }
+  });
+</script>
+
+      </div>
+    <script src="js/impress.js"></script>
+    <script>impress().init();</script>
+  </body>
+</html>
+    

@@ -1,0 +1,588 @@
+# Stupid XML/HTML Tricks
+
+Starring [Lorax](http://github.com/flavorjones/lorax), [Loofah](http://github.com/flavorjones/loofah), and [McBean](http://github.com/flavorjones/mcbean).
+
+<i>With special guest star: [Nokogiri](http://github.com/tenderlove/nokogiri/)</i>
+
+<small>Presented by [Mike Dalessio](http://mike.daless.io) at nyc.rb on 2010-03-09</small>
+
+!SLIDE
+
+# Mike Dalessio
+
+* [http://mike.daless.io/](http://mike.daless.io/)
+* [@flavorjones](http://twitter.com/flavorjones)
+* Co-author of [Nokogiri](http://github.com/tenderlove/nokogiri).
+* Formerly at [Pivotal](http://pivotallabs.com).
+* Side project is [Pharos](http://www.pharos-ei.com/).
+* Now at [Benchmark Solutions](http://join.benchmarksolutions.com).
+
+Pharos and Benchmark are both hiring!
+
+!SLIDE
+
+# I am the Lorax
+
+<img src="lorax.jpg" height="500px">
+
+I speak for the trees.
+
+!SLIDE
+
+# Lorax Speaks for the Trees
+
+Lorax is a library based on Nokogiri to provide diffs and deltas for XML/HTML documents.
+
+!SLIDE
+
+# The Lorax has CS Chops
+
+* Based on Gregory Cobena's master's thesis
+* Generates deltas in better than O(n * log(n)) time
+* A node's signature is a SHA1 of itself and its children
+
+!SLIDE
+
+# Lorax Demo
+
+!SLIDE
+
+# Lorax Needs
+
+* rspec matchers and test/unit assertions
+* better / cleaner application of deltas
+
+!SLIDE
+
+# Loofah
+
+Fast and Powerful HTML Sanitization
+
+<small>(the library formerly known as `Dryopteris`)</small>
+
+!SLIDE
+
+## Sanitization?
+
+Sanitary: [__san__-i-ter-ee] _adj._
+
+Free from elements, such as filth or pathogens, that endanger health; hygienic.
+
+
+!SLIDE
+
+## No, really.
+
+@@@ html
+    <div>
+      ohai!
+      <script>
+        alert('5cr1pt |<1dd13 wuz here');
+      </script>
+      kthxbye.
+    </div>
+@@@
+
+
+!SLIDE
+
+## Strategy #1: escape!
+
+@@@ html
+    <div>
+      ohai!
+      &lt;script&gt;
+        alert('5cr1pt |&lt;1dd13 wuz here');
+      &lt;/script&gt;
+      kthxbye.
+    </div>
+@@@
+
+
+!SLIDE
+
+## Strategy #2: strip
+
+@@@ html
+    <div>
+      ohai!
+      alert("5cr1pt |&lt;1dd13 wuz here");
+      kthxbye.
+    </div>
+@@@
+
+
+!SLIDE
+
+## Strategy #3: prune
+
+@@@ html
+    <div>
+      ohai!
+      kthxbye.
+    <div>
+@@@
+
+
+!SLIDE
+
+## Sanitization and You
+
+
+!SLIDE
+
+There is no one-size-fits-all sanitization.
+
+
+!SLIDE
+
+### Aspect #1: Markup Fixer-Uppery
+
+Most people expect that the markup will be valid after sanitization.
+
+
+!SLIDE
+
+### Aspect #1: Markup Fixer-Uppery
+
+Regexes don't help with this. Don't use them.
+
+
+!SLIDE
+
+### Aspect #1: Markup Fixer-Uppery
+
+Loofah uses Nokogiri and libxml2, so you're guaranteed valid markup.
+
+
+!SLIDE
+
+### Aspect #2: Whitelist
+
+A whitelist of allowed tags and attributes is a must. Security best practices.
+
+
+!SLIDE
+
+### Aspect #2: Whitelist
+
+Enforcing a whitelist with regexes when you don't necessarily have valid markup is hard and wrong.
+
+
+!SLIDE
+
+### Aspect #2: Whitelist
+
+Enforcing a whitelist when you have a valid DOM tree is easy.
+
+
+!SLIDE
+
+### Aspect #3: Output
+
+How do we render the output?
+
+* Plain text?
+* HTML?
+* HTML without styles or attributes?
+* All of the above?
+
+
+!SLIDE
+
+### Aspect #3: Output
+
+Most packages assume one output format and give you the string.
+
+
+!SLIDE
+
+### Aspect #3: Output
+
+But what if I want to do some post-processing?
+
+* convert `<div>` to `<span>`
+* only take a subtree of the sanitized HTML
+
+
+!SLIDE
+
+## The Players
+
+
+!SLIDE
+
+## Rails's `HTML::Sanitizer`
+
+@@@ ruby
+    fragment = "<script>
+                  alert('5cr1pt |<1dd13 wuz here');
+                </script>"
+    HTML::Sanitizer.new.sanitize(fragment);
+@@@
+
+<br>
+becomes
+<br>
+<br>
+
+@@@ html
+    <script>alert('5cr1pt |<1dd13 here wuz></script>
+@@@
+
+
+!SLIDE
+
+## Rails's `HTML::Sanitizer`
+
+@@@ html
+    <script>alert('5cr1pt |<1dd13 here wuz></script>
+@@@
+
+<br>
+
+* Valid markup transformed into invalid markup!
+* `<script>` left in!
+* Words magically rearranged!
+* WTF!
+
+!SLIDE
+
+## Rails's `HTML::Sanitizer`
+
+If you are using Rails's built-in sanitizer, you may want to think about a course in refrigerator repair.
+
+!SLIDE
+
+## `Sanitize` gem
+
+Good:
+
+* Uses configurable whitelists.
+* Uses Nokogiri.
+
+Bad:
+
+* Stripping unsafe tags is the only option.
+
+
+!SLIDE
+
+## `HTML5lib`
+
+Good:
+
+* Innarnet Experts put together a best-of-breed whitelist and process.
+* Great test coverage.
+
+Bad:
+
+* Uses regexes.
+* Escaping unsafe tags is the only option.
+
+Worse:
+
+* Uses REXML.
+
+
+!SLIDE
+
+## Loofah
+
+Good:
+
+* Uses Nokogiri and libxml2.
+* Allows escaping, pruning and stripping.
+* Supports multiple output formats.
+* Presents a Nokogiri document, so you can munge as you see fit.
+* Uses `HTML5lib`'s whitelist and test suite.
+
+Bad:
+
+* Hard to micromanage the whitelist. But why would you want to do this?
+
+
+!SLIDE
+
+## Benchmarks (1)
+
+On large doc (98k):
+
+<pre>
+N = 100
+                       real
+Loofah          ( 15.601635)
+ActionView      ( 20.289561)
+Sanitize        ( 27.340555)
+HTML5lib        (114.587728)
+</pre>
+
+
+!SLIDE
+
+## Benchmarks (2)
+
+On small fragment (1k):
+
+<pre>
+N = 1000
+                       real
+Loofah          (  4.459879)
+ActionView      (  5.277416)
+Sanitize        (  5.223475)
+HTML5lib        ( 34.500048)
+</pre>
+
+Hint: as fragments get smaller, libxml2's performance gets progressively worse.
+
+!SLIDE
+
+## Codes
+
+@@@ ruby
+    doc = Loofah.document(unsafe_html)
+    doc.is_a? Nokogiri::HTML::Document # => true
+@@@
+
+
+!SLIDE
+
+## Codes
+
+@@@ ruby
+    doc = Loofah.fragment(unsafe_html)
+    doc.is_a? Nokogiri::HTML::DocumentFragment # => true
+@@@
+
+
+!SLIDE
+
+## Codes
+
+Loofah adds a `scrub!` method which modifies the document in place:
+
+<br>
+<small>
+@@@ ruby
+    doc.scrub!(:strip)       # replaces unsafe tags with their inner text
+    doc.scrub!(:prune)       # removes  unsafe tags and their children
+    doc.scrub!(:whitewash)   # removes  unsafe/namespaced tags and their children,
+                             # and strips all attributes (good for MS Word HTML)
+    doc.scrub!(:escape)      # escapes  unsafe tags, like this: &lt;script&gt;
+@@@
+</small>
+
+
+!SLIDE
+
+## Codes
+
+@@@ ruby
+    unsafe_html = "ohai! <div>div is safe</div>
+                   <script>but script is not</script>"
+
+    doc = Loofah.fragment(unsafe_html).scrub!(:strip)
+
+    doc.to_s    # => "ohai! <div>div is safe</div> "
+    doc.text    # => "ohai! div is safe "
+@@@
+
+
+!SLIDE
+
+## Codes
+
+@@@ ruby
+    # this ...
+    Loofah.scrub_fragment(dangerous_html, :prune)
+
+    # is shorthand for this
+    Loofah.fragment(dangerous_html).scrub!(:prune)
+@@@
+
+
+!SLIDE
+
+## Codes
+
+Microsoft-y Markup looks like this ...
+
+<br>
+<pre style='font-size: 6pt'>
+@@@ html
+&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"&gt;
+&lt;meta name="ProgId" content="Word.Document"&gt;
+&lt;meta name="Generator" content="Microsoft Word 11"&gt;
+&lt;meta name="Originator" content="Microsoft Word 11"&gt;
+&lt;link rel="File-List" href="file:///C:%5CDOCUME%7E1%5CNICOLE%7E1%5CLOCALS%7E1%5CTemp%5Cmsohtml1%5C01%5Cclip_filelist.xml"&gt;
+&lt;!--[if gte mso 9]&gt;
+&lt;xml&gt;
+&lt;w:WordDocument&gt;
+&lt;w:View&gt;Normal&lt;/w:View&gt;
+&lt;w:Zoom&gt;0&lt;/w:Zoom&gt;
+&lt;w:PunctuationKerning/&gt;
+&lt;w:ValidateAgainstSchemas/&gt;
+&lt;w:SaveIfXMLInvalid&gt;false&lt;/w:SaveIfXMLInvalid&gt;
+&lt;w:IgnoreMixedContent&gt;false&lt;/w:IgnoreMixedContent&gt;
+&lt;w:AlwaysShowPlaceholderText&gt;false&lt;/w:AlwaysShowPlaceholderText&gt;
+&lt;w:Compatibility&gt;
+&lt;w:BreakWrappedTables/&gt;
+&lt;w:SnapToGridInCell/&gt;
+&lt;w:WrapTextWithPunct/&gt;
+&lt;w:UseAsianBreakRules/&gt;
+&lt;w:DontGrowAutofit/&gt;
+&lt;/w:Compatibility&gt;
+&lt;w:BrowserLevel&gt;MicrosoftInternetExplorer4&lt;/w:BrowserLevel&gt;
+&lt;/w:WordDocument&gt;
+&lt;/xml&gt;&lt;![endif]--&gt;&lt;!--[if gte mso 9]&gt;&lt;xml&gt;
+&lt;w:LatentStyles DefLockedState="false" LatentStyleCount="156"&gt;
+&lt;/w:LatentStyles&gt;
+&lt;/xml&gt;&lt;![endif]--&gt;&lt;style&gt;
+&lt;!--
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+{mso-style-parent:"";
+margin:0in;
+margin-bottom:.0001pt;
+mso-pagination:widow-orphan;
+font-size:12.0pt;
+font-family:"Times New Roman";
+mso-fareast-font-family:"Times New Roman";}
+@page Section1
+{size:8.5in 11.0in;
+margin:1.0in 1.25in 1.0in 1.25in;
+mso-header-margin:.5in;
+mso-footer-margin:.5in;
+mso-paper-source:0;}
+div.Section1
+{page:Section1;}
+--&gt;
+&lt;/style&gt;&lt;!--[if gte mso 10]&gt;
+&lt;style&gt;
+/* Style Definitions */
+table.MsoNormalTable
+{mso-style-name:"Table Normal";
+mso-tstyle-rowband-size:0;
+mso-tstyle-colband-size:0;
+mso-style-noshow:yes;
+mso-style-parent:"";
+mso-padding-alt:0in 5.4pt 0in 5.4pt;
+mso-para-margin:0in;
+mso-para-margin-bottom:.0001pt;
+mso-pagination:widow-orphan;
+font-size:10.0pt;
+font-family:"Times New Roman";
+mso-ansi-language:#0400;
+mso-fareast-language:#0400;
+mso-bidi-language:#0400;}
+&lt;/style&gt;
+&lt;![endif]--&gt;
+
+&lt;p class="MsoNormal"&gt;Much &lt;b style=""&gt;Simpler&lt;o:p&gt;&lt;/o:p&gt;&lt;/b&gt;&lt;/p&gt;
+@@@
+</pre>
+
+
+!SLIDE
+
+## Codes
+
+Whitewashed Microsoft-y markup looks like ...
+
+<br>
+@@@ html
+    <p>Much <b>Simpler</b></p>
+@@@
+
+!SLIDE
+
+# Other Loofah Niceties
+
+* Two ActiveRecord plugins (opt-in and opt-out)
+* ActionView helper replacements
+* Easy to build custom scrubbers for transformations
+
+!SLIDE
+
+# McBean
+
+HTML to Markdown
+
+![Sneetches](sneetches.jpg)
+
+<small>(an exercise in using Loofah for questionable purposes)</small>
+
+!SLIDE
+
+# The Claim
+
+Loofah makes it easy to transform XML/HTML documents.
+
+!SLIDE
+
+# McBean: The Vision
+
+Eventually, McBean should allow HTML, Markdown, Textile, RTF, etc. to be interchangeable formats.
+
+!SLIDE
+
+# McBean: The Code
+
+Wrote a 60-line Loofah::Scrubber class to convert HTML to Markdown in an afternoon.
+
+[http://github.com/flavorjones/mcbean/blob/master/lib/mcbean/markdown.rb](http://github.com/flavorjones/mcbean/blob/master/lib/mcbean/markdown.rb)
+
+
+!SLIDE
+
+# McBean: The Demo
+
+Chiggity check out the live demo:
+
+[http://mcbean.heroku.com/](http://mcbean.heroku.com/)
+
+!SLIDE
+
+# Thank you!
+
+* [Lorax](http://github.com/flavorjones/loofah): <tt>gem install lorax</tt>
+* [Loofah](http://github.com/flavorjones/lorax): <tt>gem install loofah</tt>
+* [McBean](http://github.com/flavorjones/mcbean): <tt>gem install mcbean</tt>
+* Follow me on the twitters: [@flavorjones](http://twitter.com/flavorjones)
+
+!SLIDE
+
+# Hiring!
+## (Part 1)
+
+Pharos is looking for a 3-month contractor.
+
+* Pushing realtime data to a rich web app.
+* Real users. Real money.
+* If you want to work part-time, we're OK with that.
+
+Email mike@pharos-ei.com for information!
+
+!SLIDE
+
+# Hiring!
+## (Part 2)
+
+Benchmark Solutions is hiring agile developers.
+
+* Agile Team in Finance: The Great White Whale
+* Pushing realtime data to a rich web app
+* Interesting architecture and functionality.
+* Real users. Real money. Real backing.
+* Free lunch, 30" cinema displays and an 8-core Mac Pro.
+
+Email mike.dalessio@benchmarksolutions.com for information!
+
+!SLIDE
+
+# Thank you!
+
+* [Lorax](http://github.com/flavorjones/loofah): <tt>gem install lorax</tt>
+* [Loofah](http://github.com/flavorjones/lorax): <tt>gem install loofah</tt>
+* [McBean](http://github.com/flavorjones/mcbean): <tt>gem install mcbean</tt>
+* Follow me on the twitters: [@flavorjones](http://twitter.com/flavorjones)
