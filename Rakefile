@@ -1,11 +1,14 @@
+desc "Launch a development server"
 task :serve do
   sh "jekyll serve"
 end
 
+desc "Build the site"
 task :build do
   sh "jekyll build"
 end
 
+desc "Check for missing files in _site"
 task :check => :build do
   require "find"
 
