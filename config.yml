@@ -1,0 +1,31 @@
+#
+#  project structure
+#
+directory: site
+artifacts:
+  - prez
+  - posts
+  - assets
+layout: layout.rhtml
+tailwind: site.css
+
+#
+#  site configuration
+#
+title: mike.daless.io
+css:
+  - assets/solarized-dark.css
+navigation:
+  - name: mike.daless.io
+    file: index.html
+  - name: Speaking
+    file: media.html
+  - name: Writing
+    file: posts.html
+  - name: Resumé
+    file: resume.html
+feed:
+  - directory: posts
+redirects:
+  - from: Michael-Dalessio.html
+    to:  resume.html

@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+   a { @apply underline hover:text-blue-700; }
+
+   body {
+      font-family: "Literata";
+      @apply bg-stone-50;
+   }
+
+   header { @apply pt-10 pb-20; }
+
+   nav {
+      ul { @apply flex place-content-center; }
+      li { @apply px-3 py-2 font-bold; }
+      li.current { @apply bg-yellow-300 rounded-xl drop-shadow; }
+   }
+
+   main .prose {
+      /* code blocks */
+      div.highlight { @apply rounded-md drop-shadow-lg; }
+
+      /* tailwind typography doesn't cover definition lists */
+      dl {
+         dt { @apply font-bold float-left mr-1; }
+         dd {
+            p { @apply inline; }
+         }
+      }
+      @apply mx-auto;
+   }
+
+   footer { @apply flex place-content-center pb-10 pt-20 text-gray-400; }
+}

@@ -1,0 +1,301 @@
+---
+title: Michael Dalessio
+wrapper: |
+  resume prose max-w-screen-lg px-20
+  print:max-w-none print:px-10 print:text-xs
+---
+
+# Michael Dalessio
+{: .flex .place-content-center }
+
+[github.com/flavorjones](https://github.com/flavorjones)
+[mike.daless.io](https://mike.daless.io)
+[mike.dalessio<!-- don't spam me -->@<!-- don't spam me -->gmail.com](mailto:mike.dalessio+site%40gmail.com)
+<span>NYC/NJ</span>
+{: .flex .place-content-center .space-x-8 }
+
+I write code for a living, but I also do it for fun. I've had success as an executive, a manager,
+and a technical lead. I encourage [software development
+practices](https://www.amazon.com/Extreme-Programming-Explained-Embrace-Change/dp/0321278658) which
+emphasize early and continuous delivery of valuable software. I try to always respect the humanity
+of the people who must collaborate well in order to build excellent products.
+{: .italic }
+
+## TL;DR
+
+### Technology Skills
+
+Ruby and Rails.
+: I love Ruby, though I'm comfortable in many other languages. In Ruby, I have experience writing
+  native extensions in C, Java, and FFI, and am familiar with the garbage collector. At Shopify, I
+  supported one of the largest web sites anywhere and have experience with performance analysis.
+
+Distributed systems.
+: After working on Cloud Foundry for a few years, I know some things about developing, operating,
+  and maintaining a distributed computing platform, and about the interesting emergent behavior you
+  see when the platform is put under stress.
+
+C, C++, FORTRAN.
+: I've designed and implemented SDKs and have experience writing portable code for platforms old
+  and new. Yes, I've got deep knowledge of FORTRAN, having integrated it with C and C++ at the
+  source level and at linktime. No, I don't expect this to ever be useful again.
+
+Other languages.
+: I've written Golang, Java, Lisp, Clojure, Scala, Rust, Perl, and a handful of other languages in
+  addition to what's listed above; though I wouldn't claim to be an expert in any of them. Oh, but I
+  am a bash wizard.
+
+XML and HTML.
+: I've been maintaining the Nokogiri library for over a decade, so I'm intimately familiar with the
+  XML, XPath, HTML4, and HTML5 specs. I also am a co-maintainer of the libgumbo HTML5 parser used by
+  Nokogiri.
+
+System-level programming.
+: I've got experience with threaded and evented processing models. I've done network programming on
+  both *nix and Windows using TCP and UDP. I've built a fault-tolerant load balancer and implemented
+  job scheduling algorithms.
+
+Figuring It Out.
+: I can read `man` pages. I know what an RFC is. I like reading other people's code.
+
+### Organizational and Human Skills
+
+Team Building.
+: I've had success hiring and managing strong, inclusive development teams, and improving existing
+  teams.
+
+Framework Design.
+: I've designed and built application frameworks to deliver complex functionality to domain-expert
+  developers. Notably, I designed and built the SDK used by Bloomberg to build Launchpad.
+
+Mentoring.
+: I'm able to mentor developers in technology and design, both in an informal office setting and in
+  formal training classes. I'm also an experienced technical trainer, having run many large
+  "developer boot camps".
+
+Client management.
+: I've got years of experience working with clients of all sizes in a variety of verticals. I know
+  that everything works better when people trust and respect each other.
+
+Financial and Energy Markets.
+: I have experience building trading systems for equity and fixed income financial markets, and for
+  energy markets. I'm also comfortable with bond math and the FI derivative market.
+
+Mad Communication Skillz.
+: Me talk good. Me also write good. Me so funny.
+
+
+## Professional Experience
+
+### Advisor @ [Prospective](https://prospective.co/) (May 2024 --- current)
+
+Advising open-source startup Prospective on delivering fast data visualization in the browser.
+
+
+### Advisor @ [Gitwallet](https://gitwallet.co/) (Feb 2024 --- current)
+
+Advising startup focused on helping open-source maintainers monetize their expertise.
+
+
+### Director of Engineering @ [Shopify](https://shopify.com) (June 2020 --- March 2024)
+
+Led the [Ruby and Rails Infrastructure team](https://railsatscale.com), dedicated to making Ruby and
+Rails 100-year tools. Part of the Developer Acceleration team.
+
+
+### Advisor @ [True Diversity](https://github.com/true-diversity) (Jan 2021 --- Oct 2021)
+
+Advising startup focused on improving diversity and equity in the tech industry.
+
+
+### VP of Engineering @ [VMware](https://tanzu.vmware.com/) (via acquisition, Dec 2019 --- June 2020)
+
+Led the Tanzu "Modern Application" R&D team of 400+ engineers worldwide on Cloud Foundry and related
+Kubernetes and Data Services products.
+
+
+### [Pivotal](https://en.wikipedia.org/wiki/Pivotal_Software) (2012 --- 2019)
+
+#### VP, Engineering @ Pivotal Cloud Foundry (Oct 2016 --- Dec 2019)<br>Engineering Director @ Pivotal Cloud Foundry (July 2014 --- Sept 2016)
+
+* Wore many hats to help the Pivotal Cloud Foundry engineering organization scale out to 80+ teams in
+eight cities across eight timezones.
+* For the [CF Foundation](http://cloudfoundry.org/about/index.html), led two OSS [Project Management
+Committees](http://cloudfoundry.org/pdfs/CFF_Development_Governance.pdf): Buildpacks and Developer
+Tools.
+
+#### Director @ [Pivotal Labs](http://pivotallabs.com) NYC (Sept 2012 --- July 2014)
+
+As the business owner of the NYC consulting practice for Pivotal Labs, was responsible for all
+aspects of revenue and headcount.
+
+### Director of Technology @ [Benchmark Solutions](http://www.bloomberg.com/research/stocks/private/snapshot.asp?privcapId=46774241) (Feb 2010 --- Aug 2012)
+
+I was the manager and technical lead for the frontend team (web and native Windows client), the
+realtime data infrastructure team, and the reference data team.
+
+
+### [Pivotal Labs](https://en.wikipedia.org/wiki/Pivotal_Labs) (2008 --- 2010)
+
+#### Director, NYC consulting business. (Sept 2009 --- Feb 2010)
+
+As the business owner of the NYC consulting practice for Pivotal Labs, was responsible for all
+aspects of revenue and headcount.
+
+#### Agile Software Developer. (Nov 2008 --- Sept 2009)
+
+Consulted with multiple clients to implement web applications built with Rails and Javascript.
+
+
+### Founding Partner @ [Pharos Enterprise Intelligence](http://www.pharos-ei.com) (Jan 2008 --- Dec 2018)
+
+System architect and lead developer for a turn-key Energy Management System.
+
+### Director of Application Development @ [USPOWERGEN](http://www.uspowergen.com/) (May 2006 --- Dec 2007)
+
+* System architect and lead developer for an in-house Energy Management System.
+* Director of technology across multiple power plants.
+
+### Head of Software Development @ ASPEED Software (Aug 2004 --- Apr 2006)
+
+* Managed a team of developers building SDKs for parallel computing on large clusters.
+* Assisted clients in parallelizing applications (Professional Services). Lead developer on
+parallel-computing SDK.
+
+### Infrastructure Applications Lead @ [Moneyline Telerate](https://www.crunchbase.com/organization/moneyline-telerate) (Nov 2003 --- Aug 2004)
+
+* Managed a team porting applications to a new pub/sub API as the last phase of a ticker plant rollout.
+* Managed a team of offshore developers building an internal application for browsing ticker plant data.
+* Implemented a high-performance UDP feed to integrate third-party data vendors.
+
+### [Bloomberg, L.P.](http://www.bloomberg.com) (1995 --- 2003)
+
+#### Architect and Project Lead for Bloomberg Launchpad @ (2001 --- 2003)
+
+* Managed a high-performing expert team.
+* Designed, built, and led development on __Bloomberg Launchpad__, the next-gen Bloomberg UI, and
+implemented core services for pub/sub and instant messaging.
+
+#### Trading Systems Engineer (1995 --- 2001)
+
+* Designed and built the __Trading Systems Desktop ("TW")__ using the new Bloomberg UI (Win32
+controls).
+* Built and maintained a set of customer-facing TCP/IP feeds.
+* Coordinated and taught the Bloomberg "boot camp" developer training classes.
+* Wrangled a huge time-series dataset.
+
+
+## Volunteer Work
+
+### Member of the [Ruby Central](https://rubycentral.org/) OSS Committee (2023 --- present)
+
+This committee meets periodically to advise and direct the OSS team funded by Ruby Central.
+
+
+### Member of the [Ruby on Rails](https://rubyonrails.org/) security team and triage team (2023 --- present)
+
+I'm a contributor to Rails, and the de facto owner of Rails's HTML sanitization stack, which led to my joining the security team. As a member of the security team, respond as needed to vulnerability reports. As a member of the triage team, make initial reviews and responses to issues and pull requests.
+
+
+### Co-organizer of [GORUCO](http://goruco.com/) (2015 --- 2018)
+
+GORUCO was the premier NYC regional Ruby conference, convening annually from 2007 --- 2018.
+
+
+## Open Source Experience
+
+### Maintainer of [nokogiri](http://nokogiri.org)
+
+Nokogiri is currently the most popular XML/HTML parsing library for Ruby developers. It supports CSS
+and XPath querying, has push and pull SAX parsers, validates schemas, performs XSLT transformations,
+and has a very simple and usable API. It's implemented in Ruby with native extensions in C and Java.
+
+### Maintainer of [loofah](https://rubygems.org/gems/loofah), [loofah-activerecord](https://rubygems.org/gems/loofah-activerecord), and [rails-html-sanitizer](https://github.com/rails/rails-html-sanitizer) 
+
+Loofah underlies the default HTML sanitizer in Rails, which can be used to prevent cross-site
+scripting (XSS) attacks. It provides a variety of methods to clean or remove unsafe HTML, and
+delivers ActiveRecord plugins for Rails applications.
+
+Rails HTML Sanitizer is the default library for sanitizing HTML fragments in Rails applications.
+
+### Maintainer of [sqlite3](https://rubygems.org/gems/mechanize) Ruby gem
+
+The sqlite3 ruby gem is the original and most widely-used Ruby database adapter for [SQLite](https://www.sqlite.org/).
+
+### Maintainer of [mechanize](https://rubygems.org/gems/mechanize) and [http-cookie](https://github.com/sparklemotion/http-cookie)
+
+Mechanize is a Ruby library used for automating website interaction and screen-scraping. It fully
+supports browser history and cookies, and allows easy authentication and form submission. The
+http-cookie project delivers standards-compliant cookie handling.
+
+### Maintainer of [rake-compiler-dock](https://github.com/rake-compiler/rake-compiler-dock), [mini_portile](https://github.com/flavorjones/mini_portile), and [ruby-c-extensions-explained](https://github.com/flavorjones/ruby-c-extensions-explained)
+
+The rake-compiler-dock project delivers OCI images to help maintainers build precompiled native
+gems. It's the Ruby analog for Python's [`pypa/manylinux`](https://github.com/pypa/manylinux)
+project for building Wheels.
+
+The mini_portile project helps gem maintainers integrate native extensions with autoconf projects.
+
+Finally, the Ruby C Extensions Explained is a project that demonstrates and documents a variety of
+ways to package and precompile native C code in a Ruby gem, complete with CI pipelines and two
+conference talks explaining the approaches.
+
+
+### Maintainer of [tailwindcss-rails](https://github.com/rails/tailwindcss-rails)
+
+Tailwindcss-rails packages tailwindcss and provides tight integration with Rails.
+
+### Selected Smaller Projects and Contributions
+
+I've made contributions to many other Ruby-related projects, including
+the [Ruby language](https://www.ruby-lang.org/en/) and its [Prism parser](https://github.com/ruby/prism),
+[rdoc](https://github.com/ruby/rdoc),
+the [Truffleruby interpreter](https://github.com/oracle/truffleruby),
+[sanitize](https://github.com/rgrove/sanitize),
+[crass](https://github.com/rgrove/crass),
+[Active Hash](https://rubygems.org/gems/active_hash),
+[rake-compiler](https://github.com/rake-compiler/rake-compiler),
+[grpc](https://github.com/grpc/grpc),
+[ruby-magic](https://github.com/kwilczynski/ruby-magic),
+[ruby-ffi](https://github.com/ffi/ffi),
+[chromedriver-helper](https://rubygems.org/gems/chromedriver-helper),
+[hoe](https://github.com/seattlerb/hoe),
+[hoe-debugging](https://rubygems.org/gems/hoe-debugging),
+[hoe-gemspec](https://rubygems.org/gems/hoe-gemspec),
+[hoe-bundler](https://rubygems.org/gems/hoe-bundler),
+and [concurrent-ruby](https://github.com/ruby-concurrency/concurrent-ruby).
+
+Outside of Ruby, I've made contributions to
+[libxml2](https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home),
+[git](http://git-scm.com),
+[valgrind](https://sourceware.org/git/valgrind),
+[DOMPurify](https://github.com/cure53/DOMPurify),
+and [rofi](https://github.com/davatorium/rofi).
+
+
+## Undergraduate Experience
+
+### NASA Space Telescope Science Institute (1993 --- 1995)
+
+#### Research assistant to Dr. Rex Saffer
+
+Studied [Subdwarf B stars](https://en.wikipedia.org/wiki/Subdwarf_B_star) and their rotational
+velocities.
+
+
+### Rowland Department of Physics @ The Johns Hopkins University
+
+#### Research assistant to Dr. Doyle T. Hall (1993 --- 1995)
+
+Studied Jupiter and its moons, primarily through analysis of Voyager and
+[IUE](https://en.wikipedia.org/wiki/International_Ultraviolet_Explorer) data.
+
+#### Assistant System Administrator (1992 --- 1993)
+
+Helped manage the shared network and computer systems for the department.
+
+## Education
+
+### The Johns Hopkins University (Sept 1991 --- May 1995)
+
+Graduated with a B.A. in Physics.

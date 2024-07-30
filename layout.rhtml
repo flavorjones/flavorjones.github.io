@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="<%= site.tailwind %>">
+    <% (page[:css] || site.css).each do |css| -%>
+      <link rel="stylesheet" href="<%= css %>">
+    <% end -%>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&display=swap" rel="stylesheet">
+    <title><%= page[:title] || site.title %></title>
+  </head>
+  <body>
+    <header>
+      <nav class="print:hidden">
+        <ul>
+          <% site.navigation.each do |item| -%>
+            <li class="<%= 'current' if page[:file] == item[:file] %>">
+              <a href="<%= item[:file] %>"><%= item[:name] %></a>
+            </li>
+          <% end -%>
+        </ul>
+      </nav>
+    </header>
+    <main class="page-content" aria-label="Content">
+      <div class="<%= page[:wrapper] || "prose" %>">
+        <%= content -%>
+      </div>
+    </main>
+    <footer class="print:hidden">
+      <p>&copy; 2004 &mdash; <%= Time.now.year %> Mike Dalessio</p>
+    </footer>
+  </body>
+</html>
