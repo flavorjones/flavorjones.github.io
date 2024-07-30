@@ -19,4 +19,3 @@
 - advanced
   - [ ] redirects (e.g., old Michael-Dalessio.html to new resume.html)
   - [ ] atom feed
-  - [ ] sitemap
