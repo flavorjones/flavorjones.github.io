@@ -87,25 +87,27 @@ Mad Communication Skillz.
 
 ## Professional Experience
 
-### Advisor @ [Prospective](https://prospective.co/) (May 2024 --- current)
+### Startup Advisor
+
+#### [Prospective](https://prospective.co/) (May 2024 --- current)
 
 Advising open-source startup Prospective on delivering fast data visualization in the browser.
 
 
-### Advisor @ [Gitwallet](https://gitwallet.co/) (Feb 2024 --- current)
+#### [Gitwallet](https://gitwallet.co/) (Feb 2024 --- current)
 
 Advising startup focused on helping open-source maintainers monetize their expertise.
+
+
+#### [True Diversity](https://github.com/true-diversity) (Jan 2021 --- Oct 2021)
+
+Advising startup focused on improving diversity and equity in the tech industry.
 
 
 ### Director of Engineering @ [Shopify](https://shopify.com) (June 2020 --- March 2024)
 
 Led the [Ruby and Rails Infrastructure team](https://railsatscale.com), dedicated to making Ruby and
 Rails 100-year tools. Part of the Developer Acceleration team.
-
-
-### Advisor @ [True Diversity](https://github.com/true-diversity) (Jan 2021 --- Oct 2021)
-
-Advising startup focused on improving diversity and equity in the tech industry.
 
 
 ### VP of Engineering @ [VMware](https://tanzu.vmware.com/) (via acquisition, Dec 2019 --- June 2020)
