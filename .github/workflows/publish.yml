@@ -9,11 +9,13 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+permissions:
+  pages: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
@@ -28,9 +30,6 @@ jobs:
   deploy: # see https://github.com/actions/deploy-pages
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
