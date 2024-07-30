@@ -253,6 +253,8 @@ the [Ruby language](https://www.ruby-lang.org/en/) and its [Prism parser](https:
 the [Truffleruby interpreter](https://github.com/oracle/truffleruby),
 [sanitize](https://github.com/rgrove/sanitize),
 [crass](https://github.com/rgrove/crass),
+[racc](https://github.com/ruby/racc),
+[rexical](https://github.com/sparklemotion/rexical),
 [Active Hash](https://rubygems.org/gems/active_hash),
 [rake-compiler](https://github.com/rake-compiler/rake-compiler),
 [grpc](https://github.com/grpc/grpc),
