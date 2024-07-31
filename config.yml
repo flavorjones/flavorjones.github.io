@@ -24,10 +24,15 @@ navigation:
     file: posts.html
   - name: Resumé
     file: resume.html
-feed:
-  - directory: posts
-redirects:
-  - from: Michael-Dalessio.html
-    to:  resume.html
 files:
   - 404.html
+  - posts/2015/12/abstraction-or-the-gift-of-our-weak-brains.html
+
+##
+## TODO!
+##
+# feed:
+#   - directory: posts
+# redirects:
+#   - from: Michael-Dalessio.html
+#     to:  resume.html

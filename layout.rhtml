@@ -17,7 +17,7 @@
         <ul>
           <% site.navigation.each do |item| -%>
             <li class="<%= 'current' if page[:file] == item[:file] %>">
-              <a href="<%= item[:file] %>"><%= item[:name] %></a>
+              <a href="/<%= item[:file] %>"><%= item[:name] %></a>
             </li>
           <% end -%>
         </ul>
