@@ -85,38 +85,46 @@ presentations:
   url: prez/loofah-2010-03-09/loofah.html
 ---
 
-<h2>Videos</h2>
+<section>
+  <h1>Videos</h1>
 
-<% page[:videos].each do |entry| %>
-  <h3><%= entry[:title] %></h3>
-  <% if entry[:slides] %><a class="float-right" target="_blank" href="<%= entry[:slides] %>">Slides</a><% end %>
-  <b><%= entry[:venue] %></b>&nbsp;<i>(<%= entry[:date] %>)</i>
-  <iframe class="rounded-xl aspect-video w-full"
-          src="<%= entry[:url] %>" title="<%= entry[:title] %>"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen></iframe>
-  <div><%= entry[:desc] %></div>
-<% end %>
+  <% page[:videos].each do |entry| %>
+    <h2><%= entry[:title] %></h2>
+    <iframe class="rounded-xl aspect-video w-full"
+            src="<%= entry[:url] %>" title="<%= entry[:title] %>"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen></iframe>
+    <% if entry[:slides] %>
+      <a class="float-right" target="_blank" href="<%= entry[:slides] %>">Slides</a>
+    <% end %>
+    <b><%= entry[:venue] %></b>&nbsp;<i>(<%= entry[:date] %>)</i>
+    <div><%= entry[:desc] %></div>
+  <% end %>
+</section>
 
-<h2>Podcasts</h2>
+<section>
+  <h1>Podcasts</h1>
 
-<% page[:podcasts].each do |entry| %>
-  <h3><%= entry[:title] %></h3>
-  <b><%= entry[:venue] %></b>&nbsp;<i>(<%= entry[:date] %>)</i>
-  <div><%= entry[:desc] %></div>
-  <iframe class="rounded-xl"
-          src="<%= entry[:url] %>" title="<%= entry[:title] %>"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen></iframe>
-<% end %>
+  <% page[:podcasts].each do |entry| %>
+    <h2><%= entry[:title] %></h2>
+    <b><%= entry[:venue] %></b>&nbsp;<i>(<%= entry[:date] %>)</i>
+    <div><%= entry[:desc] %></div>
+    <iframe class="rounded-xl"
+            src="<%= entry[:url] %>" title="<%= entry[:title] %>"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen></iframe>
+  <% end %>
+</section>
 
-<h2>Presentations</h2>
+<section>
+  <h1>Presentations</h1>
 
-<% page[:presentations].each do |entry| %>
-  <h3><a target="_blank" href="<%= entry[:url] %>"><%= entry[:title] %></a></h3>
-  <div><%= entry[:desc] %>&nbsp;<i>(<%= entry[:date] %>)</i></div>
-<% end %>
+  <% page[:presentations].each do |entry| %>
+    <h2><a target="_blank" href="<%= entry[:url] %>"><%= entry[:title] %></a></h2>
+    <div><%= entry[:desc] %>&nbsp;<i>(<%= entry[:date] %>)</i></div>
+  <% end %>
+</section>

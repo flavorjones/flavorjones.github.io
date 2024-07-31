@@ -29,6 +29,9 @@
             p { @apply inline; }
          }
       }
+
+      section { @apply mb-10; }
+
       @apply mx-auto;
    }
 
