@@ -17,5 +17,6 @@
   - [ ] render each post in a separate subdirectory
   - [ ] writing index page
 - advanced
+  - [ ] timestamp css file names
   - [ ] redirects (e.g., old Michael-Dalessio.html to new resume.html)
   - [ ] atom feed
