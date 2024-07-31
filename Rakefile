@@ -15,6 +15,10 @@ class Site
     config.fetch(:directory).delete_suffix("/")
   end
 
+  def target
+    ENV.key?("PRODUCTION") ? "/" : directory
+  end
+
   def navigation
     config.fetch(:navigation)
   end

@@ -16,6 +16,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PRODUCTION: t
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
