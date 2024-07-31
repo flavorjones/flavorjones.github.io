@@ -132,9 +132,10 @@ aspects of revenue and headcount.
 Consulted with multiple clients to implement web applications built with Rails and Javascript.
 
 
-### Founding Partner @ [Pharos Enterprise Intelligence](http://www.pharos-ei.com) (Jan 2008 --- Dec 2018)
+### Founder @ [Pharos Enterprise Intelligence](http://www.pharos-ei.com) (Jan 2008 --- Dec 2018)
 
-System architect and lead developer for a turn-key Energy Management System.
+Architect and lead developer for a turn-key SaaS Energy Management System which helps North American
+power plant operators run their business and bid their units into the energy markets.
 
 ### Director of Application Development @ [USPOWERGEN](http://www.uspowergen.com/) (May 2006 --- Dec 2007)
 
