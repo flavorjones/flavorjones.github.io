@@ -116,7 +116,7 @@ task build: [:artifacts, :templates, :tailwind]
 multitask artifacts: site.directory
 site.artifacts.each do |dir|
   multitask :artifacts do
-    sh "rsync", "--archive", "--delete", "--info=del,name1", dir, site.directory
+    sh "rsync", "-quiet", "--archive", "--delete", "--info=del,name1", dir, site.directory
   end
 end
 
