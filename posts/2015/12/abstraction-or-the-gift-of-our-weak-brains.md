@@ -37,7 +37,7 @@ Holy cow.
 
 I mean, I realize that the solution had severe constraints placed on it (miniscule processing power, and 64KB of RAM). But the situation being described sounds like it's orthogonal to those constraints.
 
-> _"trying to get in another engineer's head."_
+> trying to get in another engineer's head.
 
 Think about that for a moment. Not "trying to understand the code", not "trying to understand the implementation", but __"trying to understand how the author was reasoning about the universe at the time."__
 
@@ -163,8 +163,8 @@ This empathy for fellow developers can emerge in a number of ways. Perhaps the b
 
 Which is simply a restatement of [Hal Abelson][ha]'s famous quote:
 
-> “Programs must be written for people to read, and only incidentally
-> for machines to execute.”
+> Programs must be written for people to read, and only incidentally
+> for machines to execute.
 
 My own personal interpretation of Literate Programming is: prefer self-explanatory code over comments. I often urge my pairs to write tests and implementations as if it were English, and in so doing help drive out the right abstractions.
 
