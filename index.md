@@ -1,5 +1,5 @@
 ---
-title: About - mike.daless.io
+title: About
 ---
 
 ## Hey there,
