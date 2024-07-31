@@ -87,23 +87,6 @@ Mad Communication Skillz.
 
 ## Professional Experience
 
-### Startup Advisor
-
-#### [Prospective](https://prospective.co/) (May 2024 --- current)
-
-Advising open-source startup Prospective on delivering fast data visualization in the browser.
-
-
-#### [Gitwallet](https://gitwallet.co/) (Feb 2024 --- current)
-
-Advising startup focused on helping open-source maintainers monetize their expertise.
-
-
-#### [True Diversity](https://github.com/true-diversity) (Jan 2021 --- Oct 2021)
-
-Advising startup focused on improving diversity and equity in the tech industry.
-
-
 ### Director of Engineering @ [Shopify](https://shopify.com) (June 2020 --- March 2024)
 
 Led the [Ruby and Rails Infrastructure team](https://railsatscale.com), dedicated to making Ruby and
@@ -202,6 +185,23 @@ I'm a contributor to Rails, and the de facto owner of Rails's HTML sanitization 
 ### Co-organizer of [GORUCO](http://goruco.com/) (2015 --- 2018)
 
 GORUCO was the premier NYC regional Ruby conference, convening annually from 2007 --- 2018.
+
+
+## Startup Advisor
+
+### [Prospective](https://prospective.co/) (May 2024 --- current)
+
+Advising open-source startup Prospective on delivering fast data visualization in the browser.
+
+
+### [Gitwallet](https://gitwallet.co/) (Feb 2024 --- current)
+
+Advising startup focused on helping open-source maintainers monetize their expertise.
+
+
+### [True Diversity](https://github.com/true-diversity) (Jan 2021 --- Oct 2021)
+
+Advising startup focused on improving diversity and equity in the tech industry.
 
 
 ## Open Source Experience
