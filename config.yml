@@ -29,3 +29,5 @@ feed:
 redirects:
   - from: Michael-Dalessio.html
     to:  resume.html
+files:
+  - 404.html

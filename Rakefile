@@ -36,7 +36,8 @@ class Site
   end
 
   def files
-    config.fetch(:navigation).map { _1[:file] }.compact.map { File.join(directory, _1) }
+    filenames = config.fetch(:navigation).map { _1[:file] } + config.fetch(:files)
+    filenames.compact.map { File.join(directory, _1) }
   end
 
   def layout
