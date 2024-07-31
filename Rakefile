@@ -15,10 +15,6 @@ class Site
     config.fetch(:directory).delete_suffix("/")
   end
 
-  def target
-    ENV.key?("PRODUCTION") ? "/" : directory
-  end
-
   def navigation
     config.fetch(:navigation)
   end
@@ -135,5 +131,9 @@ file tailwind_css => [site.tailwind, site.files].flatten do |t|
   FileUtils.touch(t.name) # because tailwind won't update the file timestamp if nothing changed
 end
 task tailwind: tailwind_css
+
+task serve: :build do
+  sh "puma"
+end
 
 task :default => :build

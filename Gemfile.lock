@@ -55,6 +55,7 @@ GEM
     mini_portile2 (2.8.7)
     minitest (5.24.1)
     mutex_m (0.2.0)
+    nio4r (2.7.3)
     nokogiri (1.16.7)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -62,6 +63,8 @@ GEM
       racc (~> 1.4)
     psych (5.1.2)
       stringio
+    puma (6.4.2)
+      nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.7)
     rack-session (2.0.0)
@@ -116,6 +119,7 @@ DEPENDENCIES
   haml
   kramdown
   kramdown-parser-gfm
+  puma
   rake
   rouge
   tailwindcss-rails
