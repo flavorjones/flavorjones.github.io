@@ -63,7 +63,7 @@ A simple velocity calculation later, and you have the answer.
 ![von-neumann](abstraction-or-the-gift-of-our-weak-brains/von-neumann.jpg)
 {: .inset .float-left .size-2/5 .pr-5 }
 
-According to <u>[The Legend of von Neumann][]</u>, here's what happened when the puzzle was posed to Von Neumann:
+According to [*The Legend of von Neumann*][legend], here's what happened when the puzzle was posed to Von Neumann:
 
 > ... he solved it in an instant, and thereby disappointed the
 > questioner: "Oh, you must have heard the trick before!" "What
@@ -77,7 +77,7 @@ __Why didn't Von Neumann see and use the shortcut?__ Was it easier for him to do
 
   [John von Neumann]: https://en.wikipedia.org/wiki/John_von_Neumann
   [2trains]: http://mathworld.wolfram.com/TwoTrainsPuzzle.html
-  [The Legend of von Neumann]: https://www.jstor.org/stable/2319080
+  [legend]: https://www.jstor.org/stable/2319080
 
 
 ## The History of Science is a History of Abstractions
