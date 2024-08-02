@@ -6,7 +6,7 @@ short: |
 
 # Abstraction, or, The Gift of Our Weak Brains
 
-2015-12, originally published at [engineering.pivotal.io](https://engineering.pivotal.io/post/abstraction-or-the-gift-of-our-weak-brains/)
+2015-12, originally published at [engineering.pivotal.io](https://web.archive.org/web/20151224023200/https://engineering.pivotal.io/post/abstraction-or-the-gift-of-our-weak-brains/)
 {: .text-sm .italic .opacity-75 }
 
 __TL;DR__:
