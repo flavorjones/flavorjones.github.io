@@ -132,6 +132,7 @@ file tailwind_css => [site.tailwind, site.files].flatten do |t|
 end
 task tailwind: tailwind_css
 
+desc "Serve the site via puma"
 task serve: :build do
   sh "puma"
 end
