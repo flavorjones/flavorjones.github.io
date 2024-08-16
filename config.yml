@@ -22,6 +22,8 @@ navigation:
     file: media.html
   - name: Writing
     file: posts.html
+  - name: Projects
+    file: projects.html
   - name: Resumé
     file: resume.html
 files:
