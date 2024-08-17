@@ -11,37 +11,23 @@ class Site
     @config ||= YAML.load_file("config.yml", symbolize_names: true)
   end
 
-  def directory
-    config.fetch(:directory).delete_suffix("/")
-  end
+  def directory = config.fetch(:directory).delete_suffix("/")
 
-  def navigation
-    config.fetch(:navigation)
-  end
+  def navigation = config.fetch(:navigation)
 
-  def title
-    config.fetch(:title)
-  end
+  def title = config.fetch(:title)
 
-  def artifacts
-    config.fetch(:artifacts)
-  end
+  def artifacts = config.fetch(:artifacts)
 
-  def tailwind
-    config.fetch(:tailwind)
-  end
+  def tailwind = config.fetch(:tailwind)
 
-  def css
-    config.fetch(:css)
-  end
+  def css = config.fetch(:css)
+
+  def layout = config.fetch(:layout)
 
   def files
     filenames = config.fetch(:navigation).map { _1[:file] } + config.fetch(:files)
     filenames.compact.map { File.join(directory, _1) }
-  end
-
-  def layout
-    config.fetch(:layout)
   end
 
   def parse_front_matter(raw_content)
