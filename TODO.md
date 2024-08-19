@@ -13,10 +13,11 @@
   - [x] put talks here, with youtube video embeds and links to slides
   - [x] put presentations here, with an deck image and link to slides
 - writing
-  - [ ] import markdown for all my posts
-  - [ ] render each post in a separate subdirectory
-  - [ ] writing index page
+  - [x] writing index page
+  - [-] import markdown for all my posts
+    - [ ] render each post in a separate subdirectory
 - advanced
-  - [ ] timestamp css file names
-  - [ ] redirects (e.g., old Michael-Dalessio.html to new resume.html)
+  - [ ] timestamp css file names (or otherwise bust caching)
+  - [x] hardcoded redirects (e.g., old Michael-Dalessio.html to new resume.html)
+  - [ ] make the redirects configurable
   - [ ] atom feed
