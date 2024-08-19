@@ -1,0 +1,14 @@
+---
+no_layout: true
+---
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0;url=<%= redirect[:to] %>" />
+  </head>
+  <body>
+    <p>Redirecting to <tt><%= redirect[:to] %></tt></p>
+    <p>If you are not redirected automatically, follow the <a href="<%= redirect[:to] %>">link</a>.</p>
+  </body>
+</html>

@@ -36,7 +36,7 @@ directory site.directory
 CLEAN << site.directory
 
 desc "Build the site"
-task build: [:artifacts, :templates, :tailwind]
+task build: [:artifacts, :templates, :redirects, :tailwind]
 
 # artifacts are blitted to the site directory
 multitask artifacts: site.directory
@@ -49,6 +49,13 @@ end
 # templates use the rules defined above
 multitask templates: site.directory
 multitask templates: site.files
+
+site.redirects.map do |redirect|
+  multitask :redirects do
+    target = File.join(site.directory, redirect[:from])
+    site.process_template("redirect.rhtml", target, redirect:)
+  end
+end
 
 # process the tailwind css file last (it depends on the html in the site directory)
 tailwind_css = File.join(site.directory, site.tailwind)

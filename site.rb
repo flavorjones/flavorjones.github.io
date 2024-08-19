@@ -39,8 +39,8 @@ class Site
     end
   end
 
-  def process_template(source, destination)
-    puts "#{source} => #{destination}"
+  def process_template(source, destination, **render_context)
+    puts "#{source} => #{destination} #{render_context.empty? ? "" : render_context}"
 
     front_matter, content = parse_front_matter(File.read(source))
     front_matter[:file] ||= Pathname.new(destination).relative_path_from(directory).to_s
@@ -50,13 +50,15 @@ class Site
     file_extensions.reverse.each do |file_ext|
       fake_filename = "#{file_basename}.#{file_ext}"
       tilt_template = Tilt.new(fake_filename, nil, tilt_config.fetch(".#{file_ext}")) { content }
-      content = tilt_template.render(self, { site: self, page: front_matter })
+      content = tilt_template.render(self, **render_context.merge(site: self, page: front_matter))
     end
 
-    tilt_template = Tilt.new(layout, nil, tilt_config[File.extname(layout)])
-    page = tilt_template.render(self, { site: self, content: content, page: front_matter })
+    unless front_matter[:no_layout]
+      tilt_template = Tilt.new(layout, nil, tilt_config[File.extname(layout)])
+      content = tilt_template.render(self, **render_context.merge(site: self, content: content, page: front_matter))
+    end
 
-    File.write(destination, page)
+    File.write(destination, content)
   end
 
   def tilt_config
