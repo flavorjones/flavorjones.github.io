@@ -35,6 +35,10 @@ files:
 ##
 # feed:
 #   - directory: posts
-# redirects:
-#   - from: Michael-Dalessio.html
-#     to:  resume.html
+redirects:
+  - from: "/about.html"
+    to: "/"
+  - from: "/prez.html"
+    to: "/media.html"
+  - from: "/Michael-Dalessio.html"
+    to: "/resume.html"

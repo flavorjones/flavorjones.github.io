@@ -22,6 +22,8 @@ class Site
 
   def layout = config.fetch(:layout)
 
+  def redirects = config.fetch(:redirects)
+
   def files
     filenames = config.fetch(:navigation).map { _1[:file] } + config.fetch(:files)
     filenames.compact.map { File.join(directory, _1) }
