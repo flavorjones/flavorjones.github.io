@@ -17,7 +17,7 @@
   - [-] import markdown for all my posts
     - [ ] render each post in a separate subdirectory
 - advanced
-  - [ ] timestamp css file names (or otherwise bust caching)
   - [x] hardcoded redirects (e.g., old Michael-Dalessio.html to new resume.html)
-  - [ ] make the redirects configurable
+  - [x] make the redirects configurable
+  - [ ] timestamp css file names (or otherwise bust caching)
   - [ ] atom feed
