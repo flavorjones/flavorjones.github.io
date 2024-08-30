@@ -45,6 +45,15 @@ videos:
   slides: prez/nokogiri-gogaruco-2013-09-20/index.html
 
 podcasts:
+- title: HTML parsing & sanitization and SQLite
+  venue: Remote Ruby
+  desc: |
+    In this podcast episode I  talk with Chris Oliver and Andrew Mason about Loofah and
+    the Rails HTML sanitizer, SQLite support in Ruby, how I got started in Ruby, and
+    a bit about management vs leadership.
+  url: https://www.buzzsprout.com/2260490/15617996?client_source=small_player&amp;iframe=true&amp?container_id=buzzsprout-small-player-2260490&player=small
+  date: 2024-08
+  full_width: true
 - title: Ruby Shield, Ruby Central, and Shopify (with Evan Phoenix)
   venue: Programming Throwdown
   desc: |
@@ -108,7 +117,7 @@ presentations:
   <h3><%= entry[:title] %></h3>
   <b><%= entry[:venue] %></b>&nbsp;<i>(<%= entry[:date] %>)</i>
   <div><%= entry[:desc] %></div>
-  <iframe class="rounded-xl"
+  <iframe class="rounded-xl <%= entry[:url].include?("buzzsprout") ? "w-full h-52" : "" %>"
           src="<%= entry[:url] %>" title="<%= entry[:title] %>"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
