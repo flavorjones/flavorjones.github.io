@@ -42,7 +42,7 @@ task build: [:artifacts, :templates, :redirects, :tailwind]
 multitask artifacts: site.directory
 site.artifacts.each do |dir|
   multitask :artifacts do
-    sh "rsync", "-quiet", "--archive", "--delete", "--info=del,name1", dir, site.directory
+    sh "rsync", "--quiet", "--archive", "--delete", "--info=del,name1", dir, site.directory
   end
 end
 
@@ -65,7 +65,7 @@ file tailwind_css => [site.tailwind, site.files].flatten do |t|
 end
 task tailwind: tailwind_css
 
-desc "Serve the site via puma"
+desc "Serve the site during development"
 task serve: :build do
   sh "puma"
 end

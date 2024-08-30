@@ -102,29 +102,32 @@ presentations:
 
 <script>
   function showSection(current) {
-    ['videos', 'podcasts', 'presentations'].forEach(function(section_name) {
-      section = document.getElementById('section_' + section_name);
-      tab = document.getElementById('tab_' + section_name);
-      if (section_name == current) {
-        section.style.display = 'block';
+    ['videos', 'podcasts', 'presentations'].forEach(function(section_name)
+      {
+        section = document.getElementById('section_' + section_name);
+        tab = document.getElementById('tab_' + section_name);
 
-        <% default_css.split.each do |css_class| %>
-          tab.classList.remove('<%= css_class %>');
-        <% end %>
-        <% current_css.split.each do |css_class| %>
-          tab.classList.add('<%= css_class %>');
-        <% end %>
-      } else {
-        section.style.display = 'none';
+        if (section_name == current) {
+          section.style.display = 'block';
 
-        <% current_css.split.each do |css_class| %>
-          tab.classList.remove('<%= css_class %>');
-        <% end %>
-        <% default_css.split.each do |css_class| %>
-          tab.classList.add('<%= css_class %>');
-        <% end %>
+          <% default_css.split.each do |css_class| %>
+            tab.classList.remove('<%= css_class %>');
+          <% end %>
+          <% current_css.split.each do |css_class| %>
+            tab.classList.add('<%= css_class %>');
+          <% end %>
+        } else {
+          section.style.display = 'none';
+
+          <% current_css.split.each do |css_class| %>
+            tab.classList.remove('<%= css_class %>');
+          <% end %>
+          <% default_css.split.each do |css_class| %>
+            tab.classList.add('<%= css_class %>');
+          <% end %>
+        }
       }
-    });
+    );
   }
 </script>
 
