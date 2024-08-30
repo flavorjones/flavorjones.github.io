@@ -94,40 +94,96 @@ presentations:
   url: prez/loofah-2010-03-09/loofah.html
 ---
 
-<h2>Videos</h2>
+<%
+  sections = [:videos, :podcasts, :presentations]
+  current_css = "border-indigo-500 text-indigo-600";
+  default_css = "border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700";
+%>
 
-<% page[:videos].each do |entry| %>
-  <h3><%= entry[:title] %></h3>
-  <iframe class="rounded-xl aspect-video w-full"
-          src="<%= entry[:url] %>" title="<%= entry[:title] %>"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen></iframe>
-  <% if entry[:slides] %>
-    <a class="float-right" target="_blank" href="<%= entry[:slides] %>">Slides</a>
+<script>
+  function showSection(current) {
+    ['videos', 'podcasts', 'presentations'].forEach(function(section_name) {
+      section = document.getElementById('section_' + section_name);
+      tab = document.getElementById('tab_' + section_name);
+      if (section_name == current) {
+        section.style.display = 'block';
+
+        <% default_css.split.each do |css_class| %>
+          tab.classList.remove('<%= css_class %>');
+        <% end %>
+        <% current_css.split.each do |css_class| %>
+          tab.classList.add('<%= css_class %>');
+        <% end %>
+      } else {
+        section.style.display = 'none';
+
+        <% current_css.split.each do |css_class| %>
+          tab.classList.remove('<%= css_class %>');
+        <% end %>
+        <% default_css.split.each do |css_class| %>
+          tab.classList.add('<%= css_class %>');
+        <% end %>
+      }
+    });
+  }
+</script>
+
+<div>
+  <div class="border-b border-gray-200">
+    <nav class="-mb-px flex" aria-label="Tabs">
+      <% sections.each_with_index do |section, j| %>
+        <a id="tab_<%= section %>" href="#"
+           class="w-1/3 whitespace-nowrap border-b-2 px-1 py-4 text-center text-sm font-medium no-underline <%= j == 0 ? current_css : default_css %>"
+            onclick="showSection('<%= section %>')"
+        >
+          <%= section.capitalize %>
+          <span class="ml-3 hidden rounded-full px-2.5 py-0.5 text-xs font-medium md:inline-block bg-gray-200 text-gray-900"><%= page[section].count %></span>
+        </a>
+      <% end %>
+    </nav>
+  </div>
+</div>
+
+<div id="section_videos">
+  <h2>Videos</h2>
+
+  <% page[:videos].each do |entry| %>
+    <h3><%= entry[:title] %></h3>
+    <iframe class="rounded-xl aspect-video w-full"
+            src="<%= entry[:url] %>" title="<%= entry[:title] %>"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen></iframe>
+    <% if entry[:slides] %>
+      <a class="float-right" target="_blank" href="<%= entry[:slides] %>">Slides</a>
+    <% end %>
+    <b><%= entry[:venue] %></b>&nbsp;<i>(<%= entry[:date] %>)</i>
+    <div><%= entry[:desc] %></div>
   <% end %>
-  <b><%= entry[:venue] %></b>&nbsp;<i>(<%= entry[:date] %>)</i>
-  <div><%= entry[:desc] %></div>
-<% end %>
+</div>
 
-<h2>Podcasts</h2>
+<div id="section_podcasts" class="hidden" >
+  <h2>Podcasts</h2>
 
-<% page[:podcasts].each do |entry| %>
-  <h3><%= entry[:title] %></h3>
-  <b><%= entry[:venue] %></b>&nbsp;<i>(<%= entry[:date] %>)</i>
-  <div><%= entry[:desc] %></div>
-  <iframe class="rounded-xl <%= entry[:url].include?("buzzsprout") ? "w-full h-52" : "" %>"
-          src="<%= entry[:url] %>" title="<%= entry[:title] %>"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen></iframe>
-<% end %>
+  <% page[:podcasts].each do |entry| %>
+    <h3><%= entry[:title] %></h3>
+    <b><%= entry[:venue] %></b>&nbsp;<i>(<%= entry[:date] %>)</i>
+    <div><%= entry[:desc] %></div>
+    <iframe class="rounded-xl <%= entry[:url].include?("buzzsprout") ? "w-full h-52" : "" %>"
+            src="<%= entry[:url] %>" title="<%= entry[:title] %>"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen></iframe>
+  <% end %>
+</div>
 
-<h2>Presentations</h2>
+<div id="section_presentations" class="hidden" >
+  <h2>Presentations</h2>
 
-<% page[:presentations].each do |entry| %>
-  <h3><a target="_blank" href="<%= entry[:url] %>"><%= entry[:title] %></a></h3>
-  <div><%= entry[:desc] %>&nbsp;<i>(<%= entry[:date] %>)</i></div>
-<% end %>
+  <% page[:presentations].each do |entry| %>
+    <h3><a target="_blank" href="<%= entry[:url] %>"><%= entry[:title] %></a></h3>
+    <div><%= entry[:desc] %>&nbsp;<i>(<%= entry[:date] %>)</i></div>
+  <% end %>
+</div>
