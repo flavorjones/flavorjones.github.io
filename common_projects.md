@@ -42,28 +42,29 @@ Tailwindcss-rails packages tailwindcss and provides tight integration with Rails
 ### Selected Smaller Projects and Contributions
 
 I've made contributions to many other Ruby-related projects, including
-the [Ruby language](https://www.ruby-lang.org/en/) and its [Prism parser](https://github.com/ruby/prism),
-[rdoc](https://github.com/ruby/rdoc),
-the [Truffleruby interpreter](https://github.com/oracle/truffleruby),
-[sanitize](https://github.com/rgrove/sanitize),
-[crass](https://github.com/rgrove/crass),
-[racc](https://github.com/ruby/racc),
-[rexical](https://github.com/sparklemotion/rexical),
-[Active Hash](https://rubygems.org/gems/active_hash),
-[rake-compiler](https://github.com/rake-compiler/rake-compiler),
-[grpc](https://github.com/grpc/grpc),
-[ruby-magic](https://github.com/kwilczynski/ruby-magic),
-[ruby-ffi](https://github.com/ffi/ffi),
-[chromedriver-helper](https://rubygems.org/gems/chromedriver-helper),
-[hoe](https://github.com/seattlerb/hoe),
-[hoe-debugging](https://rubygems.org/gems/hoe-debugging),
-[hoe-gemspec](https://rubygems.org/gems/hoe-gemspec),
-[hoe-bundler](https://rubygems.org/gems/hoe-bundler),
-and [concurrent-ruby](https://github.com/ruby-concurrency/concurrent-ruby).
+the [Ruby language](https://github.com/ruby/ruby/commits?author=flavorjones)
+and its [Prism parser](https://github.com/ruby/prism/commits?author=flavorjones),
+[rdoc](https://github.com/ruby/rdoc/commits?author=flavorjones),
+the [Truffleruby interpreter](https://github.com/oracle/truffleruby/commits?author=flavorjones),
+[Mastodon](https://github.com/mastodon/mastodon/commits?author=flavorjones),
+[Active Hash](https://github.com/active-hash/active_hash/commits?author=flavorjones),
+[racc](https://github.com/ruby/racc/commits?author=flavorjones),
+[rexical](https://github.com/sparklemotion/rexical/commits?author=flavorjones),
+[chromedriver-helper](https://github.com/flavorjones/chromedriver-helper/commits?author=flavorjones)
+[rake-compiler](https://github.com/rake-compiler/rake-compiler/commits?author=flavorjones),
+[sanitize](https://github.com/rgrove/sanitize/commits?author=flavorjones),
+[crass](https://github.com/rgrove/crass/commits?author=flavorjones),
+[grpc](https://github.com/grpc/grpc/commits?author=flavorjones),
+[ruby-magic](https://github.com/kwilczynski/ruby-magic/commits?author=flavorjones),
+[ruby-ffi](https://github.com/ffi/ffi/commits?author=flavorjones),
+[hoe-debugging](https://github.com/jbarnette/hoe-debugging/commits?author=flavorjones),
+[hoe-gemspec](https://github.com/flavorjones/hoe-gemspec/commits?author=flavorjones),
+[hoe-bundler](https://github.com/flavorjones/hoe-bundler/commits?author=flavorjones),
+and [concurrent-ruby](https://github.com/ruby-concurrency/concurrent-ruby/commit/dd2d8cf6fc5c85c904d2892de4d89eed311b995a).
 
 Outside of Ruby, I've made contributions to
-[libxml2](https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home),
-[git](http://git-scm.com),
-[valgrind](https://sourceware.org/git/valgrind),
-[DOMPurify](https://github.com/cure53/DOMPurify),
-and [rofi](https://github.com/davatorium/rofi).
+[libxml2](https://github.com/gnome/libxml2/commits?author=flavorjones),
+[git](https://github.com/git/git/commits?author=flavorjones),
+[valgrind](https://sourceware.org/git/?p=valgrind.git&a=search&h=HEAD&st=commit&s=dalessio),
+[DOMPurify](https://github.com/cure53/DOMPurify/commits?author=flavorjones),
+and [rofi](https://github.com/davatorium/rofi/commits?author=flavorjones).
