@@ -51,7 +51,8 @@ podcasts:
     In this podcast episode I  talk with Chris Oliver and Andrew Mason about Loofah and
     the Rails HTML sanitizer, SQLite support in Ruby, how I got started in Ruby, and
     a bit about management vs leadership.
-  url: https://www.buzzsprout.com/2260490/15617996?client_source=small_player&amp;iframe=true&amp?container_id=buzzsprout-small-player-2260490&player=small
+  url: https://www.buzzsprout.com/2260490/episodes/15617996
+  embed_url: https://www.buzzsprout.com/2260490/15617996?client_source=small_player&amp;iframe=true&amp?container_id=buzzsprout-small-player-2260490&player=small
   date: 2024-08
   full_width: true
 - title: Ruby Shield, Ruby Central, and Shopify (with Evan Phoenix)
@@ -60,13 +61,15 @@ podcasts:
     Evan Phoenix and I were interviewed by Patrick Wheeler and Jason Gauci about our personal
     journies in Ruby, how we learn, and how we came to work together on Ruby Shield, a security
     partnership between Shopify and Ruby Central.
-  url: https://www.youtube.com/embed/k-TGeXex-GA?list=PLmzIIZBIYADWDZj2ZbAlla3R6ag12-vWj
+  url: https://www.youtube.com/watch?v=k-TGeXex-GA
+  embed_url: https://www.youtube.com/embed/k-TGeXex-GA?list=PLmzIIZBIYADWDZj2ZbAlla3R6ag12-vWj
   date: 2022-11
 - title: Cloud Foundry Overview
   venue: Software Engineering Daily
   desc: |
     In this interview I talk about Cloud Foundry, Pivotal, and a potpourri of other topics.
-  url: https://www.youtube.com/embed/_kE51KeHwmU?list=PLmzIIZBIYADWDZj2ZbAlla3R6ag12-vWj
+  url: https://www.youtube.com/watch?v=_kE51KeHwmU
+  embed_url: https://www.youtube.com/embed/_kE51KeHwmU?list=PLmzIIZBIYADWDZj2ZbAlla3R6ag12-vWj
   date: 2018-03
 
 presentations:
@@ -170,11 +173,11 @@ presentations:
   <h2>Podcasts</h2>
 
   <% page[:podcasts].each do |entry| %>
-    <h3><%= entry[:title] %></h3>
+    <h3><a href="<%= entry[:url] %>"><%= entry[:title] %></a></h3>
     <b><%= entry[:venue] %></b>&nbsp;<i>(<%= entry[:date] %>)</i>
     <div><%= entry[:desc] %></div>
-    <iframe class="rounded-xl <%= entry[:url].include?("buzzsprout") ? "w-full h-52" : "" %>"
-            src="<%= entry[:url] %>" title="<%= entry[:title] %>"
+    <iframe class="rounded-xl <%= entry[:embed_url].include?("buzzsprout") ? "w-full h-52" : "" %>"
+            src="<%= entry[:embed_url] %>" title="<%= entry[:title] %>"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin"
