@@ -35,9 +35,10 @@ ways to package and precompile native C code in a Ruby gem, complete with CI pip
 conference talks explaining the approaches.
 
 
-### Maintainer of [tailwindcss-rails](https://github.com/rails/tailwindcss-rails)
+### Maintainer of [tailwindcss-rails](https://github.com/rails/tailwindcss-rails) and [tailwindcss-ruby](https://github.com/flavorjones/tailwindcss-ruby)
 
-Tailwindcss-rails packages tailwindcss and provides tight integration with Rails.
+`tailwindcss-ruby` packages tailwindcss, and `tailwindcss-rails` provides tight integration with Rails.
+
 
 ### Selected Smaller Projects and Contributions
 
