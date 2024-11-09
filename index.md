@@ -23,4 +23,4 @@ SDK for [Bloomberg](https://bloomberg.com)'s next-gen UI.
 | LinkedIn | [linkedin.com/in/mikedalessio](https://www.linkedin.com/in/mikedalessio/) |
 | Github | [@flavorjones](https://github.com/flavorjones) |
 | Mastodon | [@flavorjones@ruby.social](https://ruby.social/@flavorjones) |
-| Twitter | [@flavorjones](https://x.com/flavorjones) |
+| Bluesky | [@flavorjon.es](https://bsky.app/profile/flavorjon.es) |
