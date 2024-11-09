@@ -22,14 +22,6 @@
       /* code blocks */
       div.highlight { @apply rounded-md drop-shadow-lg; }
 
-      /* tailwind typography doesn't cover definition lists */
-      dl {
-         dt { @apply font-bold float-left mr-1; }
-         dd {
-            p { @apply inline; }
-         }
-      }
-
       p.inset {
          img { @apply m-0; }
          @apply m-0;
