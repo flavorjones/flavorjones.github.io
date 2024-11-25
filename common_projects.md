@@ -16,6 +16,8 @@ Rails HTML Sanitizer is the default library for sanitizing HTML fragments in Rai
 
 The sqlite3 ruby gem is the original and most widely-used Ruby database adapter for [SQLite](https://www.sqlite.org/).
 
+I also maintain the the [sqlean](https://github.com/flavorjones/sqlean-ruby) Ruby gem which wraps the [sqlean sqlite extensions](https://github.com/nalgeon/sqlean) with Ruby accessors.
+
 ### Maintainer of [mechanize](https://rubygems.org/gems/mechanize) and [http-cookie](https://github.com/sparklemotion/http-cookie)
 
 Mechanize is a Ruby library used for automating website interaction and screen-scraping. It fully
@@ -43,6 +45,7 @@ conference talks explaining the approaches.
 ### Selected Smaller Projects and Contributions
 
 I've made contributions to many other Ruby-related projects, including
+[Rails](https://github.com/rails/rails/commits?author=flavorjones),
 the [Ruby language](https://github.com/ruby/ruby/commits?author=flavorjones)
 and its [Prism parser](https://github.com/ruby/prism/commits?author=flavorjones),
 [rdoc](https://github.com/ruby/rdoc/commits?author=flavorjones),
