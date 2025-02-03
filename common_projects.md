@@ -56,6 +56,7 @@ the [Truffleruby interpreter](https://github.com/oracle/truffleruby/commits?auth
 [rexical](https://github.com/sparklemotion/rexical/commits?author=flavorjones),
 [chromedriver-helper](https://github.com/flavorjones/chromedriver-helper/commits?author=flavorjones)
 [rake-compiler](https://github.com/rake-compiler/rake-compiler/commits?author=flavorjones),
+[kamal](https://github.com/basecamp/kamal/commits?author=flavorjones),
 [sanitize](https://github.com/rgrove/sanitize/commits?author=flavorjones),
 [crass](https://github.com/rgrove/crass/commits?author=flavorjones),
 [grpc](https://github.com/grpc/grpc/commits?author=flavorjones),
