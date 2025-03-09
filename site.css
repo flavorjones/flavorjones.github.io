@@ -29,7 +29,7 @@
 
       section { @apply mb-10; }
 
-      @apply mx-auto;
+      @apply mx-5 sm:mx-auto;
    }
 
    footer { @apply flex place-content-center pb-10 pt-20 text-gray-400; }
