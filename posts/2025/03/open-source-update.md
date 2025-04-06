@@ -4,7 +4,7 @@ short: |
   The first of a (hopefully) regular series of updates on my open source work.
 ---
 
-# Open Source Update
+# Open Source Update / March '25
 
 2025-03-08, originally sent directly to open-source sponsors
 {: .text-sm .italic .opacity-75 }
