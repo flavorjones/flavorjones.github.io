@@ -11,7 +11,9 @@ short: |
 
 [Ahoy hoy](https://en.wiktionary.org/wiki/ahoy-hoy)!
 
-The last month has been pretty busy at work, and I haven't had as much time as I wanted to invest in open source. That said, I feel like I still got quite a bit done! Here's an overview of what I shipped in the last month.
+The last month has been pretty busy, and I haven't had as much time as I wanted to invest in open source. Some notable events in my personal life: my daughter got her driver's license 😅 and I hit the six-month mark at 37 signals 😲!
+
+Despite being a bit busy, I feel like I still got quite a bit done Here's an overview of what I shipped in the last month ...
 
 
 ## [Nokogiri](https://github.com/sparklemotion/nokogiri)
