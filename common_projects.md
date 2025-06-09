@@ -70,6 +70,7 @@ and [concurrent-ruby](https://github.com/ruby-concurrency/concurrent-ruby/commit
 Outside of Ruby, I've made contributions to
 [libxml2](https://github.com/gnome/libxml2/commits?author=flavorjones),
 [git](https://github.com/git/git/commits?author=flavorjones),
+[imageproxy](https://github.com/willnorris/imageproxy/commits?author=flavorjones),
 [valgrind](https://sourceware.org/git/?p=valgrind.git&a=search&h=HEAD&st=commit&s=dalessio),
 [DOMPurify](https://github.com/cure53/DOMPurify/commits?author=flavorjones),
 and [rofi](https://github.com/davatorium/rofi/commits?author=flavorjones).
