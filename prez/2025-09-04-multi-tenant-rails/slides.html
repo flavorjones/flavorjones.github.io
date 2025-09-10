@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+        
+
+        <link rel="stylesheet" href="assets/reveal-js/dist/reveal.css" />
+
+        
+            <link rel="stylesheet" href="assets/moon.css" />
+        
+        
+            <link rel="stylesheet" href="assets/github-dark.css" />
+        
+
+        
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section data-markdown
+                
+                    data-separator-notes="^💬$"
+                
+                >
+                    <!-- The markdown must be placed to the whole left to prevent indentation issues like https://github.com/MartenBE/mkslides/issues/52 -->
+                    <textarea data-template>
+# HELLO
+
+and welcome to
+
+# Multi-Tenant Rails
+
+or,
+
+## "Everybody gets a database!"
+
+<br>
+
+Rails World 2025
+
+Mike Dalessio | [@flavorjones](https://github.com/flavorjones) | https://mike.daless.io/
+
+💬
+
+This talk is going to move fast, and I don't have time to go deep everywhere I'd like, and so I'm going to assume that you're a little bit familiar with multi-tenancy, database architecture, and SQLite already.
+
+Oh also, just to get it out of the way so we can focus on the material ...
+
+---
+
+<!-- .slide: data-background-image="assets/Oprah.webp" data-background-size="cover" data-background-position="top" -->
+
+# "Everybody gets a database!"
+<!-- .element: style="color: yellow; filter: drop-shadow(0 0 1rem black)" -->
+
+---
+
+✨ `ActiveRecord::Tenanted` ✨
+<!-- .element: class="r-fit-text" -->
+
+💬
+
+The primary point of this talk is to introduce you to a new library that I developed, and that my employer 37signals is open-sourcing, to support multi-tenancy in Rails apps.
+
+I'm really excited about this software, and I'm really excited to get to talk to you about it. We've been running it in a beta production environment for over six months, and I think it's turned out great.
+
+David's already told you a bit about why we as a team have been focusing on SQLite, and this gem is battle-tested with SQLite, but there's no reason you couldn't use it for MySQL or Postgres as well. I'll talk more about that in a bit.
+
+---
+
+## Chapter 1
+
+# Why do we need a new library?
+
+💬
+
+---
+
+<!-- .slide: data-background-image="assets/guy-naor-2009.png" data-background-size="cover" data-background-position="center" style="max-height: none;" -->
+
+💬
+
+TODO: QR CODE https://www.youtube.com/watch?v=0QstBE0Bfj8
+
+Rails multi-tenancy is not a new topic. In 2009 Guy Naor gave a talk where he thoroughly discussed many of the technical problems of making Rails 2 support multi-tenancy, and provided a few variations on how to solve them. It's a little dated, but a great talk to get a feel for the problem space.
+
+If you're an infrastructure person, there are a lot of variables that go into choosing a database architecture, and there are specific features that you could choose to use for your implementation (like materialized views and postgres schemas). I don't want to talk about that today.
+
+Today I want to focus on how your application code, and how the Rails framework itself, deal with multi-tenancy. And I want to start by discussing one particular aspect of multi-tenancy specifically:
+
+---
+
+# DATA ISOLATION
+
+> "Each tenant’s data is isolated from, and invisible to, the other tenants sharing the application
+> instance, ensuring data security and privacy for all tenants."
+
+ref: https://www.ibm.com/think/topics/multi-tenant
+
+💬
+
+This is the key bit that I mean when I talk about "multi-tenancy". You've got data from multiple customers being made available in your app. And you'd like to provide some sort of isolation or protection so that one customer can't access another customer's data.
+
+Every solution I've seen for multi-tenancy in Rails falls into one of two categories.
+
+---
+
+## Commingled Data
+
+or
+
+## Separate Databases
+
+---
+
+|                          | Commingled Data                               |
+|--------------------------|-----------------------------------------------|
+| **Design**               | Single database, tables shared by the tenants |
+| **Isolation constraint** | Specify tenant ID in every query              |
+| **Drawback**             | Tenant ID in every row                        |
+
+---
+
+## [`acts_as_tenant`](https://github.com/ErwinM/acts_as_tenant)
+
+``` ruby [1-9|11-21|24-31|34-44|47-56]
+# Users table:
+# 
+# | id | name     | account_id |
+# |----|----------|------------|
+# | 1  | Adrianna | 1          |
+# | 2  | Peter    | 1          |
+# | 3  | Jeremy   | 2          |
+# | 4  | Jeremy   | 3          |
+# | 5  | Jeremy   | 4          |
+
+# make the User model multi-tenant
+class AddAccountToUser < ActiveRecord::Migration
+  def change
+    add_column :users, :account_id, :integer
+  end
+end
+
+class User < ActiveRecord::Base
+  acts_as_tenant :account
+  validates_uniqueness_to_tenant :name
+end
+
+
+ActsAsTenant.with_tenant(Current.account) do
+  # Inside this block, Active Record queries are constrained by `account_id`
+  User.where(name: "Jeremy")
+end
+
+# This raises an exception
+# because the account context is missing
+User.where(name: "Jeremy")
+
+
+# make the Project model multi-tenant
+class AddAccountToProject < ActiveRecord::Migration
+  def change
+    add_column :projects, :account_id, :integer
+  end
+end
+
+class Project < ActiveRecord::Base
+  acts_as_tenant :account
+  validates_uniqueness_to_tenant :name
+end
+
+
+# make the Post model multi-tenant
+class AddAccountToPost < ActiveRecord::Migration
+  def change
+    add_column :posts, :account_id, :integer
+  end
+end
+
+class Post < ActiveRecord::Base
+  acts_as_tenant :account
+end
+```
+
+circa 2008: nailed "Commingled data"
+
+---
+
+|                          | ✨ Separate Databases ✨            |
+|--------------------------|-------------------------------------|
+| **Design**               | Each tenant has its own database    |
+| **Isolation constraint** | Use the tenant-specific connection  |
+| **Drawback**             | Many database connections to manage |
+
+---
+
+## [`apartment`](https://github.com/influitive/apartment)
+
+<small>(Currently maintained as [`ros-apartment`](https://github.com/rails-on-services/apartment))</small>
+
+``` ruby [1-4|6-9|11-13]
+# On Postgres: create a schema (and migrate it)
+#    MySQL:    create a database named after the tenant (and migrate it)
+#    SQLite:   create a new database file (and migrate it)
+Apartment::Tenant.create('tenant_name')
+
+Apartment::Tenant.switch('tenant_name') do
+  # Inside this block, the database connection is to `tenant_name`'s database
+  User.where(name: "Jeremy")
+end
+
+# This raises an exception
+# because the tenant context is missing
+User.where(name: "Jeremy")
+```
+
+circa 2011: "Separate databases"
+
+---
+
+|               | Commingled Data                  | ✨ Separate Databases ✨       |
+|---------------|----------------------------------|--------------------------------|
+| **Design**    | Single database, shared tables   | Per-tenant database            |
+| **Isolation** | Specify tenant ID in every query | Use tenant-specific connection |
+| **Drawback**  | Tenant ID in every row           | Many database connections      |
+
+💬
+
+Having built apps in both styles, my feeling is that commingling data needs to be handled in the application, but separate databases can be handled almost entirely by the framework itself.
+
+Let's look at some specific examples.
+
+---
+
+OK, smart guy,
+
+# Why not just use `apartment`?
+
+---
+
+<!-- .slide: data-background-image="assets/rails-6.1-announcement.png" data-background-size="cover" data-background-position="center" -->
+
+💬
+
+One reason is connection handling. In 2020, Rails 6.1 shipped support for horizontal sharding and multi-database, both of which were implemented with thread safety in mind.
+
+The way Apartment switches database connections dates back to 2011 and is not entirely thread-safe.
+
+I saw a path to faster, more flexible, and thread safe connection management.
+
+ref on thread safety: https://github.com/rails-on-services/apartment/issues/304#issuecomment-2648202324
+
+TIME: 6m30s
+
+---
+
+<!-- .slide: data-background-image="assets/shardines.png" data-background-size="cover" data-background-position="center" -->
+
+💬
+
+TODO: QR CODE https://blog.julik.nl/2025/04/a-can-of-shardines
+
+I'm not the only one who saw this. Earlier this year, Julik Tarkhanov published a blog post pointing out the opportunity that Rails's new connection management offered for implementing multi-tenancy, and even published a short one-file implementation called "Shardine" that was an improvement over Apartment.
+
+---
+
+<!-- .slide: data-background-image="assets/owl1.jpg" data-background-size="50%" data-background-position="center" -->
+
+💬
+
+The other reason has to do with completeness.
+
+---
+
+<!-- .slide: data-background-image="assets/owl2.jpg" data-background-size="50%" data-background-position="center" -->
+
+💬
+
+Apartment offers a solution for Active Record, and for Action Dispatch to map a request to a specific tenant.
+
+But it doesn't offer much to make the rest of rails understand tenanting: fragment cache, Action Cable, Active Job, Action Mailer, or the testing frameworks.
+
+---
+
+<!-- .slide: data-background-image="assets/owl3.jpg" data-background-size="50%" data-background-position="center" -->
+
+---
+
+## Making multi-tenancy "omakase easy"
+
+1. Modern thread-safe connection management
+2. Tight integration with _every_ Rails component
+
+💬
+
+I wanted to try to build a library that worked great with all of the Rails subsystems, and made multitenancy "omakase easy".
+
+---
+
+## Omakase defaults
+
+- Every model inheriting from ApplicationRecord is tenanted
+- Subdomain maps requests to a tenant
+
+💬
+
+The defaults today are ApplicationRecord and subdomain, but you can change these, and I'll show you how. But these defaults make it DEAD simple to make your app multi-tenant.
+
+How easy?
+
+---
+
+``` diff
+--- a/Gemfile
++++ b/Gemfile
+@@ -3,6 +3,7 @@ git_source(:bc) { |repo| "https://github.com/basecamp/#{repo}" }
+ ruby file: ".ruby-version"
+
+ gem "rails", github: "rails/rails", branch: "main"
++gem "active_record-tenanted"
+
+ # Assets & front end
+ gem "importmap-rails"
+```
+
+``` diff
+--- a/app/models/application_record.rb
++++ b/app/models/application_record.rb
+@@ -1,3 +1,4 @@
+ class ApplicationRecord < ActiveRecord::Base
+   primary_abstract_class
++  tenanted
+ end
+```
+
+``` diff
+--- a/config/database.yml
++++ b/config/database.yml
+@@ -12,7 +12,8 @@ default: &default
+ production:
+   primary:
+     <<: *default
+-    database: storage/production.sqlite3
++    database: storage/production/%{tenant}/main.sqlite3
++    tenanted: true
+   cable:
+     <<: *default
+     database: storage/production_cable.sqlite3
+```
+
+---
+
+<!-- .slide: data-background-image="assets/owl4.jpg" data-background-size="50%" data-background-position="center" -->
+
+---
+
+<!-- .slide: data-background-image="assets/fizzy1.png" data-background-size="cover" data-background-position="center" -->
+
+💬
+
+Keep in mind that we've got a team of developers and designers hacking away on this application, and all of them can do their job without having to be aware of tenanting concerns.
+
+TIME: 10m
+
+---
+
+## Chapter 2
+
+# Active Record and Action Dispatch
+<!-- .element: class="r-fit-text" -->
+
+💬
+
+Let me start by telling you why the horizontal sharding feature introduced into Rails 6.1 was so interesting
+
+---
+
+``` yaml [6-11]
+# config/database.yml
+production:
+primary:
+    database: my_primary_database
+    adapter:  sqlite3
+  primary_shard_one:
+    database: my_primary_shard_one
+    adapter:  sqlite3
+  primary_shard_two:
+    database: my_primary_shard_two
+    adapter:  sqlite3
+```
+
+``` ruby [3-6]
+class ApplicationRecord < ActiveRecord::Base
+  primary_abstract_class
+  connects_to shards: {
+    shard_one: { writing: :primary_shard_one },
+    shard_two: { writing: :primary_shard_two },
+  }
+end
+```
+
+``` ruby
+ActiveRecord::Base.connected_to(role: :writing, shard: :shard_one) do
+  Person.create! # Creates a record in the `people` table in `primary_shard_one`
+end
+
+ActiveRecord::Base.connected_to(role: :writing, shard: :shard_two) do
+  Person.where(name: "Jeremy") # Reads the `people` table in `primary_shard_two`
+end
+```
+
+💬
+
+You can define shards in your database configuration and abstract connection class. What Rails means by shards is a group of databases. each of which have an identical schema. What that means is that any model inheriting from that connection class can use any of those shards as its data source.
+
+Then, you can use `connected_to` to control which database shard is used within a block.
+
+---
+
+<!-- .slide: data-background-image="assets/eleven.png" data-background-size="cover" data-background-position="center" -->
+
+---
+
+``` yaml [6-10]
+# config/database.yml
+production:
+  primary:
+    database: primary
+    adapter:  sqlite3
+<% TENANTS.each do |tenant| %>
+  <%= tenant %>:
+    database: primary_<%= tenant %>
+    adapter:  sqlite3
+<% end
+```
+
+``` ruby [3-7]
+class ApplicationRecord < ActiveRecord::Base
+  self.abstract_class = true
+  shards = TENANTS.each_with_object({}) do |tenant, hash|
+    shard_name = "primary_#{tenant}"
+    hash[shard_name.to_sym] = { writing: shard_name }
+  end
+  connects_to shards: shards
+end
+```
+
+``` ruby
+ActiveRecord::Base.connected_to(role: :writing, shard: :tenant_one) do
+  Person.create! # Creates a record in the `people` table in `primary_tenant_one`
+end
+
+ActiveRecord::Base.connected_to(role: :writing, shard: :tenant_two) do
+  Person.where(name: "Jeremy") # Reads the `people` table in `primary_tenant_two`
+end
+```
+
+---
+
+<!-- .slide: data-background-image="assets/it-worked.png" data-background-size="cover" data-background-position="center" -->
+
+💬
+
+Per-tenant sqlite exploration
+Chatted with Kevin McConnellKevin and David Heinemeier HanssonDavid about pushing the limits of sqlite. Hot backups, multi-tenant, etc. See sqlite chat 2024-10-07 - Mike D's Notes
+
+I spent a few hours spiking on the idea of "one sqlite database per tenant". To get something up and running quickly, I used vanilla horizontal sharding to stand up an app with 10,000 small (~20 records) single-tenant databases.
+
+In summary, I've found good reasons why we should not use horizontal sharding for this use case, primarily because Rails will by default create a ConnectionPool for every shard, which affects boot and response performance and uses a great deal of memory.
+
+The good news, though, is that even the extreme edge case of having 10,000 open connections, the app worked.
+
+---
+
+### Vanilla Horizontal Sharding?
+
+- Pros
+  - Battle-tested since Rails 6.1
+  - Thread safe
+  - Block semantics for connection management
+
+- Cons:
+  - Shards must be declared statically in `database.yml`
+  - Cannot dynamically create a new tenant
+  - *Very* slow process boot time
+  - 10,000 small SQLite databases needed 2GB of memory
+
+---
+
+Is it possible to
+
+## Create a shard dynamically?
+
+---
+
+# YES!
+
+- ActiveRecord::Base <!-- .element: class="fragment" -->
+- ActiveRecord::ConnectionHandling <!-- .element: class="fragment" -->
+- ActiveRecord::ConnectionAdapters::AbstractAdapter <!-- .element: class="fragment" -->
+- ActiveRecord::ConnectionAdapters::ConnectionHandler <!-- .element: class="fragment" -->
+- ActiveRecord::ConnectionAdapters::ConnectionPool <!-- .element: class="fragment" -->
+- ActiveRecord::ConnectionAdapters::PoolConfig <!-- .element: class="fragment" -->
+- ActiveRecord::ConnectionAdapters::PoolManager <!-- .element: class="fragment" -->
+- ActiveRecord::DatabaseConfigurations <!-- .element: class="fragment" -->
+- ActiveRecord::DatabaseConfigurations::DatabaseConfig <!-- .element: class="fragment" -->
+
+<br>
+<br>
+
+## But how? 🥴 <!-- .element: class="fragment" -->
+
+---
+
+<!-- .slide: data-background-image="assets/connection-management.png" data-background-size="contain" data-background-position="center" -->
+
+💬
+
+This felt overwhelming, and it took quite a while to find what I think is the best approach.
+
+TIME: 17m (v1)
+
+---
+
+<!-- .slide: data-background-image="assets/connection-management-2.png" data-background-size="contain" data-background-position="center" -->
+
+---
+
+<!-- .slide: data-background-image="assets/connection-management-3.png" data-background-size="contain" data-background-position="center" -->
+
+---
+
+<!-- .slide: data-background-image="assets/connection-management-4.png" data-background-size="contain" data-background-position="center" -->
+
+---
+
+<!-- .slide: data-background-image="assets/connection-management-5.png" data-background-size="contain" data-background-position="center" -->
+
+---
+
+Problem #1: `DatabaseConfigurations` doesn't know about tenanting.
+
+``` yml [5-6]
+# config/database.yml
+production: &production
+  primary:
+    <<: *default
+    database: storage/tenants/<%= Rails.env %>/%{tenant}/db/main.sqlite3
+    tenanted: true
+  cable:
+    <<: *default
+    database: storage/production_cable.sqlite3
+    migrations_paths: db/cable_migrate
+  cache:
+    <<: *default
+    database: storage/production_cache.sqlite3
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *default
+    database: storage/production_queue.sqlite3
+    migrations_paths: db/queue_migrate
+```
+
+We need something smarter than a `HashConfig`
+
+---
+
+Solution: Use `register_db_config_handler` to instantiate a custom class
+
+``` ruby [2-4|7-11|8-10]
+module ActiveRecord::Tenanted::DatabaseConfigurations
+  class RootConfig < ActiveRecord::DatabaseConfigurations::HashConfig
+    # ...
+  end
+end
+
+ActiveRecord::DatabaseConfigurations.register_db_config_handler do |env_name, name, _, config|
+  next unless config.fetch(:tenanted, false)
+
+  ActiveRecord::Tenanted::DatabaseConfigurations::RootConfig.new(env_name, name, config)
+end
+```
+
+---
+
+The database configuration is now tenant-aware. ☑
+
+``` text [1,3]
+fizzy(dev):001> ActiveRecord::Base.configurations.configs_for(env_name: "production", include_hidden: true)
+=>
+[#<ActiveRecord::Tenanted::DatabaseConfigurations::RootConfig env_name=production name=primary adapter_class=ActiveRecord::ConnectionAdapters::SQLite3Adapter>,
+ #<ActiveRecord::DatabaseConfigurations::HashConfig env_name=production name=cable adapter_class=ActiveRecord::ConnectionAdapters::SQLite3Adapter>,
+ #<ActiveRecord::DatabaseConfigurations::HashConfig env_name=production name=cache adapter_class=ActiveRecord::ConnectionAdapters::SQLite3Adapter>,
+ #<ActiveRecord::DatabaseConfigurations::HashConfig env_name=production name=queue adapter_class=ActiveRecord::ConnectionAdapters::SQLite3Adapter>]
+```
+
+---
+
+Problem #2: How do we create a connection pool that uses a tenant-specific db config?
+
+``` ruby [1-5|7-9|11-15|17-19|21-26|26]
+root_config = ActiveRecord::Base.configurations.resolve(:primary)
+# => #<ActiveRecord::Tenanted::DatabaseConfigurations::RootConfig
+#      env_name=development
+#      name=primary
+#      adapter_class=ActiveRecord::ConnectionAdapters::SQLite3Adapter>
+
+root_config.database
+# => "storage/tenants/development/%{tenant}/db/main.sqlite3"
+#                                 ~~~~~~~~~
+
+db_config = root_config.new_tenant_config("foo")
+# => #<ActiveRecord::Tenanted::DatabaseConfigurations::TenantConfig
+#      env_name=development 
+#      name=primary_foo
+#      adapter_class=ActiveRecord::ConnectionAdapters::SQLite3Adapter>
+
+db_config.database
+# => "storage/tenants/development/foo/db/main.sqlite3"
+#                                 ~~~
+
+connection_pool = establish_connection(db_config)
+# => #<ActiveRecord::ConnectionAdapters::ConnectionPool
+#      env_name="development"
+#      name="primary_foo"
+#      role=:writing
+#      shard="foo">
+```
+
+---
+
+``` ruby [3]
+class ApplicationRecord < ActiveRecord::Base
+  primary_abstract_class
+  tenanted
+end
+```
+
+``` ruby [2-3|6-8|10-20]
+# ⚠ This is greatly simplified code!
+module ActiveRecord::Tenanted::Tenant
+  extend ActiveSupport::Concern # mixed into the abstract connection class, e.g. ApplicationRecord
+
+  class_methods do
+    def current_tenant
+      current_shard
+    end
+
+    def connection_pool
+      pool = retrieve_connection_pool(strict: false)
+
+      if pool.nil?
+        config = tenanted_root_config.new_tenant_config(current_tenant)
+        establish_connection(config)
+        pool = retrieve_connection_pool(strict: true)
+      end
+
+      pool
+    end
+  end
+end
+```
+
+---
+
+### `ConnectionPool` complications
+
+1. All classes inheriting from a common connection class must share the same connection pool
+2. Must allow creation of a connection pool without a current tenant (return a mock pool)
+3. Cannot connect to the database during boot
+4. Database must be migrated when created
+5. Race conditions when creating a new database
+6. Race conditions when creating a connection pool
+7. Test fixtures try to wrap all databases in a transaction
+
+---
+
+### Basic API
+
+``` ruby [1-2|4-5|7-8|10-12|14-15|17-21]
+# Enumerate existing tenants
+ApplicationRecord.tenants # => ["foo", "bar", "baz"]
+
+# Check for existence
+ApplicationRecord.tenant_exist?("foo") # => true
+
+# Create the database and migrate it
+ApplicationRecord.create_tenant(tenant_name)
+
+# No current tenant by default
+ApplicationRecord.current_tenant # => nil
+User.current_tenant              # => nil
+
+User.where(name: "Jeremy")
+# => raises ActiveRecord::Tenanted::NoTenantError: Cannot connect to a tenanted database while untenanted (User).
+
+ApplicationRecord.with_tenant("foo") do
+  ApplicationRecord.current_tenant # => "foo"
+  User.current_tenant              # => "foo"
+  user = User.where(name: "Jeremy")
+  user.tenant                      # => "foo"
+end
+```
+
+---
+
+### Safety checks
+
+It should be really hard to accidentally connect to the wrong database.
+
+``` ruby [1|3-4|6-7]
+user = ApplicationRecord.with_tenant("foo") { User.first }
+
+user.update! name: "Jim"
+# => raises ActiveRecord::Tenanted::NoTenantError: Cannot connect to a tenanted database while untenanted (User).
+
+ApplicationRecord.with_tenant("bar") { user.update! name: "Jim" }
+# => raises ActiveRecord::Tenanted::WrongTenantError: User model belongs to tenant "foo", but current tenant is "bar"
+```
+
+---
+
+### Safety checks
+
+Even on associations!
+
+``` ruby [3-4|6-7]
+user = ApplicationRecord.with_tenant("foo") { User.first }
+
+user.comments
+# => raises ActiveRecord::Tenanted::NoTenantError: Cannot connect to a tenanted database while untenanted (User).
+
+ApplicationRecord.with_tenant("bar") { user.comments }
+# => raises ActiveRecord::Tenanted::WrongTenantError: User model belongs to tenant "foo", but current tenant is "bar"
+```
+
+---
+
+### Safety checks
+
+When changing tenants!
+
+``` ruby [1-4|6-8|10-12]
+ApplicationRecord.with_tenant("foo") do
+  ApplicationRecord.with_tenant("bar") { }
+  # => raises ArgumentError: cannot swap `shard` while shard swapping is prohibited.
+end
+
+ApplicationRecord.with_tenant("foo", prohibit_shard_swapping: false) do
+  ApplicationRecord.with_tenant("bar") { puts "This is OK" }
+end
+
+ApplicationRecord.with_tenant("foo") do
+  ApplicationRecord.with_tenant("foo") { puts "This is also OK" }
+end
+```
+
+---
+
+But I don't want to call `with_tenant` everywhere!
+
+## Middleware to the rescue
+<!-- .element: class="fragment" -->
+
+---
+
+### Rack Middleware
+
+Setting the tenant for request handling
+
+``` ruby [|9-16|10-11|13-15]
+# ⚠ This is greatly simplified code!
+class ActiveRecord::Tenanted::TenantSelector
+  attr_reader :app
+
+  def initialize(app)
+    @app = app
+  end
+
+  def call(env)
+    request = ActionDispatch::Request.new(env)
+    tenant_name = tenant_resolver.call(request)
+
+    connection_class.with_tenant(tenant_name) do
+      @app.call(env)
+    end
+  end
+end
+```
+
+---
+
+### Rack Middleware
+
+Configuring how the tenant is discovered
+
+``` ruby [2-6|10-12]
+class ActiveRecord::Tenanted::Railtie < ::Rails::Railtie
+  # Omakase default: assume ApplicationRecord will be tenanted.
+  config.active_record_tenanted.connection_class = "ApplicationRecord"
+
+  # Omakase default: assume request subdomain determines the tenant
+  config.active_record_tenanted.tenant_resolver = ->(request) { request.subdomain }
+
+  config.before_initialize do
+    Rails.application.configure do
+      if config.active_record_tenanted.connection_class.present?
+        config.middleware.use ActiveRecord::Tenanted::TenantSelector
+      end
+    end
+  end
+end
+```
+
+To get more complicated, override `tenant_resolver`
+
+---
+
+## Chapter 3
+
+# The Rest Of The Owl
+<!-- .element: class="r-fit-text" -->
+
+---
+
+<!-- .slide: data-background-image="assets/slaps-car.jpg" data-background-size="cover" data-background-position="top" -->
+
+---
+
+### `config.active_record_tenanted.connection_class`
+
+Controls all (well, most) of the fancy integrations.
+
+``` ruby
+Rails.application.configure do
+  if config.active_record_tenanted.connection_class.present?
+    config.middleware.use ActiveRecord::Tenanted::TenantSelector
+  end
+end
+```
+
+Set it to `nil` if you want to draw the owl yourself.
+
+---
+
+### Rails's record types
+
+We want these Rails models to be tenanted:
+
+- `ActionText::Record`
+- `ActiveStorage::Record`
+- `ActionMailbox::Record`
+
+<br>
+<br>
+<div>
+But they all subclass `ActiveRecord::Base`! 🥴
+
+
+``` ruby[|4]
+ActiveStorage::Record.connection
+# => raises ActiveRecord::Tenanted::NoTenantError:
+#           Cannot use an untenanted ActiveRecord::Base connection. If you have a model that inherits
+#           directly from ActiveRecord::Base, make sure to use 'subtenant_of'. In development,
+#           you may see this error if constant reloading is not being done properly.
+```
+</div> <!-- .element class="fragment" -->
+
+---
+
+### Subtenanting and Rails's record types
+
+`subtenant_of` forwards `connection_pool` to the tenanted connection class
+
+``` ruby [1-2|9-13|21-25]
+# Omakase default
+ActiveStorage::Record.subtenant_of "ApplicationRecord"
+
+module ActiveRecord::Tenanted
+  module Base # always mixed into ActiveRecord::Base
+    extend ActiveSupport::Concern
+
+    class_methods do
+      def subtenant_of(class_name)
+        prepend Subtenant
+    
+        @tenanted_subtenant_of = class_name
+      end
+    end
+  end
+
+  module Subtenant
+    extend ActiveSupport::Concern
+  
+    class_methods do
+      def tenanted_subtenant_of
+        @tenanted_subtenant_of&.constantize || superclass.tenanted_subtenant_of
+      end
+    
+      delegate :current_tenant, :connection_pool, to: :tenanted_subtenant_of
+    end
+  end
+end
+```
+
+💬
+
+Remember how we overrode `.connection_pool` in the connection class?
+
+Nothing stopping us from overriding it in these classes, too.
+
+---
+
+### Subtenanting and Rails's record types
+
+``` ruby [2-3|5-6|8-13|13]
+ApplicationRecord.with_tenant("foo") do
+  ActiveStorage::Record.current_tenant
+  # => "foo"
+
+  ActiveStorage::Record.connection_pool == ApplicationRecord.connection_pool
+  # => true
+
+  ApplicationRecord.with_tenant("foo") { ActiveStorage::Record.connection }
+  # => #<ActiveRecord::ConnectionAdapters::SQLite3Adapter:0x00000000006680
+  #      env_name="development"
+  #      name="primary_foo"
+  #      role=:writing
+  #      shard="foo">
+end
+```
+
+And the same for `ActionText` and `ActionMailbox`.
+
+---
+
+### Fragment cache
+
+``` erb
+<%# app/views/users/show.html.erb %>
+
+<% cache @user do %>
+  <h2><%= @user.name %></h2>
+  <div>Account info: <%= @user.expensive_account_info %></div>
+<% end %>
+```
+
+Timeline:
+
+1. User 1 in tenant "foo" views their profile.
+2. A fragment is cached under the key `users/1`
+3. User 1 in tenant "bar" views their profile
+4. ⚠ Cache hit on `users/1` displays tenant "foo"'s data ⚠
+
+---
+
+### Fragment cache
+
+If you're using Solid Cache,<br>one option is to put the cache in the tenanted database:
+
+``` ruby
+SolidCache::Record.subtenant_of "ApplicationRecord"
+```
+
+So every tenant has their own cache.
+
+<small>(I haven't tried this myself, some tweaks may be needed<br>to Solid Cache's connection logic.)</small>
+
+---
+
+### Fragment cache
+
+But what if you're using:
+
+- `MemoryStore`
+- `FileStore`
+- `MemCacheStore`
+- `RedisStore`
+- a custom store?
+
+---
+
+### Fragment cache
+
+`ActiveRecord::Tenanted` includes the tenant in the cache key of all tenanted models.
+
+``` ruby
+ApplicationRecord.with_tenant("foo") { User.first.cache_key }
+# => "users/1?tenant=foo"
+#             ~~~~~~~~~~
+```
+
+which works for all cache stores.
+
+---
+
+### Fragment cache, take two
+
+``` erb
+<%# app/views/users/show.html.erb %>
+
+<% cache @user do %>
+  <h2><%= @user.name %></h2>
+  <div>Account info: <%= @user.expensive_account_info %></div>
+<% end %>
+```
+
+Timeline:
+
+1. User 1 in tenant "foo" views their profile.
+2. A fragment is cached under the key `users/1?tenant=foo`.
+3. User 1 from tenant "bar" views their profile.
+4. ☑ A fragment is cached under the key `users/1?tenant=bar`. ☑
+
+---
+
+### Active Storage
+
+Without any special handling:
+
+``` ruby
+ApplicationRecord.with_tenant("foo") { ActiveStorage::Blob.first.key }
+# => "q5gc2oc313zr7berq0fomrta6of3"
+
+ApplicationRecord.with_tenant("bar") { ActiveStorage::Blob.first.key }
+# => "zy161pmzbc8igjr89ouodkjeocy5"
+```
+
+In either an S3 blob store or the disk store, all tenants will be commingled.
+
+---
+
+### Active Storage
+
+`ActiveRecord::Tenanted` includes the tenant in the key of all blobs<br>(if `ActiveStorage::Record` is tenanted).
+
+``` ruby
+ApplicationRecord.with_tenant("foo") { ActiveStorage::Blob.first.key }
+# => "foo/q5gc2oc313zr7berq0fomrta6of3"
+#     ~~~
+
+ApplicationRecord.with_tenant("bar") { ActiveStorage::Blob.first.key }
+# => "bar/zy161pmzbc8igjr89ouodkjeocy5"
+#     ~~~
+```
+
+- In an S3 blob store, each tenant's blobs will be in a distinct "folder"
+- In a disk blob store, each tenant's blobs will be in a distinct subdirectory
+
+---
+
+### Active Job
+
+``` ruby
+ApplicationRecord.with_tenant("foo") do
+  DeleteUserCommentsJob.perform_later(User.find(1))
+end
+```
+
+How does the job worker know which tenant you mean?
+
+---
+
+### Active Job
+
+``` ruby [1-2|4-13|15-22|25-26]
+module ActiveRecord::Tenanted::Job
+  extend ActiveSupport::Concern # mixed into ActiveJob::Base
+
+  prepended do
+    attr_reader :tenant
+  end
+
+  def initialize(...)
+    super
+    if klass = ActiveRecord::Tenanted.connection_class
+      @tenant = klass.current_tenant
+    end
+  end
+
+  def serialize
+    super.merge!({ "tenant" => tenant })
+  end
+
+  def deserialize(job_data)
+    super
+    @tenant = job_data.fetch("tenant", nil)
+  end
+
+  def perform_now
+    if tenant.present? && (klass = ActiveRecord::Tenanted.connection_class)
+      klass.with_tenant(tenant) { super }
+    else
+      super
+    end
+  end
+end
+```
+
+---
+
+### Active Job
+
+``` ruby
+ApplicationRecord.with_tenant("foo") do
+  # The current_tenant context is captured as part of the job metadata
+  DeleteUserCommentsJob.perform_later(User.find(1))
+end
+
+# Untenanted jobs can just have a `nil` tenant in their metadata
+SmokeTestJob.perform_later
+```
+
+---
+
+### Active Job
+
+Imagine this scenario, though:
+
+``` ruby
+# User from tenant "foo" ...
+user = ApplicationRecord.with_tenant("foo") { User.find(1) }
+
+ApplicationRecord.with_tenant("bar") do
+  # ... being passed to a job that will run for tenant "bar"
+  DeleteUserCommentsJob.perform_later(user)
+end
+```
+
+Is this safe? How are model instances serialized and deserialized?
+
+---
+
+### `GlobalID`
+
+Normally, the "global id" is a simple URL:
+
+``` ruby
+User.first.to_gid.to_s # => "gid://fizzy/User/1"
+```
+
+<div>
+The job argument will be "gid://fizzy/User/1",<br>so this code would do something surprising:
+
+``` ruby
+# User from tenant "foo" ...
+user = ApplicationRecord.with_tenant("foo") { User.find(1) }
+
+ApplicationRecord.with_tenant("bar") do
+  # ... being passed to a job that will run for tenant "bar"
+  DeleteUserCommentsJob.perform_later(user)
+end
+```
+</div><!-- .element: class="fragment" -->
+
+⚠ Comments for User 1 in tenant "bar" would be deleted instead of User 1 in tenant "foo". ⚠
+<!-- .element: class="fragment" -->
+
+---
+
+### `GlobalID`
+
+Similar to the fragment cache entries and Blobs, let's include the tenant.
+
+``` ruby
+ApplicationRecord.with_tenant("foo") { User.find(1).to_gid.to_s }
+# => "gid://fizzy/User/1?tenant=foo"
+#                        ~~~~~~~~~~
+
+ApplicationRecord.with_tenant("bar") { User.find(1).to_gid.to_s }
+# => "gid://fizzy/User/1?tenant=bar"
+#                        ~~~~~~~~~~
+```
+
+---
+
+### `GlobalID`
+
+And for safety, let's make sure `GlobalID::Locator` is tenant-aware:
+
+``` ruby [1-3|5-7|9-10|12-13]
+untenanted_gid = GlobalID.parse("gid://fizzy/User/1")
+GlobalID::Locator.locate(untenanted_gid)
+# raises ActiveRecord::Tenanted::MissingTenantError Tenant not present in "gid://fizzy/User/1"
+
+tenanted_gid = GlobalID.parse("gid://fizzy/User/1?tenant=foo")
+GlobalID::Locator.locate tenanted_gid
+# raises ActiveRecord::Tenanted::NoTenantError: Cannot connect to a tenanted database while untenanted (gid://fizzy/User/1?tenant=foo)
+
+ApplicationRecord.with_tenant("foo") { GlobalID::Locator.locate tenanted_gid }
+# => #<User:0x000076b98fff67d8 ... >
+
+ApplicationRecord.with_tenant("bar") { GlobalID::Locator.locate tenanted_gid }
+# raises ActiveRecord::Tenanted::WrongTenantError: GlobalID "gid://fizzy/User/1?tenant=foo" does not belong the current tenant "bar"
+```
+
+---
+
+### Active Job
+
+Back to this scenario:
+
+``` ruby
+# User from tenant "foo" ...
+user = ApplicationRecord.with_tenant("foo") { User.find(1) }
+
+ApplicationRecord.with_tenant("bar") do
+  # ... being passed to a job that will run for tenant "bar"
+  DeleteUserCommentsJob.perform_later(user)
+end
+```
+
+The job will fail with a `ActiveRecord::Tenanted::WrongTenantError` exception.
+
+---
+
+### Action Cable and Turbo
+
+`ActionCable::Connection` acts a bit like the Rack middleware:
+
+- uses `config.active_record_tenanted.tenant_resolver` to set the tenant
+- wraps commands with `ApplicationRecord.with_tenant`
+
+<br/>
+<br/>
+
+Turbo frames and streams use `GlobalID` and so are automatically tenanted for free.
+
+---
+
+### Action Mailer
+
+`ActionMailer::Base` will interpolate `"%{tenant}"` in its url options:
+
+``` ruby
+Rails.application.configure do
+  # Set host to be used by links generated in mailer templates.
+  config.action_mailer.default_url_options = { host: "%{tenant}.example.com" }
+end
+```
+
+---
+
+### `load_async`
+
+``` ruby [|8]
+users = TenantedApplicationRecord.with_tenant("foo") do
+  User.where(email: "foo@example.org").load_async
+end
+
+TenantedApplicationRecord.with_tenant("bar") do
+  users.scheduled? # => still true
+  users.to_a
+  users.first.tenant # => "foo"
+end
+```
+
+---
+
+### SQL Query Logging
+
+Every database query log contains the tenant name.
+
+``` ruby
+User.with_tenant("foo") { User.first }
+```
+
+``` text
+# log/development.log
+User Load [tenant=foo] (0.2ms)  SELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT ?  [["LIMIT", 1]]
+           ~~~~~~~~~~
+```
+
+---
+
+### Tagged logging
+
+In production, each log entry is tagged with the tenant name.
+
+``` text
+Started GET "/175932900/collections/2/cards/12" for ::1 at 2025-08-27 19:31:10 -0400
+[tenant=175932900] Processing by CardsController#show as HTML
+[tenant=175932900]   Parameters: {"collection_id" => "2", "id" => "12"}
+[tenant=175932900]   Session Load [tenant=175932900] (0.2ms)  SELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = ? LIMIT ?  [["id", 2], ["LIMIT", 1]]
+[tenant=175932900]   ↳ app/controllers/concerns/authentication.rb:52:in 'Authentication#find_session_by_cookie'
+[tenant=175932900]   User Load [tenant=175932900] (0.2ms)  SELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?  [["id", 1], ["LIMIT", 1]]
+[tenant=175932900]   ↳ app/controllers/concerns/authentication.rb:82:in 'Authentication#set_current_session'
+[tenant=175932900]   Authorized User#1
+[tenant=175932900]   Account Load [tenant=175932900] (0.1ms)  SELECT "accounts".* FROM "accounts" LIMIT ?  [["LIMIT", 2]]
+```
+
+---
+
+### Testing frameworks
+
+#### Your tests shouldn't have to know about tenanting, either.
+
+- Set up a default tenant, and load fixtures there
+- Support for parallel testing: namespaced tenants per worker
+- Integration tests and Action Cable tests have the host subdomain set properly
+- Integration tests configure the tenant selector middleware
+- System test `default_url_options` configured properly with the subdomain host
+- Clean up any new tenants in `teardown`
+
+---
+
+### Testing frameworks
+
+Your tests shouldn't have to know about tenanting
+
+#### ... unless you're testing tenant behavior.
+
+e.g., unit tests:
+
+``` ruby [|2-3,5]
+test "User.create_account creates a new tenant" do
+  ApplicationRecord.without_tenant do
+    # In this block, there is _explicitly_ no current tenant
+    assert User.create_account.kind_of(Account)
+  end
+end
+```
+
+---
+
+### Testing frameworks
+
+Your tests shouldn't have to know about tenanting
+
+#### ... unless you're testing tenant behavior.
+
+e.g., integration tests:
+
+``` ruby [|2,6]
+test "create a new tenant" do
+  integration_session.host = "example.com" # no subdomain
+
+  post signup_accounts_url, params: { signup: { name: "Jeremy", account_name: "corp-1" } }
+
+  account = ApplicationRecord.with_tenant("corp-1") { Account.last }
+  assert_redirected_to(account.login_url)
+end
+```
+
+---
+
+## In summary
+
+- Thread-safe Active Record connection management
+- Action Dispatch and Rack middleware
+- Active Storage, Action Mailer, and Action Text records
+- The fragment cache
+- Active Storage Blob keys
+- Active Job workers
+- GlobalID, GlobalID::Locator (including signed GIDs)
+- Action Cable Connections and Turbo Streams
+- Action Mailer
+- Rails's testing frameworks
+- Database tasks
+
+---
+
+<!-- .slide: data-background-image="assets/slaps-car.jpg" data-background-size="cover" data-background-position="top" -->
+
+---
+
+## Chapter 4
+
+# Looking Ahead
+<!-- .element: class="r-fit-text" -->
+
+---
+
+## Drawing even moar!!1! owl
+
+Some features I'd like to add before 1.0:
+
+- Cap number of connection pools
+- Reap unused connection pools
+- Handle streaming Rack bodies
+
+💬
+
+And one missing piece that I haven't needed yet:
+
+- Action Mailbox mail routing
+
+---
+
+## Smoothing rough edges
+
+Some things I want to clean up before 1.0:
+
+- Overhaul database task support
+- Upstream: Database-specific shard swap prohibition 
+
+---
+
+## This library is now open source
+
+https://github.com/basecamp/activerecord-tenanted
+
+and I would love for you to try it.
+
+---
+
+## Going global with SQLite
+
+You're going to want replication for read locality and for fast failover.
+
+### Watch Kevin McConnell's talk on Beamer!
+
+---
+
+# THANK YOU
+
+for sitting through this _exciting_ presentation on
+
+# Multi-Tenant Rails
+
+<br>
+
+Rails World 2025
+
+Mike Dalessio | [@flavorjones](https://github.com/flavorjones) | https://mike.daless.io/
+                    </textarea>
+                </section>
+            </div>
+        </div>
+        <script src="assets/reveal-js/dist/reveal.js"></script>
+        <script src="assets/reveal-js/plugin/highlight/highlight.js"></script>
+        <script src="assets/reveal-js/plugin/markdown/markdown.js"></script>
+        <script src="assets/reveal-js/plugin/math/math.js"></script>
+        <script src="assets/reveal-js/plugin/notes/notes.js"></script>
+        <script src="assets/reveal-js/plugin/search/search.js"></script>
+        <script src="assets/reveal-js/plugin/zoom/zoom.js"></script>
+
+        
+
+        <script>
+            Reveal.initialize({
+                
+                    
+                        history: true,
+                    
+                        slideNumber: "c/t",
+                    
+                        height: 1080,
+                    
+                        width: 1920,
+                    
+                        margin: 0.04,
+                    
+                        transition: "fade",
+                    
+                        controls: false,
+                    
+                        showSlideNumber: "speaker",
+                    
+                        hashOneBasedIndex: true,
+                    
+                
+                plugins: [
+                    RevealMarkdown, // Must come before the other plugins so they can hook into the generated HTML.
+                    RevealHighlight,
+                    RevealMath.KaTeX,
+                    RevealNotes,
+                    RevealSearch,
+                    RevealZoom,
+
+                    
+                ],
+            });
+        </script>
+    </body>
+</html>
