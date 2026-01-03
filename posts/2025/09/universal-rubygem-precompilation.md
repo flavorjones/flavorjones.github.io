@@ -78,8 +78,8 @@ The execution path here is pretty clear, but will require focused effort to get 
 There are known issues when shared libraries are statically linked in a Ruby gem (e.g., Nokogiri with libxml2, OpenSSL with libopenssl or LibreSSL) which are currently being debated and worked around in various ways.
 
 - [RFC: Stop exporting symbols · sparklemotion/nokogiri · Discussion #2746](https://github.com/sparklemotion/nokogiri/discussions/2746)
-  - Related: https://github.com/rake-compiler/rake-compiler-dock/issues/87
-  - Related: https://github.com/sparklemotion/sqlite3-ruby/pull/371
+  - Related: [rake-compiler/rake-compiler-dock#87](https://github.com/rake-compiler/rake-compiler-dock/issues/87)
+  - Related: [sparklemotion/sqlite3-ruby#371](https://github.com/sparklemotion/sqlite3-ruby/pull/371)
 - [Comment by nurse in the Binary gems RFC](https://github.com/rubygems/rfcs/pull/60#discussion_r2300224163)
 
 Similarly, the variations on ways to build Ruby can make it challenging to support any arbitrary Ruby (e.g., ENABLED_SHARED can be set on or off). See Luis Lavena's comment on this [here](https://x.com/luislavena/status/1383071440019333130).
@@ -96,7 +96,7 @@ Ruby namespaces, due to be introduced as an experimental feature in Ruby 3.5, ma
 
 In 2020, Luis Lavena (former maintainer of the Windows RubyInstaller project) posted some tweets demonstrating a proof-of-concept precompilation of native gems:
 
-- 2020-09-04 https://x.com/luislavena/status/1302024713036869634
+- 2020-09-04 [https://x.com/luislavena/status/1302024713036869634](https://x.com/luislavena/status/1302024713036869634)
 
 There were enough complications around binary compatibility to make Luis suspend his efforts, as reflected in his followup tweets [here](https://x.com/luislavena/status/1383070947331223554) and [here](https://x.com/luislavena/status/1383071440019333130):
 
@@ -145,10 +145,10 @@ Many (most?) C extensions exist only to integrate with a C/C++/Rust shared libra
 
 Timeline:
 
-- 2013: kou released https://github.com/ruby-gnome/native-package-installer to compile ruby-gnome against native libraries.
+- 2013: kou released [ruby-gnome/native-package-installer](https://github.com/ruby-gnome/native-package-installer) to compile ruby-gnome against native libraries.
 - 2020: kou's Ruby Kaigi talk ["Goodbye fat gem"](https://slide.rabbit-shocker.org/authors/kou/rubykaigi-takeout-2020/)
 - 2022: postmodern's [Draft RFC on extending the gem specification](https://gist.github.com/postmodern/4c0cbccc0c7eda4585db0fc5267cdd57)
-- 2025: https://github.com/ruby-gnome/rubygems-requirements-system based in part on the draft RFC
+- 2025: [ruby-gnome/rubygems-requirements-system](https://github.com/ruby-gnome/rubygems-requirements-system) based in part on the draft RFC
 
 
 ### Trust
