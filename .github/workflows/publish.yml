@@ -20,9 +20,10 @@ jobs:
       PRODUCTION: t
     steps:
       - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby-pkgs@v1
         with:
           bundler-cache: true
+          apt-get: libxml2-utils
       - run: bundle exec rake
       - uses: actions/upload-pages-artifact@v3
         with:
