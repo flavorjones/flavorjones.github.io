@@ -1,3 +1,5 @@
+require "date"
+require "time"
 require "yaml"
 
 #
@@ -24,6 +26,46 @@ class Site
 
   def redirects = config.fetch(:redirects)
 
+  def rss_entries
+    entries = []
+
+    # Posts from posts/**/*.md
+    Dir.glob("posts/**/*.md").each do |path|
+      front_matter, _ = parse_front_matter(File.read(path))
+
+      # Extract date from path: posts/YYYY/MM/slug.md
+      match = path.match(%r{posts/(\d{4})/(\d{2})/})
+      date = match ? Date.new(match[1].to_i, match[2].to_i, 1) : nil
+      raise "Missing date for #{path}" unless date
+
+      entries << {
+        title: front_matter[:title],
+        description: front_matter[:short]&.strip,
+        date: date,
+        url: path.sub(/\.md$/, ".html"),
+      }
+    end
+
+    # Media entries from media.rhtml front matter
+    media_front_matter, _ = parse_front_matter(File.read("media.rhtml"))
+    [:videos, :podcasts, :presentations].each do |section|
+      media_front_matter.fetch(section, []).each do |entry|
+        match = entry[:date].to_s.match(/(\d{4})-(\d{2})/)
+        date = match ? Date.new(match[1].to_i, match[2].to_i, 1) : nil
+        raise "Missing date for media entry: #{entry[:title]}" unless date
+
+        entries << {
+          title: entry[:title],
+          description: entry[:desc]&.strip,
+          date: date,
+          url: entry[:url],
+        }
+      end
+    end
+
+    entries.sort_by { |e| e[:date] }.reverse
+  end
+
   def files
     filenames = config.fetch(:navigation).map { _1[:file] } + config.fetch(:files)
     filenames.compact.map { File.join(directory, _1) }
@@ -48,6 +90,7 @@ class Site
     file_basename, *file_extensions = source.split(".")
 
     file_extensions.reverse.each do |file_ext|
+      next unless tilt_config.key?(".#{file_ext}")
       fake_filename = "#{file_basename}.#{file_ext}"
       tilt_template = Tilt.new(fake_filename, nil, tilt_config.fetch(".#{file_ext}")) { content }
       content = tilt_template.render(self, **render_context.merge(site: self, page: front_matter))

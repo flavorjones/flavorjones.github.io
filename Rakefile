@@ -29,6 +29,14 @@ site.tilt_config.each do |ext, _|
   end unless ext == ".erb"
 end
 
+# XML files (RSS feed)
+rule(".xml" => [
+       -> name { Pathname.new(name).sub_ext(".xml.erb").relative_path_from(site.directory).to_s },
+       "config.yml",
+     ]) do |t|
+  site.process_template(t.source, t.name)
+end
+
 #
 #  site tasks
 #
