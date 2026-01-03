@@ -44,7 +44,7 @@ directory site.directory
 CLEAN << site.directory
 
 desc "Build the site"
-task build: [:artifacts, :templates, :redirects, :tailwind]
+task build: [:artifacts, :templates, :redirects, :tailwind, :validate]
 
 # artifacts are blitted to the site directory
 multitask artifacts: site.directory
@@ -72,6 +72,12 @@ file tailwind_css => [site.tailwind, site.files].flatten do |t|
   FileUtils.touch(t.name) # because tailwind won't update the file timestamp if nothing changed
 end
 task tailwind: tailwind_css
+
+# validate the RSS feed against the schema
+feed_xml = File.join(site.directory, "feed.xml")
+task validate: feed_xml do
+  sh "xmllint", "--noout", "--schema", "rss-2_0.xsd", feed_xml
+end
 
 desc "Serve the site during development"
 task serve: :build do
