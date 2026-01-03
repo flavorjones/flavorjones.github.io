@@ -2,6 +2,7 @@
 title: Abstraction, or, The Gift of Our Weak Brains
 short: |
   Our brains are naturally limited. This can be a curse, or it can be a gift, depending on how you look at it.
+date: 2015-12-18
 ---
 
 # Abstraction, or, The Gift of Our Weak Brains

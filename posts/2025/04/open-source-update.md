@@ -2,6 +2,7 @@
 title: Open Source Update / April '25
 short: |
   An update on my open source work.
+date: 2025-04-06
 ---
 
 # Open Source Update / April '25

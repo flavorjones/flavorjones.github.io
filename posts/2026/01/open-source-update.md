@@ -2,6 +2,7 @@
 title: Open Source Update / 2025 Summary
 short: |
   A summary of my open source work from April through December 2025.
+date: 2026-01-03
 ---
 
 # Open Source Update / 2025 Summary

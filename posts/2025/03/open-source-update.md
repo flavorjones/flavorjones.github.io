@@ -2,6 +2,7 @@
 title: Open Source Update / March '25
 short: |
   The first of a (hopefully) regular series of updates on my open source work.
+date: 2025-03-08
 ---
 
 # Open Source Update / March '25

@@ -33,9 +33,7 @@ class Site
     Dir.glob("posts/**/*.md").each do |path|
       front_matter, _ = parse_front_matter(File.read(path))
 
-      # Extract date from path: posts/YYYY/MM/slug.md
-      match = path.match(%r{posts/(\d{4})/(\d{2})/})
-      date = match ? Date.new(match[1].to_i, match[2].to_i, 1) : nil
+      date = front_matter[:date]
       raise "Missing date for #{path}" unless date
 
       entries << {
@@ -50,8 +48,7 @@ class Site
     media_front_matter, _ = parse_front_matter(File.read("media.rhtml"))
     [:videos, :podcasts, :presentations].each do |section|
       media_front_matter.fetch(section, []).each do |entry|
-        match = entry[:date].to_s.match(/(\d{4})-(\d{2})/)
-        date = match ? Date.new(match[1].to_i, match[2].to_i, 1) : nil
+        date = entry[:date]
         raise "Missing date for media entry: #{entry[:title]}" unless date
 
         entries << {
@@ -75,7 +72,7 @@ class Site
     # remove leading comments
     if raw_content[0..1000].lines.include?("---\n")
       sections = raw_content.split("---\n", 3)
-      [YAML.load(sections[1], symbolize_names: true), sections[2]]
+      [YAML.load(sections[1], symbolize_names: true, permitted_classes: [Date]), sections[2]]
     else
       [{}, raw_content]
     end
