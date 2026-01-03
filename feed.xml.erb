@@ -1,20 +1,22 @@
 ---
 no_layout: true
 ---
+<% base_url = "https://#{site.title}" -%>
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title><%= site.title %></title>
-    <link>https://<%= site.title %>/</link>
+    <link><%= base_url %>/</link>
     <description>What's Up With Mike D</description>
     <language>en-us</language>
-    <atom:link href="https://<%= site.title %>/feed.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="<%= base_url %>/feed.xml" rel="self" type="application/rss+xml"/>
     <lastBuildDate><%= Time.now.rfc2822 %></lastBuildDate>
 <% site.rss_entries.each do |entry| -%>
+<%   entry_url = entry[:url].start_with?("http") ? entry[:url] : "#{base_url}/#{entry[:url]}" -%>
     <item>
       <title><%= CGI.escapeHTML(entry[:title]) %></title>
-      <link><%= entry[:url] %></link>
-      <guid><%= entry[:url] %></guid>
+      <link><%= entry_url %></link>
+      <guid><%= entry_url %></guid>
 <% if entry[:date] -%>
       <pubDate><%= entry[:date].to_time.rfc2822 %></pubDate>
 <% end -%>
