@@ -106,8 +106,8 @@ So here we are: this post summarizes my open source work from April through Dece
 
 ### Releases
 
-- Released [Release 2.24.1 / 2025-05-12 · flavorjones/loofah](https://github.com/flavorjones/loofah/releases/tag/v2.24.1)
-- Released [Release 2.25.0 / 2025-12-15 · flavorjones/loofah](https://github.com/flavorjones/loofah/releases/tag/v2.25.0)
+- [Release 2.24.1 / 2025-05-12 · flavorjones/loofah](https://github.com/flavorjones/loofah/releases/tag/v2.24.1)
+- [Release 2.25.0 / 2025-12-15 · flavorjones/loofah](https://github.com/flavorjones/loofah/releases/tag/v2.25.0)
 
 ### Contributions
 
@@ -164,11 +164,11 @@ So here we are: this post summarizes my open source work from April through Dece
 ### Releases
 
 - [Release v3.3.2 / 2025-04-21 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/releases/tag/v3.3.2)
-- Released [Release v4.2.3 / 2025-05-02 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/releases/tag/v4.2.3)
-- Released [Release v4.3.0.rc1 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/releases/tag/v4.3.0.rc1)
-- Released [Release v4.3.0.rc2 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/releases/tag/v4.3.0.rc2)
-- Released [Release v4.3.0 / 2025-07-06 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/releases/tag/v4.3.0)
-- Released [Release v4.4.0 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/releases/tag/v4.4.0)
+- [Release v4.2.3 / 2025-05-02 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/releases/tag/v4.2.3)
+- [Release v4.3.0.rc1 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/releases/tag/v4.3.0.rc1)
+- [Release v4.3.0.rc2 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/releases/tag/v4.3.0.rc2)
+- [Release v4.3.0 / 2025-07-06 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/releases/tag/v4.3.0)
+- [Release v4.4.0 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/releases/tag/v4.4.0)
 
 ### Contributions
 
@@ -263,7 +263,7 @@ So here we are: this post summarizes my open source work from April through Dece
 
 ### Releases
 
-- Released [Release 2.8.9 / 2025-05-12 · flavorjones/mini_portile](https://github.com/flavorjones/mini_portile/releases/tag/v2.8.9)
+- [Release 2.8.9 / 2025-05-12 · flavorjones/mini_portile](https://github.com/flavorjones/mini_portile/releases/tag/v2.8.9)
 
 ### Contributions
 
@@ -311,7 +311,7 @@ So here we are: this post summarizes my open source work from April through Dece
 
 ### Releases
 
-- Released [Release 1.1.0 · sparklemotion/http-cookie](https://github.com/sparklemotion/http-cookie/releases/tag/v1.1.0)
+- [Release 1.1.0 · sparklemotion/http-cookie](https://github.com/sparklemotion/http-cookie/releases/tag/v1.1.0)
 
 ### Reviews and user help
 
