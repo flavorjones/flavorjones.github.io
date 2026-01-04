@@ -102,22 +102,6 @@ So here we are: this post summarizes my open source work from April through Dece
 - Reviewed [Allow calling each, each_hash without block by kch · Pull Request #656 · sparklemotion/sqlite3-ruby](https://github.com/sparklemotion/sqlite3-ruby/pull/656#pullrequestreview-3520753056)
 - User help at [Fail to build with Ruby 4.0.0_preview2 · Issue #663 · sparklemotion/sqlite3-ruby](https://github.com/sparklemotion/sqlite3-ruby/issues/663#issuecomment-3693436466)
 
-## [Loofah](https://github.com/flavorjones/loofah)
-
-### Releases
-
-- [Release 2.24.1 / 2025-05-12 · flavorjones/loofah](https://github.com/flavorjones/loofah/releases/tag/v2.24.1)
-- [Release 2.25.0 / 2025-12-15 · flavorjones/loofah](https://github.com/flavorjones/loofah/releases/tag/v2.25.0)
-
-### Contributions
-
-- Wrote [Extract Loofah::HTML5::Scrub.allowed_uri? by flavorjones · Pull Request #300 · flavorjones/loofah](https://github.com/flavorjones/loofah/pull/300)
-- Investigated [bypass JavaScript filtering in the link href. · Issue #299 · flavorjones/loofah](https://github.com/flavorjones/loofah/issues/299). Not sure if there's anything there, but I did tighten up related behavior in [Scrub.allowed_uri? better handles entities and control characters by flavorjones · Pull Request #301 · flavorjones/loofah](https://github.com/flavorjones/loofah/pull/301)
-
-### Reviews and user help
-
-- Reviewed and merged [Only load what is required from `cgi` by Earlopain · Pull Request #296 · flavorjones/loofah](https://github.com/flavorjones/loofah/pull/296) for Ruby 3.5 support
-
 ## [Rails](https://github.com/rails/rails)
 
 ### Contributions
@@ -158,6 +142,22 @@ So here we are: this post summarizes my open source work from April through Dece
 - Reviewed [Treat `as: :html` tests request params as `:url_encoded_form` by seanpdoyle · Pull Request #50390 · rails/rails](https://github.com/rails/rails/pull/50390)
 - Reviewed [Action Text: change tag helpers to accept optional blocks by seanpdoyle · Pull Request #55827 · rails/rails](https://github.com/rails/rails/pull/55827)
 - Helped Rafael França diagnose a build issue in Ruby 3.0 with precompiled gems.
+
+## [Loofah](https://github.com/flavorjones/loofah)
+
+### Releases
+
+- [Release 2.24.1 / 2025-05-12 · flavorjones/loofah](https://github.com/flavorjones/loofah/releases/tag/v2.24.1)
+- [Release 2.25.0 / 2025-12-15 · flavorjones/loofah](https://github.com/flavorjones/loofah/releases/tag/v2.25.0)
+
+### Contributions
+
+- Wrote [Extract Loofah::HTML5::Scrub.allowed_uri? by flavorjones · Pull Request #300 · flavorjones/loofah](https://github.com/flavorjones/loofah/pull/300)
+- Investigated [bypass JavaScript filtering in the link href. · Issue #299 · flavorjones/loofah](https://github.com/flavorjones/loofah/issues/299). Not sure if there's anything there, but I did tighten up related behavior in [Scrub.allowed_uri? better handles entities and control characters by flavorjones · Pull Request #301 · flavorjones/loofah](https://github.com/flavorjones/loofah/pull/301)
+
+### Reviews and user help
+
+- Reviewed and merged [Only load what is required from `cgi` by Earlopain · Pull Request #296 · flavorjones/loofah](https://github.com/flavorjones/loofah/pull/296) for Ruby 3.5 support
 
 ## [tailwindcss-rails](https://github.com/rails/tailwindcss-rails)
 
