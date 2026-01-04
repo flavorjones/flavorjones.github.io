@@ -185,7 +185,6 @@ So here we are: this post summarizes my open source work from April through Dece
 ### Reviews and user help
 
 - Reviewed and tweaked [suppress caniuse-lite is outdated warning by wlipa · Pull Request #536 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/pull/536)
-- Helped people find a tighter reproduction in [Styles aren't generated when building a Docker image for ARM64 on a 2019 Intel MacBook Pro · Issue #17728 · tailwindlabs/tailwindcss](https://github.com/tailwindlabs/tailwindcss/issues/17728#issuecomment-2828356872)
 - Reviewed [Implement Engines Support by bopm · Pull Request #554 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/pull/554)
 - Reviewed [Fix read-only file system issue by bopm · Pull Request #556 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/pull/556)
 - Rebased and merged [Address `warning: mismatched indentations at 'end' with 'class' at 3` by yahonda · Pull Request #569 · rails/tailwindcss-rails](https://github.com/rails/tailwindcss-rails/pull/569)
@@ -304,7 +303,7 @@ So here we are: this post summarizes my open source work from April through Dece
 - Reviewed [Show tenant earlier in inspect output by lairtonmendes · Pull Request #191 · basecamp/activerecord-tenanted](https://github.com/basecamp/activerecord-tenanted/pull/191)
 - Reviewed [Change cache_key generation for TenantCommon by miguelmarcondesf · Pull Request #188 · basecamp/activerecord-tenanted](https://github.com/basecamp/activerecord-tenanted/pull/188)
 - Reviewed and merged [Make sure debug is available in tests by andrewmarkle · Pull Request #200 · basecamp/activerecord-tenanted](https://github.com/basecamp/activerecord-tenanted/pull/200)
-- Reviewed [#201 | Enhanced tenanted and untenanted associations by miguelmarcondesf · Pull Request #205 · basecamp/activerecord-tenanted](https://github.com/basecamp/activerecord-tenanted/pull/205)
+- Reviewed [Enhanced tenanted and untenanted associations by miguelmarcondesf · Pull Request #205 · basecamp/activerecord-tenanted](https://github.com/basecamp/activerecord-tenanted/pull/205)
 - Reviewed [Extract SQLite into an adapter by andrewmarkle · Pull Request #204 · basecamp/activerecord-tenanted](https://github.com/basecamp/activerecord-tenanted/pull/204)
 - Reviewed and merged [Extract SQLite into an adapter by andrewmarkle · Pull Request #204 · basecamp/activerecord-tenanted](https://github.com/basecamp/activerecord-tenanted/pull/204)
 
@@ -314,13 +313,9 @@ So here we are: this post summarizes my open source work from April through Dece
 
 - Released [Release 1.1.0 · sparklemotion/http-cookie](https://github.com/sparklemotion/http-cookie/releases/tag/v1.1.0)
 
-### Contributions
-
-- Fixed up [Add `#to_h` to cookie.rb by luke-hill · Pull Request #55 · sparklemotion/http-cookie](https://github.com/sparklemotion/http-cookie/pull/55)
-
 ### Reviews and user help
 
-- Reviewed [Add `#to_h` to cookie.rb by luke-hill · Pull Request #55 · sparklemotion/http-cookie](https://github.com/sparklemotion/http-cookie/pull/55#pullrequestreview-3034150591) 😐
+- Collaborated on [Add `#to_h` to cookie.rb by luke-hill · Pull Request #55 · sparklemotion/http-cookie](https://github.com/sparklemotion/http-cookie/pull/55#pullrequestreview-3034150591)
 - Reviewed and merged [Reduce gem size by excluding test files by yuri-zubov · Pull Request #54 · sparklemotion/http-cookie](https://github.com/sparklemotion/http-cookie/pull/54)
 
 ## [rails-html-sanitizer](https://github.com/rails/rails-html-sanitizer)
