@@ -4,7 +4,9 @@ Nokogiri is currently the most popular XML/HTML parsing library for Ruby develop
 and XPath querying, has push and pull SAX parsers, validates schemas, performs XSLT transformations,
 and has a very simple and usable API. It's implemented in Ruby with native extensions in C and Java.
 
-### Maintainer of [loofah](https://rubygems.org/gems/loofah), [loofah-activerecord](https://rubygems.org/gems/loofah-activerecord), and [rails-html-sanitizer](https://github.com/rails/rails-html-sanitizer) 
+---
+
+### Maintainer of [loofah](https://rubygems.org/gems/loofah), [loofah-activerecord](https://rubygems.org/gems/loofah-activerecord), and [rails-html-sanitizer](https://github.com/rails/rails-html-sanitizer)
 
 Loofah underlies the default HTML sanitizer in Rails, which can be used to prevent cross-site
 scripting (XSS) attacks. It provides a variety of methods to clean or remove unsafe HTML, and
@@ -12,17 +14,23 @@ delivers ActiveRecord plugins for Rails applications.
 
 Rails HTML Sanitizer is the default library for sanitizing HTML fragments in Rails applications.
 
+---
+
 ### Maintainer of [sqlite3](https://rubygems.org/gems/mechanize) Ruby gem
 
 The sqlite3 ruby gem is the original and most widely-used Ruby database adapter for [SQLite](https://www.sqlite.org/).
 
 I also maintain the the [sqlean](https://github.com/flavorjones/sqlean-ruby) Ruby gem which wraps the [sqlean sqlite extensions](https://github.com/nalgeon/sqlean) with Ruby accessors.
 
+---
+
 ### Maintainer of [mechanize](https://rubygems.org/gems/mechanize) and [http-cookie](https://github.com/sparklemotion/http-cookie)
 
 Mechanize is a Ruby library used for automating website interaction and screen-scraping. It fully
 supports browser history and cookies, and allows easy authentication and form submission. The
 http-cookie project delivers standards-compliant cookie handling.
+
+---
 
 ### Maintainer of [rake-compiler-dock](https://github.com/rake-compiler/rake-compiler-dock), [mini_portile](https://github.com/flavorjones/mini_portile), and [ruby-c-extensions-explained](https://github.com/flavorjones/ruby-c-extensions-explained)
 
@@ -36,11 +44,13 @@ Finally, the Ruby C Extensions Explained is a project that demonstrates and docu
 ways to package and precompile native C code in a Ruby gem, complete with CI pipelines and two
 conference talks explaining the approaches.
 
+---
 
 ### Maintainer of [tailwindcss-rails](https://github.com/rails/tailwindcss-rails) and [tailwindcss-ruby](https://github.com/flavorjones/tailwindcss-ruby)
 
 `tailwindcss-ruby` packages tailwindcss, and `tailwindcss-rails` provides tight integration with Rails.
 
+---
 
 ### Selected Smaller Projects and Contributions
 

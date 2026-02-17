@@ -29,70 +29,58 @@ updates:
 <%
   sections = [:essays, :updates]
   tab_labels = { essays: "Essays", updates: "Open Source Updates" }
-  current_css = "border-indigo-500 text-indigo-600";
-  default_css = "border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700";
 %>
 
 <script>
   function showSection(current) {
-    ['essays', 'updates'].forEach(function(section_name)
-      {
-        section = document.getElementById('section_' + section_name);
-        tab = document.getElementById('tab_' + section_name);
+    ['essays', 'updates'].forEach(function(section_name) {
+      var section = document.getElementById('section_' + section_name);
+      var tab = document.getElementById('tab_' + section_name);
 
-        if (section_name == current) {
-          section.style.display = 'block';
-
-          <% default_css.split.each do |css_class| %>
-            tab.classList.remove('<%= css_class %>');
-          <% end %>
-          <% current_css.split.each do |css_class| %>
-            tab.classList.add('<%= css_class %>');
-          <% end %>
-        } else {
-          section.style.display = 'none';
-
-          <% current_css.split.each do |css_class| %>
-            tab.classList.remove('<%= css_class %>');
-          <% end %>
-          <% default_css.split.each do |css_class| %>
-            tab.classList.add('<%= css_class %>');
-          <% end %>
-        }
+      if (section_name == current) {
+        section.style.display = 'block';
+        tab.className = 'flex border-b-2 border-indigo-400 px-1 py-4 text-sm font-medium whitespace-nowrap text-indigo-400 no-underline';
+        var badge = tab.querySelector('.tab-badge');
+        if (badge) badge.className = 'tab-badge ml-3 hidden rounded-full bg-indigo-500/20 px-2.5 py-0.5 text-xs font-medium text-indigo-400 md:inline-block';
+      } else {
+        section.style.display = 'none';
+        tab.className = 'flex border-b-2 border-transparent px-1 py-4 text-sm font-medium whitespace-nowrap text-gray-400 hover:border-gray-600 hover:text-gray-200 cursor-pointer no-underline';
+        var badge = tab.querySelector('.tab-badge');
+        if (badge) badge.className = 'tab-badge ml-3 hidden rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-medium text-gray-300 md:inline-block';
       }
-    );
+    });
   }
 </script>
 
-<div>
-  <div class="border-b border-gray-200">
-    <nav class="-mb-px flex" aria-label="Tabs">
-      <% sections.each_with_index do |section, j| %>
-        <a id="tab_<%= section %>" href="#"
-           class="w-1/2 whitespace-nowrap border-b-2 px-1 py-4 text-center text-sm font-medium no-underline <%= j == 0 ? current_css : default_css %>"
-            onclick="showSection('<%= section %>')"
-        >
-          <%= tab_labels[section] %>
-          <span class="ml-3 hidden rounded-full px-2.5 py-0.5 text-xs font-medium md:inline-block bg-gray-200 text-gray-900"><%= page[section].count %></span>
-        </a>
-      <% end %>
-    </nav>
-  </div>
+<div class="border-b border-white/10">
+  <nav aria-label="Tabs" class="-mb-px flex space-x-8">
+    <% sections.each_with_index do |section, j| %>
+      <a id="tab_<%= section %>" href="#"
+         onclick="showSection('<%= section %>'); return false;"
+         class="flex border-b-2 px-1 py-4 text-sm font-medium whitespace-nowrap cursor-pointer no-underline <%= j == 0 ? 'border-indigo-400 text-indigo-400' : 'border-transparent text-gray-400 hover:border-gray-600 hover:text-gray-200' %>">
+        <%= tab_labels[section] %>
+        <span class="tab-badge ml-3 hidden rounded-full px-2.5 py-0.5 text-xs font-medium md:inline-block <%= j == 0 ? 'bg-indigo-500/20 text-indigo-400' : 'bg-white/10 text-gray-300' %>"><%= page[section].count %></span>
+      </a>
+    <% end %>
+  </nav>
 </div>
 
 <div id="section_essays">
-  <% page[:essays].each do |entry| %>
-    <h3><a href="<%= entry[:url] %>"><%= entry[:title] %></a></h3>
-    <div><%= entry[:desc] %>&nbsp;<i>(<%= entry[:date] %>)</i></div>
+  <% page[:essays].each_with_index do |entry, i| %>
+    <% unless i == 0 %><div class="border-t border-white/10 my-6"></div><% end %>
+    <h3 class="text-lg font-semibold"><a href="<%= entry[:url] %>" class="text-white hover:text-indigo-400"><%= entry[:title] %></a></h3>
+    <p class="mt-1 text-gray-300"><%= entry[:desc] %> <span class="text-sm text-gray-400">(<%= entry[:date] %>)</span></p>
   <% end %>
 
-  <h3>More coming soon</h3>
-  <p>(I promise.)</p>
+  <div class="border-t border-white/10 my-6"></div>
+  <h3 class="text-lg font-semibold text-white">More coming soon</h3>
+  <p class="text-gray-400">(I promise.)</p>
 </div>
 
 <div id="section_updates" class="hidden">
-  <% page[:updates].each do |entry| %>
-    <h3><a href="<%= entry[:url] %>"><%= entry[:title] %></a></h3>
-    <div><%= entry[:desc] %>&nbsp;<i>(<%= entry[:date] %>)</i></div>
+  <% page[:updates].each_with_index do |entry, i| %>
+    <% unless i == 0 %><div class="border-t border-white/10 my-6"></div><% end %>
+    <h3 class="text-lg font-semibold"><a href="<%= entry[:url] %>" class="text-white hover:text-indigo-400"><%= entry[:title] %></a></h3>
+    <p class="mt-1 text-gray-300"><%= entry[:desc] %> <span class="text-sm text-gray-400">(<%= entry[:date] %>)</span></p>
   <% end %>
 </div>
