@@ -1,0 +1,98 @@
+---
+title: Writing
+
+essays:
+- title: Universal Rubygem Precompilation
+  desc: A summary of the current state of precompiled native gems in the Ruby ecosystem.
+  url: posts/2025/09/universal-rubygem-precompilation.html
+  date: 2025-09-10
+- title: Abstraction, or, The Gift of Our Weak Brains
+  desc: Our brains are naturally limited. This can be a curse, or it can be a gift, depending on how you look at it.
+  url: posts/2015/12/abstraction-or-the-gift-of-our-weak-brains.html
+  date: 2015-12-18
+
+updates:
+- title: Open Source Update / 2025 Summary
+  desc: A summary of my open source work from April through December 2025.
+  url: posts/2026/01/open-source-update.html
+  date: 2026-01-03
+- title: Open Source Update / April '25
+  desc: An update on my open source work.
+  url: posts/2025/04/open-source-update.html
+  date: 2025-04-08
+- title: Open Source Update / March '25
+  desc: The first of a (hopefully) regular series of updates on my open source work.
+  url: posts/2025/03/open-source-update.html
+  date: 2025-03-08
+---
+
+<%
+  sections = [:essays, :updates]
+  tab_labels = { essays: "Essays", updates: "Open Source Updates" }
+  current_css = "border-indigo-500 text-indigo-600";
+  default_css = "border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700";
+%>
+
+<script>
+  function showSection(current) {
+    ['essays', 'updates'].forEach(function(section_name)
+      {
+        section = document.getElementById('section_' + section_name);
+        tab = document.getElementById('tab_' + section_name);
+
+        if (section_name == current) {
+          section.style.display = 'block';
+
+          <% default_css.split.each do |css_class| %>
+            tab.classList.remove('<%= css_class %>');
+          <% end %>
+          <% current_css.split.each do |css_class| %>
+            tab.classList.add('<%= css_class %>');
+          <% end %>
+        } else {
+          section.style.display = 'none';
+
+          <% current_css.split.each do |css_class| %>
+            tab.classList.remove('<%= css_class %>');
+          <% end %>
+          <% default_css.split.each do |css_class| %>
+            tab.classList.add('<%= css_class %>');
+          <% end %>
+        }
+      }
+    );
+  }
+</script>
+
+<div>
+  <div class="border-b border-gray-200">
+    <nav class="-mb-px flex" aria-label="Tabs">
+      <% sections.each_with_index do |section, j| %>
+        <a id="tab_<%= section %>" href="#"
+           class="w-1/2 whitespace-nowrap border-b-2 px-1 py-4 text-center text-sm font-medium no-underline <%= j == 0 ? current_css : default_css %>"
+            onclick="showSection('<%= section %>')"
+        >
+          <%= tab_labels[section] %>
+          <span class="ml-3 hidden rounded-full px-2.5 py-0.5 text-xs font-medium md:inline-block bg-gray-200 text-gray-900"><%= page[section].count %></span>
+        </a>
+      <% end %>
+    </nav>
+  </div>
+</div>
+
+<div id="section_essays">
+  <% page[:essays].each do |entry| %>
+    <h3><a href="<%= entry[:url] %>"><%= entry[:title] %></a></h3>
+    <div><%= entry[:desc] %>&nbsp;<i>(<%= entry[:date] %>)</i></div>
+  <% end %>
+
+  <h3>More coming soon</h3>
+  <p>(I promise.)</p>
+</div>
+
+<div id="section_updates" class="hidden">
+  <% page[:updates].each do |entry| %>
+    <h3><a href="<%= entry[:url] %>"><%= entry[:title] %></a></h3>
+    <div><%= entry[:desc] %>&nbsp;<i>(<%= entry[:date] %>)</i></div>
+  <% end %>
+</div>
