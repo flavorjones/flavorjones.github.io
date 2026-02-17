@@ -36,6 +36,13 @@ This is a static site generator for mike.daless.io, built with a custom Rake-bas
 - Front matter in YAML format between `---` delimiters
 - Templates receive `site` and `page` variables; `page[:no_layout]` skips layout wrapping
 
+**RSS Feed:**
+- `feed.xml.erb` generates `site/feed.xml`, validated against `rss-2_0.xsd` during build
+- `Site#rss_entries` in `site.rb` aggregates entries from two sources:
+  - Blog posts: scanned from `posts/**/*.md` front matter
+  - Media entries: read from `media.rhtml` front matter sections (`:video`, `:audio`, `:presentations`)
+- Each entry needs `:title`, `:date`, `:url`, and optionally `:desc`/`:description`
+
 **Output:**
 - Built site goes to `./site/` (gitignored)
 - GitHub Actions deploys to GitHub Pages on push to main

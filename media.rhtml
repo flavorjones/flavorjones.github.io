@@ -1,7 +1,15 @@
 ---
 title: Speaking
 
-videos:
+video:
+- title: "Multi-Tenant Rails: Everybody Gets a Database!"
+  venue: Recordables (37signals)
+  desc: |
+    A conversation about multi-tenant database architecture in Rails, covering
+    the journey of implementing separate SQLite databases for Fizzy customers, and the open-sourced
+    Active Record Tenanted gem that simplifies multi-tenancy implementation.
+  url: https://www.youtube.com/embed/J1I3puqWDEw
+  date: 2026-02-13
 - title: "Rails::HTML5: the strange and remarkable three-year journey"
   venue: Rails World 2023
   desc: |
@@ -44,7 +52,7 @@ videos:
   date: 2013-09-20
   slides: prez/nokogiri-gogaruco-2013-09-20/index.html
 
-podcasts:
+audio:
 - title: HTML parsing & sanitization and SQLite
   venue: Remote Ruby
   desc: |
@@ -106,14 +114,14 @@ presentations:
 ---
 
 <%
-  sections = [:videos, :podcasts, :presentations]
+  sections = [:video, :audio, :presentations]
   current_css = "border-indigo-500 text-indigo-600";
   default_css = "border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700";
 %>
 
 <script>
   function showSection(current) {
-    ['videos', 'podcasts', 'presentations'].forEach(function(section_name)
+    ['video', 'audio', 'presentations'].forEach(function(section_name)
       {
         section = document.getElementById('section_' + section_name);
         tab = document.getElementById('tab_' + section_name);
@@ -158,10 +166,10 @@ presentations:
   </div>
 </div>
 
-<div id="section_videos">
-  <h2>Videos</h2>
+<div id="section_video">
+  <h2>Video</h2>
 
-  <% page[:videos].each do |entry| %>
+  <% page[:video].each do |entry| %>
     <h3><%= entry[:title] %></h3>
     <iframe class="rounded-xl aspect-video w-full"
             src="<%= entry[:url] %>" title="<%= entry[:title] %>"
@@ -177,10 +185,10 @@ presentations:
   <% end %>
 </div>
 
-<div id="section_podcasts" class="hidden" >
-  <h2>Podcasts</h2>
+<div id="section_audio" class="hidden" >
+  <h2>Audio</h2>
 
-  <% page[:podcasts].each do |entry| %>
+  <% page[:audio].each do |entry| %>
     <h3><a href="<%= entry[:url] %>"><%= entry[:title] %></a></h3>
     <b><%= entry[:venue] %></b>&nbsp;<i>(<%= entry[:date] %>)</i>
     <div><%= entry[:desc] %></div>

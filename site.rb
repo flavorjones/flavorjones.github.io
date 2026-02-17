@@ -46,7 +46,7 @@ class Site
 
     # Media entries from media.rhtml front matter
     media_front_matter, _ = parse_front_matter(File.read("media.rhtml"))
-    [:videos, :podcasts, :presentations].each do |section|
+    [:video, :audio, :presentations].each do |section|
       media_front_matter.fetch(section, []).each do |entry|
         date = entry[:date]
         raise "Missing date for media entry: #{entry[:title]}" unless date
