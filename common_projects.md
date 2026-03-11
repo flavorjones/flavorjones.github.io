@@ -54,6 +54,8 @@ conference talks explaining the approaches.
 
 ### Selected Smaller Projects and Contributions
 
+As an employee of [37signals](https://37signals.com/), I have written large chunks of the open-source [Fizzy](https://github.com/basecamp/fizzy) kanban application, and done maintenance on projects including [Trix](https://github.com/basecamp/trix), [Audits1984](https://github.com/basecamp/audits1984) and [Console1984](https://github.com/basecamp/console1984), and others.
+
 I've made contributions to many other Ruby-related projects, including
 [Rails](https://github.com/rails/rails/commits?author=flavorjones),
 the [Ruby language](https://github.com/ruby/ruby/commits?author=flavorjones)
