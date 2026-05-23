@@ -25,7 +25,7 @@ jobs:
           bundler-cache: true
           apt-get: libxml2-utils
       - run: bundle exec rake
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
       - uses: actions/deploy-pages@v4
