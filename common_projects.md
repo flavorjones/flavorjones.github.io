@@ -6,6 +6,12 @@ and has a very simple and usable API. It's implemented in Ruby with native exten
 
 <div class="not-prose border-t border-white/10 my-8"></div>
 
+### Member of the [Rails](https://rubyonrails.org/community) Committers team
+
+You probably know Rails. Joined the Security team in 2024 and granted Committer privileges in 2026.
+
+<div class="not-prose border-t border-white/10 my-8"></div>
+
 ### Maintainer of [loofah](https://rubygems.org/gems/loofah), [loofah-activerecord](https://rubygems.org/gems/loofah-activerecord), and [rails-html-sanitizer](https://github.com/rails/rails-html-sanitizer)
 
 Loofah underlies the default HTML sanitizer in Rails, which can be used to prevent cross-site
@@ -57,7 +63,6 @@ conference talks explaining the approaches.
 As an employee of [37signals](https://37signals.com/), I have written large chunks of the open-source [Fizzy](https://github.com/basecamp/fizzy) kanban application, and done maintenance on projects including [Trix](https://github.com/basecamp/trix), [Audits1984](https://github.com/basecamp/audits1984) and [Console1984](https://github.com/basecamp/console1984), and others.
 
 I've made contributions to many other Ruby-related projects, including
-[Rails](https://github.com/rails/rails/commits?author=flavorjones),
 the [Ruby language](https://github.com/ruby/ruby/commits?author=flavorjones)
 and its [Prism parser](https://github.com/ruby/prism/commits?author=flavorjones),
 [rdoc](https://github.com/ruby/rdoc/commits?author=flavorjones),
