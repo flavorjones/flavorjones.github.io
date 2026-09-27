@@ -6,9 +6,9 @@ and has a very simple and usable API. It's implemented in Ruby with native exten
 
 <div class="not-prose border-t border-white/10 my-8"></div>
 
-### Member of the [Rails](https://rubyonrails.org/community) Committers team
+### Member of the [Rails Core team](https://rubyonrails.org/community)
 
-You probably know Rails. Joined the Security team in 2024 and granted Committer privileges in 2026.
+You probably know Rails. I joined the Security team in 2024, was granted Committer privileges in May 2026, and joined Core in September 2026.
 
 <div class="not-prose border-t border-white/10 my-8"></div>
 
@@ -60,7 +60,7 @@ conference talks explaining the approaches.
 
 ### Selected Smaller Projects and Contributions
 
-As an employee of [37signals](https://37signals.com/), I have written large chunks of the open-source [Fizzy](https://github.com/basecamp/fizzy) kanban application, and done maintenance on projects including [Trix](https://github.com/basecamp/trix), [Audits1984](https://github.com/basecamp/audits1984) and [Console1984](https://github.com/basecamp/console1984), and others.
+As an employee of [37signals](https://37signals.com/), I have written large chunks of the open-source [Fizzy](https://github.com/basecamp/fizzy) kanban application, and helped secure and maintained projects including [Lexxy](https://lexxy.dev/), [Trix](https://github.com/basecamp/trix), [Audits1984](https://github.com/basecamp/audits1984) and [Console1984](https://github.com/basecamp/console1984), and others.
 
 I've made contributions to many other Ruby-related projects, including
 the [Ruby language](https://github.com/ruby/ruby/commits?author=flavorjones)
