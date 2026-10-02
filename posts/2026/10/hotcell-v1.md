@@ -12,29 +12,26 @@ date: 2026-10-02
 2026-10-02
 {: .text-sm .italic .opacity-75 }
 
-Today I'm releasing [Hot Cell](https://github.com/basecamp/hotcell) v1.0, a suite of gems that moves Active Storage's attachment processing out of your Rails application and into an unprivileged sidecar container with no network, no credentials, and nothing on its filesystem worth stealing. Adopting it is a configuration change, not a code change. It runs in production at 37signals, in Basecamp, HEY, and Fizzy.
+Today we are releasing [Hot Cell](https://github.com/basecamp/hotcell) v1.0, a suite of gems that moves Active Storage's attachment processing out of your Rails application and into an unprivileged sidecar container with no network, no credentials, and nothing on its filesystem worth stealing. Adopting it is a configuration change, not a code change. It runs in production at 37signals, in Basecamp, HEY, and Fizzy.
 
 I introduced Hot Cell at Rails World 2026 in a talk titled "Hot Cell: Securing Active Storage in the age of AI." This post follows the talk, and adds what has changed since. You can [watch the video](https://www.youtube.com/watch?v=swXl8M84YmM&list=PLdMRFKO1zSBE&index=28) or [flip through the slides](/prez/2026-09-23_rails-world-hotcell/slides.html) if you prefer.
-
-The original plan for that talk was a markdown API for Action Text. It was conference-driven development: get the talk accepted, then write the code. But I spent most of my summer heads-down on security issues in Rails, because that work felt more important and more urgent. So when it came time to write the talk, I gave a security talk instead.
-
 
 ## Where we are
 
 ![a timeline: a volcano, a dinosaur, a tape drive, a TRS-80, then a band labeled CHAOS marked "you are here," then a question mark](hotcell-v1/timeline.png)
 
-In the beginning, the earth cooled. Dinosaurs roamed the earth. Then humans started writing software, and a lot of that software was very trusting in nature: corner cases weren't explored, and the design assumed the input was friendly.
+In the beginning, the earth cooled. Dinosaurs roamed the earth. Then humans started writing software, and a lot of that software was very trusting in nature: corner cases weren't explored, and the design assumed users were friendly and input could be trusted.
 
-We are here, in the chaos. AI is very good at finding these problems, and security in particular is chaotic right now. I'm a worrier, and a lot of what I do is security. I don't know what's coming, but at this moment I'm very worried, and I think you should be too. So first I'm going to scare you, and then I'm going to give you the tools to do something about it.
+Now we find ourselves in a time of chaos. AI is very good at finding these problems, and security in particular is chaotic right now. I'm a worrier, and a lot of what I do is security. I don't know what's coming, but at this moment I'm very worried, and I think you should be too. So first I'm going to scare you, and then I'm going to give you the tools to do something about it.
 
 
 ## Part 1: You are not worried enough (probably)
 
-My summer started with [CVE-2026-66066](https://discuss.rubyonrails.org/t/cve-2026-66066-possible-arbitrary-file-read-and-remote-code-execution-in-active-storage-variant-processing/91432), nicknamed "KindaRails2Shell." Here's the description we published:
+My summer started with [CVE-2026-66066](https://discuss.rubyonrails.org/t/cve-2026-66066-possible-arbitrary-file-read-and-remote-code-execution-in-active-storage-variant-processing/91432), nicknamed "KindaRails2Shell." I'm a member of the Rails security team, and I was its first responder. Here's the description we published:
 
 > In versions prior to 7.2.3.2, 8.0.5.1 and 8.1.3.1, Active Storage does not disable libvips operations marked unsafe for untrusted content, allowing a crafted upload to invoke such an operation. Consuming applications are affected when configured to use libvips and accept image uploads from untrusted users. An unauthenticated attacker may exploit this behavior to read arbitrary files accessible to the Rails process, including environment variables and application secrets. Exposure of credentials such as secret_key_base or external-service tokens may enable remote code execution or lateral movement.
 
-I wrote it to be as opaque as possible and disclosed none of the details, because I wanted to buy you time to upgrade before attackers went after your systems. Let's take it apart one sentence at a time.
+I wrote it to be as opaque as possible and disclosed none of the details, because I wanted to buy Rails developers time to upgrade before attackers went after their systems. Let's take it apart one sentence at a time.
 
 **"Active Storage does not disable libvips operations marked unsafe for untrusted content."** Active Storage is Rails's subsystem for storing files and transforming them. You upload an image, Active Storage saves it, and later Active Storage transforms it into a thumbnail for your activity feed. This CVE is about the transforming half.
 
@@ -52,7 +49,7 @@ Installing libvips on the `ruby:slim` image pulls in over a hundred libraries. I
 
 We scored it 9.5 on CVSS, which is about as bad as it gets.
 
-But here's the best bit. Once we published that opaque description, people reverse-engineered the attack in under an hour and published their results. I bought you sixty minutes.
+But here's the best bit. Once we published that opaque description, people reverse-engineered the attack in under an hour and published their results. I bought them sixty minutes.
 <!-- TODO: the slides' speaker notes say "within a day"; the transcript says "under an hour". Confirm which. -->
 
 And there was no single big vulnerability here. The agents chained together seven small ones:
@@ -389,7 +386,7 @@ Allocate some time for tuning. Size `file_size` and the deadlines from what your
 
 ### What's next
 
-At Rails World I said Hot Cell wasn't 1.0 yet because I was waiting for Rails 8.2, and because I wanted to ship more of the observability features. The observability features are now in the gems.
+At Rails World I said Hot Cell wasn't 1.0 yet because we were waiting for Rails 8.2, and because I wanted to ship more of the observability features. The observability features are now in the gems.
 <!-- TODO: say where Rails 8.2 stands at the v1.0 release -->
 
 I'm still interested in [Linux Landlock](https://github.com/basecamp/hotcell/issues/13). Landlock lets a process ratchet down its own permissions so that it can never regain them, even if an attacker takes it over. That's a nice belt-and-suspenders addition, and if you know Landlock, I'd love to talk.
