@@ -14,7 +14,7 @@ date: 2026-10-02
 
 Today we are releasing [Hot Cell](https://github.com/basecamp/hotcell) v1.0, a suite of gems that moves Active Storage's attachment processing out of your Rails application and into an unprivileged sidecar container with no network, no credentials, and nothing on its filesystem worth stealing. Adopting it is a configuration change, not a code change. It runs in production at 37signals, in Basecamp, HEY, and Fizzy.
 
-I introduced Hot Cell at Rails World 2026 in a talk titled "Hot Cell: Securing Active Storage in the age of AI." This post follows the talk, and adds what has changed since. You can [watch the video](https://www.youtube.com/watch?v=swXl8M84YmM&list=PLdMRFKO1zSBE&index=28) or [flip through the slides](/prez/2026-09-23_rails-world-hotcell/slides.html) if you prefer.
+I introduced Hot Cell at Rails World 2026 in a talk titled "Hot Cell: Securing Active Storage in the age of AI." What follows is basically that talk, written down, plus a couple of things that have changed since then. (If you'd rather [watch the video](https://www.youtube.com/watch?v=swXl8M84YmM&list=PLdMRFKO1zSBE&index=28) or [flip through the slides](/prez/2026-09-23_rails-world-hotcell/slides.html), go for it.)
 
 ## Where we are
 
@@ -22,39 +22,36 @@ I introduced Hot Cell at Rails World 2026 in a talk titled "Hot Cell: Securing A
 
 In the beginning, the earth cooled. Dinosaurs roamed the earth. Then humans started writing software, and a lot of that software was very trusting in nature: corner cases weren't explored, and the design assumed users were friendly and input could be trusted.
 
-Now we find ourselves in a time of chaos. AI is very good at finding these problems, and security in particular is chaotic right now. I'm a worrier, and a lot of what I do is security. I don't know what's coming, but at this moment I'm very worried, and I think you should be too. So first I'm going to scare you, and then I'm going to give you the tools to do something about it.
+Now we find ourselves in a time of chaos. AI is very good at finding these problems, and security in particular is chaotic right now. I don't know what's coming, but at this moment I'm very worried, and I think you should be too. So first I'm going to scare you, and then I'm going to give you the tools to do something about it.
 
 
 ## Part 1: You are not worried enough (probably)
 
-My summer started with [CVE-2026-66066](https://discuss.rubyonrails.org/t/cve-2026-66066-possible-arbitrary-file-read-and-remote-code-execution-in-active-storage-variant-processing/91432), nicknamed "KindaRails2Shell." I'm a member of the Rails security team, and I was its first responder. Here's the description we published:
+My summer started with [CVE-2026-66066](https://discuss.rubyonrails.org/t/cve-2026-66066-possible-arbitrary-file-read-and-remote-code-execution-in-active-storage-variant-processing/91432), nicknamed "KindaRails2Shell." I'm a member of the Rails security team, and I happened to catch this report and ended up working on it. Here's the description we published:
 
 > In versions prior to 7.2.3.2, 8.0.5.1 and 8.1.3.1, Active Storage does not disable libvips operations marked unsafe for untrusted content, allowing a crafted upload to invoke such an operation. Consuming applications are affected when configured to use libvips and accept image uploads from untrusted users. An unauthenticated attacker may exploit this behavior to read arbitrary files accessible to the Rails process, including environment variables and application secrets. Exposure of credentials such as secret_key_base or external-service tokens may enable remote code execution or lateral movement.
 
-I wrote it to be as opaque as possible and disclosed none of the details, because I wanted to buy Rails developers time to upgrade before attackers went after their systems. Let's take it apart one sentence at a time.
+I wrote it to be as opaque as possible and disclosed none of the details, because I didn't want attackers to start exploiting live apps before anyone had a chance to upgrade. I was trying to buy you some time. Let's take it apart one sentence at a time.
 
 **"Active Storage does not disable libvips operations marked unsafe for untrusted content."** Active Storage is Rails's subsystem for storing files and transforming them. You upload an image, Active Storage saves it, and later Active Storage transforms it into a thumbnail for your activity feed. This CVE is about the transforming half.
 
-Active Storage's `VipsTransformer` calls libvips through `image_processing` and `ruby-vips`. libvips then looks at the file, guesses who should handle it, and routes it to a format-specific library. Some of those you know and love: libpng, libjpeg, and ImageMagick (with its long history of security problems). Some of them you've never heard of, like libmatio, which reads MATLAB files. For all of your MATLAB Rails apps.
+Active Storage's `VipsTransformer` calls libvips through `image_processing` and `ruby-vips`. libvips then looks at the file, determines which library should handle it, and routes it to that format-specific library. Some of those you know and love: libpng, libjpeg, and ImageMagick (a large, complex library with a history of CVEs). Some of them you probably haven't heard of, like libmatio, which reads MATLAB files (for all of your MATLAB Rails apps 🤣).
 
-Installing libvips on the `ruby:slim` image pulls in over a hundred libraries. I promise you that some of them have vulnerabilities in them right now. libvips knows this, and marks the libraries that have not been fuzzed to its maintainer's satisfaction as "untrusted." ImageMagick and libmatio are both untrusted.
+Installing libvips on the `ruby:slim` image pulls in over a hundred libraries. It's very likely that some of them have vulnerabilities in them right now. The libvips maintainer fuzzes some of the commonly used libraries, and has marked those as trusted. Everything else is marked "untrusted," including ImageMagick and libmatio.
 
-**"Consuming applications are affected when configured to use libvips and accept image uploads from untrusted users."** New Rails apps use libvips by default. And every user is an untrusted user.
+**"Consuming applications are affected when configured to use libvips and accept image uploads from untrusted users."** New Rails apps use libvips by default. And every user is an untrusted user. Right? RIGHT?
 
-**"An unauthenticated attacker may exploit this behavior to read arbitrary files accessible to the Rails process, including environment variables and application secrets."** Your Rails process runs in a container alongside your source code, your `config/master.key`, your credentials file, and your environment variables. All of it is readable by libmatio. The trick is to get those secrets into the thumbnail image that comes back out.
+**"An unauthenticated attacker may exploit this behavior to read arbitrary files accessible to the Rails process, including environment variables and application secrets."** Your Rails process runs in a container alongside your source code, your `config/master.key`, your credentials file, and your environment variables. All of it is readable by the Rails process, and so by libmatio. If an attacker can trick libmatio into reading one of those files, the secrets come back to them in the thumbnail image.
 
 ![the default architecture: an upload enters the Rails process, Active Storage's VipsTransformer hands it to libvips, which routes it to libpng, libjpeg, libmagick, or libmatio. The same container holds config/master.key and /proc/self/environ](hotcell-v1/architecture-today.png)
 
-**"Exposure of credentials such as secret_key_base or external-service tokens may enable remote code execution or lateral movement."** Once an attacker has `secret_key_base`, there are well-known ways to turn it into remote code execution. "Lateral movement" means using your other secrets: your database, your Redis, maybe your corporate network.
+**"Exposure of credentials such as secret_key_base or external-service tokens may enable remote code execution or lateral movement."** Once an attacker has `secret_key_base`, there are a few ways, well-known to hackers as "gadgets," to turn it into remote code execution. "Lateral movement" means using that foothold to launch another attack on some other host in your network: your database, your Redis, maybe your corporate network.
 
 We scored it 9.5 on CVSS, which is about as bad as it gets.
 
-But here's the best bit. Once we published that opaque description, people reverse-engineered the attack in under an hour and published their results. I bought them sixty minutes.
-<!-- TODO: the slides' speaker notes say "within a day"; the transcript says "under an hour". Confirm which. -->
+But here's the best (worst?) bit. Once we published that opaque description, security researchers reverse-engineered the attack in under an hour and published their results. If white-hat researchers could do it in under an hour, then surely attackers could too. Embargoing the details bought the Rails community an hour or two, at most.
 
 And there was no single big vulnerability here. The agents chained together seven small ones:
-
-![seven small things: direct uploads enabled by default; direct uploads never examine the bytes; signed variation keys do not include the blob ID; Rails doesn't call Vips.block_untrusted; libvips is fooled by a spoofed MATLAB header; libmatio trusts every file it is handed; known gadgets turn secret_key_base into RCE](hotcell-v1/seven-small-things.png)
 
 1. **Active Storage direct uploads were enabled by default**, so the route was open even in apps that didn't use them. Niklas Häusele fixed that in [rails/rails#58369](https://github.com/rails/rails/pull/58369).
 2. **Direct uploads never examine the bytes.** The file goes from the browser to the blob store without passing through Rails, so Rails trusts the reported content type. Lying about the content type is the way in. Fixing this would cost performance.
@@ -64,7 +61,7 @@ And there was no single big vulnerability here. The agents chained together seve
 6. **libmatio trusts every file it is handed**, as designed. The maintainers pointed back at libvips: you shouldn't be handing untrusted files to libmatio. Won't fix.
 7. **Known gadgets turn `secret_key_base` into RCE.** The Rails security team knows about these, but closing them is a breaking change.
 
-AI chained all seven together from very little information. They're getting very good at this. In the talk I showed a recording of the exploit script pulling every secret out of a development app in real time. Once you know what to do, it happens very fast.
+AI chained all seven together from very little information. LLMs are getting very good at this. In the talk I showed a recording of the exploit script pulling every secret out of a development app in real time. Once you know how to execute the attack, it happens very fast.
 
 ![378 vulnerabilities found so far in 2026, over the list of packages apt installs with libvips](hotcell-v1/378-vulnerabilities.jpg)
 
