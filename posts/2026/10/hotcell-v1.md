@@ -2,15 +2,13 @@
 title: "Hot Cell v1.0: Securing Active Storage in the age of AI"
 short: |
   Hot Cell v1.0 moves Active Storage's image, video, and PDF processing out of your Rails app and into a locked-down sidecar container.
-date: 2026-10-02
+date: 2026-10-05
 image: posts/2026/10/hotcell-v1/hotcell-logo.png
 ---
 
-<!-- TODO: set the date above and below to the v1.0 release date -->
-
 # Hot Cell v1.0: Securing Active Storage in the age of AI
 
-2026-10-02, originally published at [dev.37signals.com](https://dev.37signals.com/hot-cell-1-0/)
+2026-10-05, originally published at [dev.37signals.com](https://dev.37signals.com/hot-cell-1-0/)
 {: .text-sm .italic .opacity-75 }
 
 Today we are releasing [Hot Cell](https://github.com/basecamp/hotcell) v1.0, a suite of gems that moves Active Storage's attachment processing out of your Rails application and into an unprivileged sidecar container with no network, no credentials, and nothing on its filesystem worth stealing. Adopting it is a configuration change, not a code change. It is already running in production at 37signals, in Basecamp, HEY, and Fizzy.
