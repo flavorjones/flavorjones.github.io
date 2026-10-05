@@ -12,7 +12,7 @@ date: 2026-10-02
 2026-10-02
 {: .text-sm .italic .opacity-75 }
 
-Today we are releasing [Hot Cell](https://github.com/basecamp/hotcell) v1.0, a suite of gems that moves Active Storage's attachment processing out of your Rails application and into an unprivileged sidecar container with no network, no credentials, and nothing on its filesystem worth stealing. Adopting it is a configuration change, not a code change. It runs in production at 37signals, in Basecamp, HEY, and Fizzy.
+Today we are releasing [Hot Cell](https://github.com/basecamp/hotcell) v1.0, a suite of gems that moves Active Storage's attachment processing out of your Rails application and into an unprivileged sidecar container with no network, no credentials, and nothing on its filesystem worth stealing. Adopting it is a configuration change, not a code change. It is already running in production at 37signals, in Basecamp, HEY, and Fizzy.
 
 I introduced Hot Cell at Rails World 2026 in a talk titled "Hot Cell: Securing Active Storage in the age of AI." What follows is basically that talk, written down, plus a couple of things that have changed since then. (If you'd rather [watch the video](https://www.youtube.com/watch?v=swXl8M84YmM&list=PLdMRFKO1zSBE&index=28) or [flip through the slides](/prez/2026-09-23_rails-world-hotcell/slides.html), go for it.)
 
@@ -22,36 +22,18 @@ I introduced Hot Cell at Rails World 2026 in a talk titled "Hot Cell: Securing A
 
 In the beginning, the earth cooled. Dinosaurs roamed the earth. Then humans started writing software, and a lot of that software was very trusting in nature: corner cases weren't explored, and the design assumed users were friendly and input could be trusted.
 
-Now we find ourselves in a time of chaos. AI is very good at finding these problems, and security in particular is chaotic right now. I don't know what's coming, but at this moment I'm very worried, and I think you should be too. So first I'm going to scare you, and then I'm going to give you the tools to do something about it.
+Now we find ourselves in a very chaotic moment where AI is very good at finding these bugs and security problems. I don't know what's coming, but at this moment I'm very worried, and I think you should be too. So first I'm going to scare you, and then I'm going to give you the tools to do something about it.
 
 
 ## Part 1: You are not worried enough (probably)
 
-My summer started with [CVE-2026-66066](https://discuss.rubyonrails.org/t/cve-2026-66066-possible-arbitrary-file-read-and-remote-code-execution-in-active-storage-variant-processing/91432), nicknamed "KindaRails2Shell." I'm a member of the Rails security team, and I happened to catch this report and ended up working on it. Here's the description we published:
+My summer started with [CVE-2026-66066](https://discuss.rubyonrails.org/t/cve-2026-66066-possible-arbitrary-file-read-and-remote-code-execution-in-active-storage-variant-processing/91432), nicknamed "KindaRails2Shell." I'm a member of the Rails security team, and I happened to catch this report and ended up working on it. We scored it 9.5 on CVSS, which is about as bad as it gets. Here's the description we published:
 
 > In versions prior to 7.2.3.2, 8.0.5.1 and 8.1.3.1, Active Storage does not disable libvips operations marked unsafe for untrusted content, allowing a crafted upload to invoke such an operation. Consuming applications are affected when configured to use libvips and accept image uploads from untrusted users. An unauthenticated attacker may exploit this behavior to read arbitrary files accessible to the Rails process, including environment variables and application secrets. Exposure of credentials such as secret_key_base or external-service tokens may enable remote code execution or lateral movement.
 
-I wrote it to be as opaque as possible and disclosed none of the details, because I didn't want attackers to start exploiting live apps before anyone had a chance to upgrade. I was trying to buy you some time. Let's take it apart one sentence at a time.
+I wrote this CVE description to be intentionally opaque. We didn't disclose any details about the attack, because we didn't want attackers to start exploiting live apps before anyone had a chance to upgrade. We were trying to buy you some time. Unfortunately, AI has gotten so good that multiple researchers were still able to derive this attack within hours of the announcement, quickly making the embargo meaningless.
 
-**"Active Storage does not disable libvips operations marked unsafe for untrusted content."** Active Storage is Rails's subsystem for storing files and transforming them. You upload an image, Active Storage saves it, and later Active Storage transforms it into a thumbnail for your activity feed. This CVE is about the transforming half.
-
-Active Storage's `VipsTransformer` calls libvips through `image_processing` and `ruby-vips`. libvips then looks at the file, determines which library should handle it, and routes it to that format-specific library. Some of those you know and love: libpng, libjpeg, and ImageMagick (a large, complex library with a history of CVEs). Some of them you probably haven't heard of, like libmatio, which reads MATLAB files (for all of your MATLAB Rails apps 🤣).
-
-Installing libvips on the `ruby:slim` image pulls in over a hundred libraries. It's very likely that some of them have vulnerabilities in them right now. The libvips maintainer fuzzes some of the commonly used libraries, and has marked those as trusted. Everything else is marked "untrusted," including ImageMagick and libmatio.
-
-**"Consuming applications are affected when configured to use libvips and accept image uploads from untrusted users."** New Rails apps use libvips by default. And every user is an untrusted user. Right? RIGHT?
-
-**"An unauthenticated attacker may exploit this behavior to read arbitrary files accessible to the Rails process, including environment variables and application secrets."** Your Rails process runs in a container alongside your source code, your `config/master.key`, your credentials file, and your environment variables. All of it is readable by the Rails process, and so by libmatio. If an attacker can trick libmatio into reading one of those files, the secrets come back to them in the thumbnail image.
-
-![the default architecture: an upload enters the Rails process, Active Storage's VipsTransformer hands it to libvips, which routes it to libpng, libjpeg, libmagick, or libmatio. The same container holds config/master.key and /proc/self/environ](hotcell-v1/architecture-today.png)
-
-**"Exposure of credentials such as secret_key_base or external-service tokens may enable remote code execution or lateral movement."** Once an attacker has `secret_key_base`, there are a few ways, well-known to hackers as "gadgets," to turn it into remote code execution. "Lateral movement" means using that foothold to launch another attack on some other host in your network: your database, your Redis, maybe your corporate network.
-
-We scored it 9.5 on CVSS, which is about as bad as it gets.
-
-But here's the best (worst?) bit. Once we published that opaque description, security researchers reverse-engineered the attack in under an hour and published their results. If white-hat researchers could do it in under an hour, then surely attackers could too. Embargoing the details bought the Rails community an hour or two, at most.
-
-And there was no single big vulnerability here. The agents chained together seven small ones:
+And there was no single big vulnerability here that AI agents could find. The attack requires chaining together several low-severity vulnerabilities along with some Rails design decisions that helped enable the attack:
 
 1. **Active Storage direct uploads were enabled by default**, so the route was open even in apps that didn't use them. Niklas Häusele fixed that in [rails/rails#58369](https://github.com/rails/rails/pull/58369).
 2. **Direct uploads never examine the bytes.** The file goes from the browser to the blob store without passing through Rails, so Rails trusts the reported content type. Lying about the content type is the way in. Fixing this would cost performance.
@@ -61,7 +43,7 @@ And there was no single big vulnerability here. The agents chained together seve
 6. **libmatio trusts every file it is handed**, as designed. The maintainers pointed back at libvips: you shouldn't be handing untrusted files to libmatio. Won't fix.
 7. **Known gadgets turn `secret_key_base` into RCE.** The Rails security team knows about these, but closing them is a breaking change.
 
-AI chained all seven together from very little information. LLMs are getting very good at this. In the talk I showed a recording of the exploit script pulling every secret out of a development app in real time. Once you know how to execute the attack, it happens very fast.
+Agents are able to chain all seven together from very little information. They are getting very good at this! In the talk I showed a recording of the exploit script pulling every secret out of a development app in real time. Once you know how to execute the attack, it happens very fast.
 
 ![378 vulnerabilities found so far in 2026, over the list of packages apt installs with libvips](hotcell-v1/378-vulnerabilities.jpg)
 
@@ -69,13 +51,13 @@ It should also scare you that 378 vulnerabilities were published in libvips and 
 
 ![valid HackerOne reports received each month by 37signals, flat for two years and then spiking to 64 in the last month](hotcell-v1/hackerone-reports.png)
 
-This chart is 37signals' HackerOne data: valid reports received each month. It's going parabolic.
+This chart is 37signals' HackerOne data: valid reports received each month. There has been a steady increase since models turned the corner back in November 2025.
 
-So there's a whole category of problems here. I can fix this one CVE, but we'll have to go through all of this again when someone finds a zero-day in the next image processing library. Hardening those libraries is not under our control, and it's not something we can fix within Rails.
+So there's a whole category of problems here. I can fix this one CVE, but we'll have to go through all of this again when someone finds a zero-day in the _next_ image processing library. Hardening those libraries is not under our control, and it's not something we can fix within Rails.
 
-When I think about fixing it, I think about risk:
+When I think about addressing the bigger issues here, I think about risk:
 
-> risk = probability × impact
+![risk = probability × impact, annotated: a falling chart pointing at risk, a rising chart pointing at probability, and a thinking face with a question mark pointing at impact](hotcell-v1/risk.png)
 
 The probability of another vulnerability in these libraries is very high, and it's not going down any time soon. That leaves impact. How do we shrink the blast radius, so that the next vulnerability does as little damage as possible?
 
@@ -84,7 +66,7 @@ The probability of another vulnerability in these libraries is very high, and it
 
 The question I want to answer is: **How can we run Active Storage so that it doesn't matter if the libraries are vulnerable or if the input is maliciously crafted?**
 
-You're probably thinking "sandbox!" and so was I. Here's how to secure Active Storage in five easy steps.
+You're probably thinking "sandbox!" and so was I. But I wanted some very specific attributes in this sandbox.
 
 
 ### Step 1: Define the requirements
@@ -151,7 +133,7 @@ The answer is UNIX sockets. A UNIX socket is a file on disk that two processes o
 And the magic bit is that `sendmsg()` can pass open file descriptors over a UNIX socket. The Hot Cell client in your app opens the upload and the output file, and hands those descriptors to the cell. The cell reads and writes through them but never sees a path, and has no access to the rest of your filesystem. Inputs are read-only and outputs are write-only, and the kernel enforces it. Passing descriptors also closes off the class of attacks that use symbolic links to traverse paths.
 
 
-### Step 5: Do the work
+### Step 5: Doing the work
 
 This part is a supervisor and workers, like Puma or Solid Queue.
 
@@ -283,21 +265,21 @@ ActiveStorage::HotCell::Server::Previewers::Pdf::Mutool
   .limits deadline: 30
 ```
 
-That's all it took to port HEY and Fizzy:
+That's all it takes to port a Rails app that's using vanilla Active Storage!
 
 1. Configure Active Storage.
 2. Configure the cell's `Gemfile` and `config.rb`.
-3. Extend the app's Kamal (or Kubernetes) config.
-4. Add a Hot Cell accessory to the Kamal (or Kubernetes) config.
+3. Extend the Kamal (or Kubernetes) config.
 
-Once a file type is handled by the cell, remove its packages (libvips, ffmpeg, and so on) from your application image. That removal is the security win.
+Once a file type is handled by the cell, consider removing its packages (libvips, ffmpeg, and so on) from your application image to reduce the attack surface.
 
-The [README](https://github.com/basecamp/hotcell#readme) walks through all of this, and [`docs/DEPLOYMENT.md`](https://github.com/basecamp/hotcell/blob/master/docs/DEPLOYMENT.md) explains every container flag and how to size the limits.
+The [Hot Cell repository](https://github.com/basecamp/hotcell) documents all of this, including every container flag and how to size the limits.
+<!-- TODO: link the specific docs once basecamp/hotcell#94 lands -->
 
 
 ### Observability
 
-We can't trust the workers, since any one of them may have been compromised. But we can trust the supervisor, and we can trust your Rails app, and between them we have everything we need:
+We can't trust the workers, since any one of them may have been compromised. But we can trust the supervisor, and we can trust your Rails app, and between them they can give us fantastic visibility into image processing:
 
 1. **Events in the app.** Every call publishes a `perform.hot_cell` Active Support notification with the operation, outcome, cause, bytes in and out, and timing. A dead cell shows up here too, as `unavailable`.
 2. **Metrics from the supervisor.** The app asks the cell's control socket for metrics like queue depth, running workers, and kills by cause.
@@ -309,7 +291,8 @@ In the talk, wiring those into your app was left as an exercise using our exampl
 - The `yabeda-hotcell` gem records [Yabeda](https://github.com/yabeda-rb/yabeda) metrics for every call, plus gauges scraped from each cell's control socket. Add the gem and call `Yabeda::HotCell.install!`.
 - `HotCell::HealthController` and `HotCell::DiagnosticsController`, in `hotcell-client`, give you a public health check and an authenticated diagnostic endpoint that does a real round trip through the work socket.
 
-The README's [Observability section](https://github.com/basecamp/hotcell#observability) lists the alerts we recommend.
+The Hot Cell docs list the alerts we recommend.
+<!-- TODO: link docs/observability.md once basecamp/hotcell#94 lands -->
 
 ![the Hot Cell Grafana dashboard for Basecamp production: requests per host and per operation, throughput and failures by outcome, killed requests, queue wait, queue depth, perform time, and scratch disk usage](hotcell-v1/dashboard.jpg)
 
@@ -318,9 +301,9 @@ This is the dashboard we use for Basecamp.
 
 ### The cost
 
-In the talk, I said Hot Cell costs about 8ms per call in our environment. Since then, we've brought that down: **in Basecamp's production environment, the overhead is now about 3.4ms per call**, plus one more container per host.
+In the talk, I said Hot Cell costs about 8ms per call in our environment. Since then, we've brought that down: **in Basecamp's production environment, the overhead is now about 3.4ms per call**.
 
-That's a cheap price to know you won't be owned the next time ImageMagick has a problem.
+That's a cheap price to know you won't be owned the next time a zero-day is found in an image library.
 
 
 ### Coloring outside the box
@@ -376,9 +359,11 @@ Basecamp was harder. Basecamp predates Active Storage (Active Storage was extrac
 We had outages along the way, and I rolled the lessons back into the library:
 
 - **The OpenMP thread pool.** ImageMagick, and the libraries libvips delegates to, size their OpenMP thread pools from the host's core count, not the container's `cpus` quota. On a 98-core production host that's 98 threads at 8MB of stack each, which blew through the worker's memory limit, and 285 workers died. The fix is to set `OMP_NUM_THREADS` and `OMP_THREAD_LIMIT` in the image, forwarded to every tool the cell runs.
-- **The scratch disk filled.** ImageMagick wrote its pixel cache to `/tmp`, outside the per-request directory, and cleans it up only on a clean exit. Every killed worker left its cache behind, until the 4GB scratch filled on six hosts. While it was full, 3,393 files were marked permanently unreadable. The fixes were to point `TMPDIR` and `MAGICK_TMPDIR` at the request's directory ([hotcell#51](https://github.com/basecamp/hotcell/pull/51)), empty the scratch at boot ([hotcell#52](https://github.com/basecamp/hotcell/pull/52)), and size ImageMagick's limits to a worker's share of the scratch ([`docs/IMAGEMAGICK.md`](https://github.com/basecamp/hotcell/blob/master/docs/IMAGEMAGICK.md)).
+- **The scratch disk filled.** ImageMagick wrote its pixel cache to `/tmp`, outside the per-request directory, and cleans it up only on a clean exit. Every killed worker left its cache behind, until the 4GB scratch filled on six hosts. While it was full, 3,393 files were marked permanently unreadable. The fixes were to point `TMPDIR` and `MAGICK_TMPDIR` at the request's directory ([hotcell#51](https://github.com/basecamp/hotcell/pull/51)), empty the scratch at boot ([hotcell#52](https://github.com/basecamp/hotcell/pull/52)), and size ImageMagick's limits to a worker's share of the scratch.
+  <!-- TODO: link docs/imagemagick.md once basecamp/hotcell#94 lands -->
 
-Allocate some time for tuning. Size `file_size` and the deadlines from what your real uploads take, then watch `killed` by cause. [`docs/TUNING.md`](https://github.com/basecamp/hotcell/blob/master/docs/TUNING.md) covers how.
+Allocate some time for tuning. Size `file_size` and the deadlines from what your real uploads take, then watch `killed` by cause. The Hot Cell docs cover how.
+<!-- TODO: link docs/tuning.md once basecamp/hotcell#94 lands -->
 
 
 ### What's next
@@ -393,19 +378,18 @@ I'm still interested in [Linux Landlock](https://github.com/basecamp/hotcell/iss
 
 ![the same timeline, with the Starship Enterprise in place of the question mark](hotcell-v1/timeline-future.png)
 
-Is this AI's fault? It's easy to blame it, and you'd be forgiven for doing so. AI chained seven low-severity flaws into a 9.5, and it made an effective embargo impossible.
+Is this AI's fault? Well, it's easy to assign blame, and you'd be forgiven for doing so. AI chained several low-severity flaws into a critical-severity attack, and it made an effective embargo impossible.
 
-But I want a more nuanced view. The earth cooled, yada yada yada, and now we're in a time of chaos. I'm seeing things trend in a good direction, and I want to be optimistic. I don't want Terminator, I want Star Trek. The alternative is that we all quit our jobs, turn off our computers, and become sheep farmers.
+But I want to suggest a more nuanced view. I'm seeing things trend in a good direction, and I want to be optimistic. I don't want Terminator, I want Star Trek. The alternative is that we all quit our jobs, turn off our computers, and become sheep farmers (I guess!?).
 
 That HackerOne chart I showed you to scare you is the system working as designed. People are finding vulnerabilities and reporting them responsibly, which is exactly what we want. It's frustrating to deal with, but there are a finite number of vulnerabilities, and the number has to come back down at some point.
 
-And when I said 378 vulnerabilities were found this year, what I should have said is that 378 vulnerabilities were fixed. Responsible maintainers are fixing the problems and shipping updates, and those libraries are trending in the right direction.
+And when I said 378 vulnerabilities were found this year, what I should have said is that 378 vulnerabilities were **fixed**. Responsible maintainers are fixing the problems and shipping updates, and those libraries are trending in the right direction.
 
 Here's what you can do to help us get through this faster:
 
 - **Vulnerability reports should come with their own agent skills.** After the CVE, I published [rails/rails-forensics-CVE-2026-66066](https://github.com/rails/rails-forensics-CVE-2026-66066), extracted from my investigation of our own apps at 37signals. Point your agent at it and at your application, and ask whether you were vulnerable (probably) and whether you were exploited. It will go through your Active Storage records and tell you whether you need to rotate your secrets.
 - **Attack your own work.** While building Hot Cell, I ran an adversarial review on almost every commit, and Jeremy helped me red-team it by setting agents loose to break in. They found real gaps. That doesn't make Hot Cell perfect, but it has fewer problems than it would have.
-  <!-- TODO: Jeremy's surname and a link -->
 - **Improve or replace existing systems.** The only way through this period is for software to get better, or to be replaced. Hot Cell, baby!
 
 Don't be too scared. Be proactive and constructive, and the future will be Star Trek, not Terminator.
