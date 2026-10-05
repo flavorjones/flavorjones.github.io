@@ -157,7 +157,7 @@ That's the finished system, and it's what is running in production at 37signals 
 
 Add `activestorage-hotcell-client` to your app's `Gemfile`, and run the installer:
 
-```
+```console
 $ bin/rails hotcell:install
 $ find hotcell
 hotcell/Dockerfile
