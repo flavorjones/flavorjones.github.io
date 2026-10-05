@@ -90,7 +90,8 @@ This list became the prompt I gave my agent as we built the system together:
 ### Step 2: An obscure, too-clever name
 
 ![a technician at Oak Ridge National Laboratory using manipulator arms to work inside a shielded hot cell](hotcell-v1/hot-cell-photo.jpg)
-<!-- TODO: this frame is from an ORNL video. Confirm it's OK to republish, and credit or link the source. -->
+
+_Image: a frame from an [Oak Ridge National Laboratory video](https://www.youtube.com/watch?v=FC4k4bB_KGQ)._
 
 This is a hot cell at Oak Ridge National Laboratory. It's a shielded chamber for handling radioactive material: a big lead box with a window that radiation can't pass through. The operator stays outside and does everything with manipulator arms, and nothing enters or leaves except by controlled transfer.
 
@@ -122,7 +123,6 @@ config.active_storage.previewers = [ ActiveStorage::HotCell::Client::Previewers:
 ```
 
 One caveat: passing a class as the `variant_processor` became possible with [rails/rails#58384](https://github.com/rails/rails/pull/58384), so the Active Storage gems need Rails 8.2.
-<!-- TODO: update for the Rails 8.2 release status at the time of v1.0 -->
 
 ![the gem dependency tree: activestorage-hotcell-client depends on hotcell-client, activestorage-hotcell-server depends on hotcell-server, and both depend on hotcell-core](hotcell-v1/gem-tree.png)
 
@@ -370,7 +370,6 @@ Allocate some time for tuning. Size `file_size` and the deadlines from what your
 ### What's next
 
 At Rails World I said Hot Cell wasn't 1.0 yet because we were waiting for Rails 8.2, and because I wanted to ship more of the observability features. The observability features are now in the gems.
-<!-- TODO: say where Rails 8.2 stands at the v1.0 release -->
 
 I'm still interested in [Linux Landlock](https://github.com/basecamp/hotcell/issues/13). Landlock lets a process ratchet down its own permissions so that it can never regain them, even if an attacker takes it over. That's a nice belt-and-suspenders addition, and if you know Landlock, I'd love to talk.
 
