@@ -21,7 +21,10 @@
 
    main .prose {
       /* code blocks */
-      div.highlight { @apply rounded-md drop-shadow-lg; }
+      div.highlight {
+         pre, code { @apply bg-transparent text-inherit; }
+         @apply rounded-md drop-shadow-lg;
+      }
 
       p.inset {
          img { @apply m-0; }
