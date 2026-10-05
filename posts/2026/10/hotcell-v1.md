@@ -33,7 +33,11 @@ My summer started with [CVE-2026-66066](https://discuss.rubyonrails.org/t/cve-20
 
 I wrote this CVE description to be intentionally opaque. We didn't disclose any details about the attack, because we didn't want attackers to start exploiting live apps before anyone had a chance to upgrade. We were trying to buy you some time. Unfortunately, AI has gotten so good that multiple researchers were still able to derive this attack within hours of the announcement, quickly making the embargo meaningless.
 
-And there was no single big vulnerability here that AI agents could find. The attack requires chaining together several low-severity vulnerabilities along with some Rails design decisions that helped enable the attack:
+You can watch the talk for a more in-depth explanation, but the root of the problem is that the image processing libraries are running in a container with access to your secrets and to your network.
+
+![the default architecture: an image upload enters the Rails process, Active Storage's VipsTransformer hands it through image_processing and ruby-vips to libvips, which routes it to libpng, libjpeg, libmagick, or libmatio. The same app container holds config/master.key, credentials.yml.enc, and /proc/self/environ with SECRET_KEY_BASE, DATABASE_URL, and AWS_ACCESS_KEY_ID](hotcell-v1/architecture-today.png)
+
+And there was no single big vulnerability here that AI agents could find. The attack requires chaining together several low-severity vulnerabilities along with some Rails design decisions that helped enable the attack.
 
 1. **Active Storage direct uploads were enabled by default**, so the route was open even in apps that didn't use them. Niklas Häusele fixed that in [rails/rails#58369](https://github.com/rails/rails/pull/58369).
 2. **Direct uploads never examine the bytes.** The file goes from the browser to the blob store without passing through Rails, so Rails trusts the reported content type. Lying about the content type is the way in. Fixing this would cost performance.
