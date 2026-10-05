@@ -87,7 +87,7 @@ This list became the prompt I gave my agent as we built the system together:
 - **Extensible behavior.** If you want a secure place to unzip files, you should be able to build that too.
 
 
-### Step 2: An obscure, too-clever name
+### Step 2: An obscure, too-clever name 🤣
 
 ![a technician at Oak Ridge National Laboratory using manipulator arms to work inside a shielded hot cell](hotcell-v1/hot-cell-photo.jpg)
 
