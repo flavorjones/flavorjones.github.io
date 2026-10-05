@@ -23,6 +23,7 @@
       /* code blocks */
       div.highlight {
          pre, code { @apply bg-transparent text-inherit; }
+         color-scheme: dark;
          @apply rounded-md drop-shadow-lg;
       }
 
