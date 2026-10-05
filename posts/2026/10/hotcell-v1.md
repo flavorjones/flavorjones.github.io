@@ -10,7 +10,7 @@ image: posts/2026/10/hotcell-v1/hotcell-logo.png
 
 # Hot Cell v1.0: Securing Active Storage in the age of AI
 
-2026-10-02
+2026-10-02, originally published at [dev.37signals.com](https://dev.37signals.com/hot-cell-1-0/)
 {: .text-sm .italic .opacity-75 }
 
 Today we are releasing [Hot Cell](https://github.com/basecamp/hotcell) v1.0, a suite of gems that moves Active Storage's attachment processing out of your Rails application and into an unprivileged sidecar container with no network, no credentials, and nothing on its filesystem worth stealing. Adopting it is a configuration change, not a code change. It is already running in production at 37signals, in Basecamp, HEY, and Fizzy.
@@ -137,12 +137,12 @@ I've hand-waved over how the client and the server communicate, given that the c
 
 The answer is UNIX sockets. A UNIX socket is a file on disk that two processes on the same host can talk over, and nothing about it is routable on a network. A cell exposes two of them in a shared directory: one for work, and one for metadata and control.
 
-And the magic bit is that `sendmsg()` can pass open file descriptors over a UNIX socket. The Hot Cell client in your app opens the upload and the output file, and hands those descriptors to the cell. The cell reads and writes through them but never sees a path, and has no access to the rest of your filesystem. Inputs are read-only and outputs are write-only, and the kernel enforces it. Passing descriptors also closes off the class of attacks that use symbolic links to traverse paths.
+And the magic bit is that `sendmsg()` can pass open file descriptors over a UNIX socket. The Hot Cell client in your app opens the upload and the output file, and hands those descriptors to the cell. The cell reads and writes through them but never sees a path, and has no access to the rest of your filesystem. Inputs are read-only and outputs are write-only, and the kernel enforces it. Passing descriptors also [closes off the class of attacks](https://basecamp.github.io/hotcell/docs/design/descriptors/) that use symbolic links to traverse paths.
 
 
 ### Step 5: Doing the work
 
-This part is a supervisor and workers, like Puma or Solid Queue.
+This part is a supervisor and workers, like Puma or Solid Queue. The [request lifecycle](https://basecamp.github.io/hotcell/docs/request-lifecycle/) walks through each step.
 
 The supervisor is pid 1 in the cell. It accepts connections, queues them, hands each to a worker, enforces the wall-clock deadline, kills the process group, and reaps. It never reads a request and never evaluates a byte of image data.
 
@@ -155,7 +155,7 @@ That's the finished system, and it's what is running in production at 37signals 
 
 ## Part 3: Rolling it out
 
-Add `activestorage-hotcell-client` to your app's `Gemfile`, and run the installer:
+Add `activestorage-hotcell-client` to your app's `Gemfile`, and [run the installer](https://basecamp.github.io/hotcell/#1-install):
 
 ```console
 $ bin/rails hotcell:install
@@ -167,7 +167,7 @@ hotcell/operations/
 hotcell/operations/.keep
 ```
 
-Everything about the cell lives in that `hotcell/` directory. The cell has its own `Gemfile`, which you should keep short, because every gem in it is inside the blast radius. `config.rb` is plain Ruby, not Rails, and sets the cell's limits. Each operation's own limits are clamped to these:
+Everything about the cell lives in that `hotcell/` directory. The cell has its own `Gemfile`, which you should keep short, because every gem in it is inside the blast radius. `config.rb` is plain Ruby, not Rails, and sets the [cell's limits](https://basecamp.github.io/hotcell/docs/cell-settings/#request-limits). Each operation's own limits are clamped to these:
 
 ```ruby
 # hotcell/Gemfile
@@ -231,9 +231,9 @@ accessories:
         HOTCELL_DIR: /run/hotcell/cell
 ```
 
-The volume matches the app's. The resource limits cap CPU, memory (with swap pinned equal so the limit holds), and processes, so a fork bomb dies in the cell. And every one of `network: none`, `read-only`, `cap-drop`, and `no-new-privileges` is a security property. If you omit one, the protection is gone and the cell keeps serving requests exactly as before.
+The volume matches the app's. The resource limits cap CPU, memory (with swap pinned equal so the limit holds), and processes, so a fork bomb dies in the cell. And every one of `network: none`, `read-only`, `cap-drop`, and `no-new-privileges` is a [security property](https://basecamp.github.io/hotcell/docs/container/#security-flags). If you omit one, the protection is gone and the cell keeps serving requests exactly as before.
 
-Then pick the Hot Cell twin of each Active Storage class you use:
+Then pick the [Hot Cell twin](https://basecamp.github.io/hotcell/docs/active-storage/#classes) of each Active Storage class you use:
 
 | `ActiveStorage` | `ActiveStorage::HotCell::Client` |
 | --- | --- |
@@ -255,7 +255,7 @@ HotCell.root  = ENV["HOTCELL_ROOT"]
 HotCell.group = ENV["HOTCELL_GROUP"]
 ```
 
-On the cell side, require the operations that match. The cell isn't a Rails app, so there's no Zeitwerk; requiring a file is what serves its operation. This is also where you set per-operation limits:
+On the cell side, require the operations that match. The cell isn't a Rails app, so there's no Zeitwerk; requiring a file is what serves its operation. This is also where you [set per-operation limits](https://basecamp.github.io/hotcell/docs/operation-api/#change-a-shipped-operations-limits):
 
 ```ruby
 # hotcell/operations/active_storage.rb
@@ -278,19 +278,18 @@ That's all it takes to port a Rails app that's using vanilla Active Storage!
 2. Configure the cell's `Gemfile` and `config.rb`.
 3. Extend the Kamal (or Kubernetes) config.
 
-Once a file type is handled by the cell, consider removing its packages (libvips, ffmpeg, and so on) from your application image to reduce the attack surface.
+Once a file type is handled by the cell, consider [removing its packages](https://basecamp.github.io/hotcell/docs/active-storage/#remove-packages-from-the-application-image) (libvips, ffmpeg, and so on) from your application image to reduce the attack surface.
 
-The [Hot Cell repository](https://github.com/basecamp/hotcell) documents all of this, including every container flag and how to size the limits.
-<!-- TODO: link the specific docs once basecamp/hotcell#94 lands -->
+The [Hot Cell documentation](https://basecamp.github.io/hotcell/) covers all of this, including [every container flag](https://basecamp.github.io/hotcell/docs/container/#container-flags) and [how to size the limits](https://basecamp.github.io/hotcell/docs/tuning/).
 
 
 ### Observability
 
 We can't trust the workers, since any one of them may have been compromised. But we can trust the supervisor, and we can trust your Rails app, and between them they can give us fantastic visibility into image processing:
 
-1. **Events in the app.** Every call publishes a `perform.hot_cell` Active Support notification with the operation, outcome, cause, bytes in and out, and timing. A dead cell shows up here too, as `unavailable`.
-2. **Metrics from the supervisor.** The app asks the cell's control socket for metrics like queue depth, running workers, and kills by cause.
-3. **Logs from the supervisor.** One JSON object per event on stdout, so you can see when a worker was killed and why.
+1. **[Events in the app](https://basecamp.github.io/hotcell/docs/observability/#per-call-notification).** Every call publishes a `perform.hot_cell` Active Support notification with the operation, outcome, cause, bytes in and out, and timing. A dead cell shows up here too, as `unavailable`.
+2. **[Metrics from the supervisor](https://basecamp.github.io/hotcell/docs/observability/#cell-metrics).** The app asks the cell's control socket for metrics like queue depth, running workers, and kills by cause.
+3. **[Logs from the supervisor](https://basecamp.github.io/hotcell/docs/observability/#cell-log).** One JSON object per event on stdout, so you can see when a worker was killed and why.
 
 In the talk, wiring those into your app was left as an exercise using our examples. In v1.0 they ship in the gems:
 
@@ -298,8 +297,7 @@ In the talk, wiring those into your app was left as an exercise using our exampl
 - The `yabeda-hotcell` gem records [Yabeda](https://github.com/yabeda-rb/yabeda) metrics for every call, plus gauges scraped from each cell's control socket. Add the gem and call `Yabeda::HotCell.install!`.
 - `HotCell::HealthController` and `HotCell::DiagnosticsController`, in `hotcell-client`, give you a public health check and an authenticated diagnostic endpoint that does a real round trip through the work socket.
 
-The Hot Cell docs list the alerts we recommend.
-<!-- TODO: link docs/observability.md once basecamp/hotcell#94 lands -->
+The Hot Cell docs list the [alerts we recommend](https://basecamp.github.io/hotcell/docs/observability/#recommended-alerts).
 
 ![the Hot Cell Grafana dashboard for Basecamp production: requests per host and per operation, throughput and failures by outcome, killed requests, queue wait, queue depth, perform time, and scratch disk usage](hotcell-v1/dashboard.jpg)
 
@@ -319,10 +317,10 @@ Hot Cell isn't only for Active Storage:
 
 - You can run multiple cells per host, which gives you multiple queues with different depths, timeouts, and deadlines.
 - An operation can take multiple input and output files.
-- You can bring your own container. A conformance test tells you whether it's configured properly.
+- You can bring your own container. A [conformance test](https://basecamp.github.io/hotcell/docs/conformance/) tells you whether it's configured properly.
 - Every operation's limits are configurable.
 
-A custom operation is shaped like an Active Job. It lives in `hotcell/operations/`, has a routing name and its own default limits, and does its work in `perform`:
+A [custom operation](https://basecamp.github.io/hotcell/docs/operation-api/) is shaped like an Active Job. It lives in `hotcell/operations/`, has a routing name and its own default limits, and does its work in `perform`:
 
 ```ruby
 # hotcell/operations/extract_text.rb
@@ -339,7 +337,7 @@ class ExtractTextOperation < HotCell::Operation
 end
 ```
 
-In the app, a thin client class names the cell and the operation. Where a job has `perform_later`, a client has `perform_in_hotcell`, a blocking call that serializes the arguments, passes the descriptors, and returns the operation's result:
+In the app, a [thin client class](https://basecamp.github.io/hotcell/docs/client-api/#write-a-client) names the cell and the operation. Where a job has `perform_later`, a client has `perform_in_hotcell`, a blocking call that serializes the arguments, passes the descriptors, and returns the operation's result:
 
 ```ruby
 class ExtractText < HotCell::Client
@@ -365,12 +363,10 @@ Basecamp was harder. Basecamp predates Active Storage (Active Storage was extrac
 
 We had outages along the way, and I rolled the lessons back into the library:
 
-- **The OpenMP thread pool.** ImageMagick, and the libraries libvips delegates to, size their OpenMP thread pools from the host's core count, not the container's `cpus` quota. On a 98-core production host that's 98 threads at 8MB of stack each, which blew through the worker's memory limit, and 285 workers died. The fix is to set `OMP_NUM_THREADS` and `OMP_THREAD_LIMIT` in the image, forwarded to every tool the cell runs.
-- **The scratch disk filled.** ImageMagick wrote its pixel cache to `/tmp`, outside the per-request directory, and cleans it up only on a clean exit. Every killed worker left its cache behind, until the 4GB scratch filled on six hosts. While it was full, 3,393 files were marked permanently unreadable. The fixes were to point `TMPDIR` and `MAGICK_TMPDIR` at the request's directory ([hotcell#51](https://github.com/basecamp/hotcell/pull/51)), empty the scratch at boot ([hotcell#52](https://github.com/basecamp/hotcell/pull/52)), and size ImageMagick's limits to a worker's share of the scratch.
-  <!-- TODO: link docs/imagemagick.md once basecamp/hotcell#94 lands -->
+- **The OpenMP thread pool.** ImageMagick, and the libraries libvips delegates to, size their OpenMP thread pools from the host's core count, not the container's `cpus` quota. On a 98-core production host that's 98 threads at 8MB of stack each, which blew through the worker's memory limit, and 285 workers died. The fix is to [set `OMP_NUM_THREADS` and `OMP_THREAD_LIMIT`](https://basecamp.github.io/hotcell/docs/container/#bound-the-openmp-thread-pools) in the image, forwarded to every tool the cell runs.
+- **The scratch disk filled.** ImageMagick wrote its pixel cache to `/tmp`, outside the per-request directory, and cleans it up only on a clean exit. Every killed worker left its cache behind, until the 4GB scratch filled on six hosts. While it was full, 3,393 files were marked permanently unreadable. The fixes were to point `TMPDIR` and `MAGICK_TMPDIR` at the request's directory ([hotcell#51](https://github.com/basecamp/hotcell/pull/51)), empty the scratch at boot ([hotcell#52](https://github.com/basecamp/hotcell/pull/52)), and [size ImageMagick's limits](https://basecamp.github.io/hotcell/docs/imagemagick/#set-the-limits) to a worker's share of the scratch.
 
-Allocate some time for tuning. Size `file_size` and the deadlines from what your real uploads take, then watch `killed` by cause. The Hot Cell docs cover how.
-<!-- TODO: link docs/tuning.md once basecamp/hotcell#94 lands -->
+Allocate some time for tuning. Size `file_size` and the deadlines from what your real uploads take, then watch `killed` by cause. The [tuning guide](https://basecamp.github.io/hotcell/docs/tuning/) covers how.
 
 
 ### What's next
