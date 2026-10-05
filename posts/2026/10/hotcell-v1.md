@@ -3,6 +3,7 @@ title: "Hot Cell v1.0: Securing Active Storage in the age of AI"
 short: |
   Hot Cell v1.0 moves Active Storage's image, video, and PDF processing out of your Rails app and into a locked-down sidecar container.
 date: 2026-10-02
+image: posts/2026/10/hotcell-v1/hotcell-logo.png
 ---
 
 <!-- TODO: set the date above and below to the v1.0 release date -->
@@ -96,6 +97,8 @@ This list became the prompt I gave my agent as we built the system together:
 This is a hot cell at Oak Ridge National Laboratory. It's a shielded chamber for handling radioactive material: a big lead box with a window that radiation can't pass through. The operator stays outside and does everything with manipulator arms, and nothing enters or leaves except by controlled transfer.
 
 That's exactly what I want for Active Storage.
+
+![the Hot Cell logo: two manipulator arms inside a shielded window, over the tagline "It can't hurt you in there."](hotcell-v1/hotcell-logo.png)
 
 
 ### Step 3: Jam it into Rails
